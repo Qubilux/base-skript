@@ -1,0 +1,1095 @@
+{
+  "skriptVersion" : "1.0.0",
+
+  "classes" : [
+    {
+  "id" : "boolean",
+  "name" : "Boolean",
+  "patterns" : [
+    "true/yes/on or false/no/off",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A boolean is a value that is either true or false. Other accepted names are 'on' and 'yes' for true, and 'off' and 'no' for false.",
+  "examples" : "set {config.%player%.use mod} to false"
+},
+{
+  "id" : "color",
+  "name" : "Color",
+  "patterns" : [
+    "black, dark grey/dark gray, grey/light grey/gray/light gray/silver, white, blue/dark blue, cyan/aqua/dark cyan/dark aqua, light blue/light cyan/light aqua, green/dark green, light green/lime/lime green, yellow/light yellow, orange/gold/dark yellow, red/dark red, pink/light red, purple/dark purple, magenta/light purple, brown/indigo",
+
+    "pattern_end"
+  ],
+  "since" : "Unknown",
+  "description" : "Wool, dye and chat colors.",
+  "examples" : "color of the sheep is red or black\\nset the color of the block to green\\nmessage \"You're holding a &amp;amp;amp;amp;amp;lt;%color of tool%&amp;amp;amp;amp;amp;gt;%color of tool%&amp;amp;amp;amp;amp;lt;reset&amp;amp;amp;amp;amp;gt; wool block\""
+},
+{
+  "id" : "commandsender",
+  "name" : "Command Sender",
+  "patterns" : [
+    "use <a href='expressions.html#LitConsole'>the console</a> for the console",
+"see <a href='#player'>player</a> for players.",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A player or the console.",
+  "examples" : "command /push [&amp;amp;amp;amp;amp;amp;lt;player&amp;amp;amp;amp;amp;amp;gt;]:\\n    trigger:\\n        if arg-1 is not set:\\n            if command sender is console:\\n                send \"You can't push yourself as a console :\\\" to sender\\n                stop\\n            push sender upwards with force 2\\n            send \"Yay!\"\\n        else:\\n            push arg-1 upwards with force 2\\n            send \"Yay!\" to sender and arg-1"
+},
+{
+  "id" : "date",
+  "name" : "Date",
+  "patterns" : [
+    "Missing patterns.",
+
+    "pattern_end"
+  ],
+  "since" : "1.4",
+  "description" : "A date is a certain point in the real world's time which can be obtained with <a href='./expressions.html#ExprNow'>now expression</a>, <a href='./expressions.html#ExprUnixDate'>unix date expression</a> and <a href='./functions.html#date'>date function</a>.\\nSee <a href='#time'>time</a> and <a href='#timespan'>timespan</a> for the other time types of Skript.",
+  "examples" : "set {_yesterday} to now\\nsubtract a day from {_yesterday}\\n# now {_yesterday} represents the date 24 hours before now"
+},
+{
+  "id" : "number",
+  "name" : "Number",
+  "patterns" : [
+    "[-]###[.###]</code> (any amount of digits; very large numbers will be truncated though)",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A number, e.g. 2.5, 3, or -9812454.\\nPlease note that many expressions only need integers, i.e. will discard any fractional parts of any numbers without producing an error.",
+  "examples" : "set the player's health to 5.5\\nset {_temp} to 2*{_temp} - 2.5"
+},
+{
+  "id" : "object",
+  "name" : "Object",
+  "patterns" : [
+    "Missing patterns.",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "The supertype of all types, meaning that if %object% is used in e.g. a condition it will accept all kinds of expressions.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "string",
+  "name" : "Text",
+  "patterns" : [
+    "simple: "..."",
+"quotes: "...""..."",
+"expressions: "...%expression%..."",
+"percent signs: "...%%..."",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "Text is simply text, i.e. a sequence of characters, which can optionally contain expressions which will be replaced with a meaningful representation (e.g. %player% will be replaced with the player's name).\\nBecause scripts are also text, you have to put text into double quotes to tell Skript which part of the line is an effect/expression and which part is the text.\\nPlease read the article on <a href='./text.html'>Texts and Variable Names</a> to learn more.",
+  "examples" : "broadcast \"Hello World!\"\\nmessage \"Hello %player%\"\\nmessage \"The id of \"\"%type of tool%\"\" is %id of tool%.\""
+},
+{
+  "id" : "time",
+  "name" : "Time",
+  "patterns" : [
+    "##:##",
+"##[:##][ ]am/pm",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A time is a point in a minecraft day's time (i.e. ranges from 0:00 to 23:59), which can vary per world.\\nSee <a href='#date'>date</a> and <a href='#timespan'>timespan</a> for the other time types of Skript.",
+  "examples" : "at 20:00:\\n    time is 8 pm\\n    broadcast \"It's %time%\""
+},
+{
+  "id" : "timeperiod",
+  "name" : "Timeperiod",
+  "patterns" : [
+    "##:## - ##:##",
+"dusk/day/dawn/night",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A period of time between two <a href='#time'>times</a>. Mostly useful since you can use this to test for whether it's day, night, dusk or dawn in a specific world.\\nThis type might be removed in the future as you can use 'time of world is between x and y' as a replacement.",
+  "examples" : "time in world is night"
+},
+{
+  "id" : "timespan",
+  "name" : "Timespan",
+  "patterns" : [
+    "&lt;number&gt; [minecraft/mc/real/rl/irl] ticks/seconds/minutes/hours/days/weeks/months/years [[,/and] &lt;more...&gt;]",
+"[###:]##:##[.####] ([hours:]minutes:seconds[.milliseconds])",
+
+    "pattern_end"
+  ],
+  "since" : "1.0, 2.6.1 (weeks, months, years)",
+  "description" : "A timespan is a difference of two different dates or times, e.g '10 minutes'. Timespans are always displayed as real life time, but can be defined as minecraft time, e.g. '5 minecraft days and 12 hours'.\\nNOTE: Months always have the value of 30 days, and years of 365 days.\\nSee <a href='#date'>date</a> and <a href='#time'>time</a> for the other time types of Skript.",
+  "examples" : "every 5 minecraft days:\\n    wait a minecraft second and 5 ticks\\nevery 10 mc days and 12 hours:\\n    halt for 12.7 irl minutes, 12 hours and 120.5 seconds"
+},
+{
+  "id" : "classinfo",
+  "name" : "Type",
+  "patterns" : [
+    "See the type name patterns of all types - including this one",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Represents a type, e.g. number, object, item type, location, block, world, entity type, etc.\\nThis is mostly used for expressions like 'event-&lt;type&gt;', '&lt;type&gt;-argument', 'loop-&lt;type&gt;', etc., e.g. event-world, number-argument and loop-player.",
+  "examples" : "{variable} is a number # check whether the variable contains a number, e.g. -1 or 5.5\\n{variable} is a type # check whether the variable contains a type, e.g. number or player\\n{variable} is an object # will always succeed if the variable is set as everything is an object, even types.\\ndisable PvP in the event-world\\nkill the loop-entity"
+},
+
+    {"end" : true}
+  ],
+
+  "conditions" : [
+    {
+  "id" : "CondCompare",
+  "name" : "Comparison",
+  "patterns" : [
+    "[(neither)] %<a href='./classes.html#object'>objects</a>% ((is|are)[(n't| not| neither)] ((greater|more|higher|bigger|larger) than|above)|&gt;) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((is|are)[(n't| not| neither)] (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|&gt;=) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((is|are)[(n't| not| neither)] ((less|smaller|lower) than|below)|&lt;) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((is|are)[(n't| not| neither)] (less|smaller|lower|below) [than] or (equal to|the same as)|&lt;=) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((is|are) (not|neither)|isn't|aren't|!=) [equal to] %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (is|are|=) [(equal to|the same as)] %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (is|are) between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (is not|are not|isn't|aren't) between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were)[(n't| not| neither)] ((greater|more|higher|bigger|larger) than|above) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were)[(n't| not| neither)] (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were)[(n't| not| neither)] ((less|smaller|lower) than|below) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were)[(n't| not| neither)] (less|smaller|lower|below) [than] or (equal to|the same as) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((was|were) (not|neither)|wasn't|weren't) [equal to] %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were) [(equal to|the same as)] %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was|were) between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (was not|were not|wasn't|weren't) between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) ((greater|more|higher|bigger|larger) than|above) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) ((less|smaller|lower) than|below) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) (less|smaller|lower|below) [than] or (equal to|the same as) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% ((will (not|neither) be|won't be)|(isn't|aren't|is not|are not) (turning|changing) [in]to) [equal to] %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will be [(equal to|the same as)]|(is|are) (turning|changing) [in]to) %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% will be between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+"[(neither)] %<a href='./classes.html#object'>objects</a>% (will not be|won't be) between %<a href='./classes.html#object'>objects</a>% and %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "A very general condition, it simply compares two values. Usually you can only compare for equality (e.g. block is/isn't of &lt;type&gt;), but some values can also be compared using greater than/less than. In that case you can also test for whether an object is between two others.
+Note: This is the only element where not all patterns are shown. It has actually another two sets of similar patters, but with <code>(was|were)</code> or <code>will be</code> instead of <code>(is|are)</code> respectively, which check different <a href='expressions.html#ExprTimeState'>time states</a> of the first expression.",
+  "examples" : "the clicked block is a stone slab or a double stone slab\\ntime in the player's world is greater than 8:00\\nthe creature is not an enderman or an ender dragon"
+},
+{
+  "id" : "CondIsSet",
+  "name" : "Exists/Is Set",
+  "patterns" : [
+    "%~<a href='./classes.html#object'>objects</a>% (exist[s]|(is|are) set)",
+"%~<a href='./classes.html#object'>objects</a>% (do[es](n't| not) exist|(is|are)(n't| not) set)",
+
+    "pattern_end"
+  ],
+  "since" : "1.2",
+  "description" : "Checks whether a given expression or variable is set.",
+  "examples" : "{teams::%player's uuid%::preferred-team} is not set\\non damage:\\n    projectile exists\\n    broadcast \"%attacker% used a %projectile% to attack %victim%!\""
+},
+
+    {"end" : true}
+  ],
+
+  "effects" : [
+    {
+  "id" : "EffCopy",
+  "name" : "Copy Into Variable",
+  "patterns" : [
+    "copy %~<a href='./classes.html#object'>objects</a>% [in]to %~<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Copies objects into a variable. When copying a list over to another list, the source list and its sublists are also copied over.
+<strong>Note: Copying a value into a variable/list will overwrite the existing data.</strong>",
+  "examples" : "set {_foo::bar} to 1\\nset {_foo::sublist::foobar} to \"hey\"\\ncopy {_foo::*} to {_copy::*}\\nbroadcast indices of {_copy::*} # bar, sublist\\nbroadcast {_copy::bar} # 1\\nbroadcast {_copy::sublist::foobar} # \"hey!\""
+},
+{
+  "id" : "Delay",
+  "name" : "Delay",
+  "patterns" : [
+    "(wait|halt) [for] %<a href='./classes.html#timespan'>time span</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.4",
+  "description" : "Delays the script's execution by a given timespan. Please note that delays are not persistent, e.g. trying to create a tempban script with <code>ban player → wait 7 days → unban player</code> will not work if you restart your server anytime within these 7 days. You also have to be careful even when using small delays!",
+  "examples" : "wait 2 minutes\\nhalt for 5 minecraft hours\\nwait a tick"
+},
+{
+  "id" : "EffScriptFile",
+  "name" : "Enable/Disable/Reload Script File",
+  "patterns" : [
+    "((enable|load)|reload|(disable|unload)) s(c|k)ript [file] %<a href='./classes.html#string'>text</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.4",
+  "description" : "Enables, disables, or reloads a script file.",
+  "examples" : "reload script \"test\"\\nenable script file \"testing\"\\nunload script file \"script.sk\""
+},
+{
+  "id" : "EffSuppressWarnings",
+  "name" : "Locally Suppress Warning",
+  "patterns" : [
+    "[local[ly]] suppress [the] (conflict|variable save|[missing] conjunction[s]|starting [with] expression[s]) warning[s]",
+
+    "pattern_end"
+  ],
+  "since" : "2.3",
+  "description" : "Suppresses target warnings from the current script.",
+  "examples" : "locally suppress missing conjunction warnings\\nsuppress the variable save warnings"
+},
+{
+  "id" : "EffLog",
+  "name" : "Log",
+  "patterns" : [
+    "log %<a href='./classes.html#string'>texts</a>% [(to|in) [file[s]] %<a href='./classes.html#string'>texts</a>%]",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Writes text into a .log file. Skript will write these files to /.skript/logs.
+NB: Using 'server.log' as the log file will write to the default server log. Omitting the log file altogether will log the message as '[Skript] [&lt;script&gt;.sk] &lt;message&gt;' in the server log.",
+  "examples" : "on place of TNT:\\n    log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""
+},
+{
+  "id" : "EffLogToConsole",
+  "name" : "LogToConsole",
+  "patterns" : [
+    "log %<a href='./classes.html#string'>texts</a>% [to the (console|terminal|output|log)]",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Writes text to the console. Skript will write these files to /.skript/logs.",
+  "examples" : "on place of TNT:\\n    log \"%player% placed TNT in %world% at %location of block%\" to the console"
+},
+{
+  "id" : "EffReturn",
+  "name" : "Return",
+  "patterns" : [
+    "return %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.2, 2.8.0 (returns aliases)",
+  "description" : "Makes a function return a value",
+  "examples" : "function double(i: number) :: number:\\n    return 2 * {_i}\\n\\nfunction divide(i: number) returns number:\\n    return {_i} / 2"
+},
+
+    {"end" : true}
+  ],
+
+  "events" : [
+    {
+  "id" : "server_startstop",
+  "name" : "On Server Start/Stop",
+  "patterns" : [
+    "[on] (server|skript) (start|load|enable)",
+"[on] (server|skript) (stop|unload|disable)",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Called when the server starts or stops (actually, when Skript starts or stops, so a /reload will trigger these events as well).",
+  "examples" : "on skript start:\\non server stop:"
+},
+
+    {"end" : true}
+  ],
+
+  "expressions" : [
+    {
+  "id" : "ExprScripts",
+  "name" : "All Scripts",
+  "patterns" : [
+    "[all [of the]|the] scripts [without ([subdirectory] paths|parents)]",
+"[all [of the]|the] (enabled|loaded) scripts [without ([subdirectory] paths|parents)]",
+"[all [of the]|the] (disabled|unloaded) scripts [without ([subdirectory] paths|parents)]",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Returns all of the scripts, or just the enabled or disabled ones.",
+  "examples" : "command /scripts:\\n    trigger:\\n        send \"All Scripts: %scripts%\" to player\\n        send \"Loaded Scripts: %enabled scripts%\" to player\\n        send \"Unloaded Scripts: %disabled scripts%\" to player"
+},
+{
+  "id" : "ExprStringCase",
+  "name" : "Case Text",
+  "patterns" : [
+    "%<a href='./classes.html#string'>texts</a>% in (upper|lower)[ ]case",
+"(upper|lower)[ ]case %<a href='./classes.html#string'>texts</a>%",
+"capitali(s|z)ed %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>% in [(lenient|strict) ](proper|title)[ ]case",
+"[(lenient|strict) ](proper|title)[ ]case %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>% in [(lenient|strict) ]camel[ ]case",
+"[(lenient|strict) ]camel[ ]case %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>% in [(lenient|strict) ]pascal[ ]case",
+"[(lenient|strict) ]pascal[ ]case %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>% in [(lower|upper|capital|screaming)[ ]]snake[ ]case",
+"[(lower|upper|capital|screaming)[ ]]snake[ ]case %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>% in [(lower|upper|capital)[ ]]kebab[ ]case",
+"[(lower|upper|capital)[ ]]kebab[ ]case %<a href='./classes.html#string'>texts</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev16 (lowercase and uppercase), 2.5 (advanced cases)",
+  "description" : "Copy of given text in Lowercase, Uppercase, Proper Case, camelCase, PascalCase, Snake_Case, and Kebab-Case",
+  "examples" : "\"Oops!\" in lowercase # oops!\\n\"oops!\" in uppercase # OOPS!\\n\"hellO i'm steve!\" in proper case # HellO I'm Steve!\\n\"hellO i'm steve!\" in strict proper case # Hello I'm Steve!\\n\"spAwn neW boSs ()\" in camel case # spAwnNeWBoSs()\\n\"spAwn neW boSs ()\" in strict camel case # spawnNewBoss()\\n\"geneRate ranDom numBer ()\" in pascal case # GeneRateRanDomNumBer()\\n\"geneRate ranDom numBer ()\" in strict pascal case # GenerateRandomNumber()\\n\"Hello Player!\" in snake case # Hello_Player!\\n\"Hello Player!\" in lower snake case # hello_player!\\n\"Hello Player!\" in upper snake case # HELLO_PLAYER!\\n\"What is your name?\" in kebab case # What-is-your-name?\\n\"What is your name?\" in lower kebab case # what-is-your-name?\\n\"What is your name?\" in upper kebab case # WHAT-IS-YOUR-NAME?"
+},
+{
+  "id" : "ExprCharacters",
+  "name" : "Characters Between",
+  "patterns" : [
+    "[(all [[of] the]|the)] [alphanumeric] characters (between|from) %<a href='./classes.html#string'>text</a>% (and|to) %<a href='./classes.html#string'>text</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "All characters between two given characters, useful for generating random strings. This expression uses the Unicode numerical code of a character to determine which characters are between the two given characters. The <a href=\"https://www.asciitable.com/\">ASCII table linked here</a> shows this ordering for the first 256 characters.
+If you would like only alphanumeric characters you can use the 'alphanumeric' option in the expression.
+If strings of more than one character are given, only the first character of each is used.",
+  "examples" : "loop characters from \"a\" to \"f\":\\n    broadcast \"%loop-value%\"\\n\\n# 0123456789:;&lt;=&gt;?@ABC... ...uvwxyz\\nsend characters between \"0\" and \"z\"\\n\\n# 0123456789ABC... ...uvwxyz\\nsend alphanumeric characters between \"0\" and \"z\""
+},
+{
+  "id" : "ExprColoured",
+  "name" : "Colored / Uncolored",
+  "patterns" : [
+    "(colo[u]r-|colo[u]red )%<a href='./classes.html#string'>texts</a>%",
+"(format-|formatted )%<a href='./classes.html#string'>texts</a>%",
+"(un|non)[-](colo[u]r-|colo[u]red |format-|formatted )%<a href='./classes.html#string'>texts</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Parses &lt;color&gt;s and, optionally, chat styles in a message or removes
+any colors <i>and</i> chat styles from the message. Parsing all
+chat styles requires this expression to be used in same line with
+the <a href=effects.html#EffSend>send effect</a>.",
+  "examples" : "on chat:\\n    set message to colored message # Safe; only colors get parsed\\ncommand /fade &amp;lt;player&amp;gt;:\\n    trigger:\\n        set display name of the player-argument to uncolored display name of the player-argument\\ncommand /format &amp;lt;text&amp;gt;:\\n    trigger:\\n        message formatted text-argument # Safe, because we're sending to whoever used this command"
+},
+{
+  "id" : "ExprDateAgoLater",
+  "name" : "Date Ago/Later",
+  "patterns" : [
+    "%<a href='./classes.html#timespan'>time span</a>% (ago|in the past|before [the] [date] %<a href='./classes.html#date'>date</a>%)",
+"%<a href='./classes.html#timespan'>time span</a>% (later|(from|after) [the] [date] %<a href='./classes.html#date'>date</a>%)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev33",
+  "description" : "A date the specified timespan before/after another date.",
+  "examples" : "set {_yesterday} to 1 day ago\\nset {_hourAfter} to 1 hour after {someOtherDate}\\nset {_hoursBefore} to 5 hours before {someOtherDate}"
+},
+{
+  "id" : "ExprHash",
+  "name" : "Hash",
+  "patterns" : [
+    "%<a href='./classes.html#string'>texts</a>% hash[ed] with (MD5|SHA-256)",
+
+    "pattern_end"
+  ],
+  "since" : "2.0, 2.2-dev32 (SHA-256 algorithm)",
+  "description" : "Hashes the given text using the MD5 or SHA-256 algorithms. Each algorithm is suitable for different use cases.<p>
+MD5 is provided mostly for backwards compatibility, as it is outdated and not secure. 
+SHA-256 is more secure, and can used to hash somewhat confidental data like IP addresses and even passwords. 
+It is not <i>that</i> secure out of the box, so please consider using salt when dealing with passwords! 
+When hashing data, you <strong>must</strong> specify algorithms that will be used for security reasons! 
+<p>Please note that a hash cannot be reversed under normal circumstanses. You will not be able to get original value from a hash with Skript.",
+  "examples" : "command /setpass &amp;lt;text&amp;gt;:\\n    trigger:\\n        set {password::%uuid of player%} to text-argument hashed with SHA-256\\ncommand /login &amp;lt;text&amp;gt;:\\n    trigger:\\n        if text-argument hashed with SHA-256 is {password::%uuid of player%}:\\n            message \"Login successful.\"\\n        else:\\n            message \"Wrong password!\""
+},
+{
+  "id" : "ExprIndexOf",
+  "name" : "Index Of",
+  "patterns" : [
+    "[the] [(first|last)] index of %<a href='./classes.html#string'>text</a>% in %<a href='./classes.html#string'>text</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "The first or last index of a character (or text) in a text, or -1 if it doesn't occur in the text. Indices range from 1 to the <a href='#ExprIndexOf'>length</a> of the text.",
+  "examples" : "set {_first} to the first index of \"@\" in the text argument\\nif {_s} contains \"abc\":\\n    set {_s} to the first (index of \"abc\" in {_s} + 3) characters of {_s} # removes everything after the first \"abc\" from {_s}"
+},
+{
+  "id" : "ExprIndices",
+  "name" : "Indices of List",
+  "patterns" : [
+    "[(the|all [[of] the])] (indexes|indices) of %~<a href='./classes.html#object'>objects</a>%",
+"%~<a href='./classes.html#object'>objects</a>%'[s] (indexes|indices)",
+"[sorted] (indices|indexes) of %~<a href='./classes.html#object'>objects</a>% in (ascending|descending) order",
+"[sorted] %~<a href='./classes.html#object'>objects</a>%'[s] (indices|indexes) in (ascending|descending) order",
+
+    "pattern_end"
+  ],
+  "since" : "2.4 (indices), 2.6.1 (sorting)",
+  "description" : "Returns all the indices of a list variable, optionally sorted by their values.
+To sort the indices, all objects in the list must be comparable;
+Otherwise, this expression will just return the unsorted indices.",
+  "examples" : "set {l::*} to \"some\", \"cool\" and \"values\"\\nbroadcast \"%indices of {l::*}%\" # result is 1, 2 and 3\\n\\nset {_leader-board::first} to 17\\nset {_leader-board::third} to 30\\nset {_leader-board::second} to 25\\nset {_leader-board::fourth} to 42\\nset {_ascending-indices::*} to sorted indices of {_leader-board::*} in ascending order\\nbroadcast \"%{_ascending-indices::*}%\" #result is first, second, third, fourth\\nset {_descending-indices::*} to sorted indices of {_leader-board::*} in descending order\\nbroadcast \"%{_descending-indices::*}%\" #result is fourth, third, second, first"
+},
+{
+  "id" : "ExprLength",
+  "name" : "Length",
+  "patterns" : [
+    "[the] length of %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>%'[s] length",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "The length of a text, in number of characters.",
+  "examples" : "set {_l} to length of the string argument"
+},
+{
+  "id" : "ExprPlugins",
+  "name" : "Loaded Plugins",
+  "patterns" : [
+    "[(all [[of] the]|the)] [loaded] plugins",
+
+    "pattern_end"
+  ],
+  "since" : "2.7",
+  "description" : "An expression to obtain a list of the names of the server's loaded plugins.",
+  "examples" : "if the loaded plugins contains \"Vault\":\\n    broadcast \"This server uses Vault plugin!\"\\n\\nsend \"Plugins (%size of loaded plugins%): %plugins%\" to player"
+},
+{
+  "id" : "ExprLoopIteration",
+  "name" : "Loop Iteration",
+  "patterns" : [
+    "[the] loop(-| )(counter|iteration)[-%*<a href='./classes.html#number'>number</a>%]",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Returns the loop's current iteration count (for both normal and while loops).",
+  "examples" : "while player is online:\\n    give player 1 stone\\n    wait 5 ticks\\n    if loop-counter &gt; 30:\\n        stop loop\\n\\nloop {top-balances::*}:\\n    if loop-iteration &lt;= 10:\\n        broadcast \"##%loop-iteration% %loop-index% has $%loop-value%\""
+},
+{
+  "id" : "ExprLoopValue",
+  "name" : "Loop value",
+  "patterns" : [
+    "[the] loop-&lt;.+&gt;",
+
+    "pattern_end"
+  ],
+  "since" : "1.0, 2.8.0 (loop-counter)",
+  "description" : "Returns the currently looped value.",
+  "examples" : "# Countdown\\nloop 10 times:\\n    message \"%11 - loop-number%\"\\n    wait a second\\n\\n# Generate a 10x10 floor made of randomly colored wool below the player\\nloop blocks from the block below the player to the block 10 east of the block below the player:\\n    loop blocks from the loop-block to the block 10 north of the loop-block:\\n        set loop-block-2 to any wool\\n\\nloop {top-balances::*}:\\n    loop-iteration &lt;= 10\\n    send \"##%loop-iteration% %loop-index% has $%loop-value%\""
+},
+{
+  "id" : "ExprNow",
+  "name" : "Now",
+  "patterns" : [
+    "now",
+
+    "pattern_end"
+  ],
+  "since" : "1.4",
+  "description" : "The current <a href='classes.html#date'>system time</a> of the server. Use <a href='#ExprTime'>time</a> to get the <a href='classes.html#time'>Minecraft time</a> of a world.",
+  "examples" : "broadcast \"Current server time: %now%\""
+},
+{
+  "id" : "ExprNumberOfCharacters",
+  "name" : "Number of Characters",
+  "patterns" : [
+    "number of upper[ ]case char(acters|s) in %<a href='./classes.html#string'>text</a>%",
+"number of lower[ ]case char(acters|s) in %<a href='./classes.html#string'>text</a>%",
+"number of digit char(acters|s) in %<a href='./classes.html#string'>text</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "The number of uppercase, lowercase, or digit characters in a string.",
+  "examples" : "#Simple Chat Filter\\non chat:\\n    if number of uppercase chars in message / length of message &gt; 0.5\\n        cancel event\\n        send \"&amp;lt;red&amp;gt;Your message has to many caps!\" to player"
+},
+{
+  "id" : "ExprNumbers",
+  "name" : "Numbers",
+  "patterns" : [
+    "[(all [[of] the]|the)] (numbers|integers|decimals) (between|from) %<a href='./classes.html#number'>number</a>% (and|to) %<a href='./classes.html#number'>number</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.4.6 (integers & numbers), 2.5.1 (decimals)",
+  "description" : "All numbers between two given numbers, useful for looping.
+Use 'numbers' if your start is not an integer and you want to keep the fractional part of the start number constant, or use 'integers' if you only want to loop integers.
+You may also use 'decimals' if you want to use the decimal precision of the start number.
+You may want to use the 'times' expression instead, for instance 'loop 5 times:'",
+  "examples" : "loop numbers from 2.5 to 5.5: # loops 2.5, 3.5, 4.5, 5.5\\nloop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5\\nloop decimals from 3.94 to 4: # loops 3.94, 3.95, 3.96, 3.97, 3.98, 3.99, 4"
+},
+{
+  "id" : "ExprParse",
+  "name" : "Parse",
+  "patterns" : [
+    "%<a href='./classes.html#string'>text</a>% parsed as (%*<a href='./classes.html#classinfo'>type</a>%|"&lt;.*&gt;")",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Parses text as a given type, or as a given pattern.
+This expression can be used in two different ways: One which parses the entire text as a single instance of a type, e.g. as a number, and one that parses the text according to a pattern.
+If the given text could not be parsed, this expression will return nothing and the <a href='#ExprParseError'>parse error</a> will be set if some information is available.
+Some notes about parsing with a pattern:
+- The pattern must be a <a href='./patterns/'>Skript pattern</a>, e.g. percent signs are used to define where to parse which types, e.g. put a %number% or %items% in the pattern if you expect a number or some items there.
+- You <i>have to</i> save the expression's value in a list variable, e.g. <code>set {parsed::*} to message parsed as \"...\"</code>.
+- The list variable will contain the parsed values from all %types% in the pattern in order. If a type was plural, e.g. %items%, the variable's value at the respective index will be a list variable, e.g. the values will be stored in {parsed::1::*}, not {parsed::1}.",
+  "examples" : "set {var} to line 1 parsed as number\\non chat:\\n    set {var::*} to message parsed as \"buying %items% for %money%\"\\n    if parse error is set:\\n        message \"%parse error%\"\\n    else if {var::*} is set:\\n        cancel event\\n        remove {var::2} from the player's balance\\n        give {var::1::*} to the player"
+},
+{
+  "id" : "ExprParseError",
+  "name" : "Parse Error",
+  "patterns" : [
+    "[the] [last] [parse] error",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "The error which caused the last <a href='#ExprParse'>parse operation</a> to fail, which might not be set if a pattern was used and the pattern didn't match the provided text at all.",
+  "examples" : "set {var} to line 1 parsed as integer\\nif {var} is not set:\\n    parse error is set:\\n        message \"&amp;lt;red&amp;gt;Line 1 is invalid: %last parse error%\"\\n    else:\\n        message \"&amp;lt;red&amp;gt;Please put an integer on line 1!\""
+},
+{
+  "id" : "ExprPercent",
+  "name" : "Percent of",
+  "patterns" : [
+    "%<a href='./classes.html#number'>number</a>%(\\%| percent) of %<a href='./classes.html#number'>numbers</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Returns a percentage of one or more numbers.",
+  "examples" : "set damage to 10% of victim's health\\nset damage to 125 percent of damage\\nset {_result} to {_percent} percent of 999\\nset {_result::*} to 10% of {_numbers::*}\\nset experience to 50% of player's total experience"
+},
+{
+  "id" : "ExprRandom",
+  "name" : "Random",
+  "patterns" : [
+    "[a] random %*<a href='./classes.html#classinfo'>type</a>% [out] of %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.4.9",
+  "description" : "Gets a random item out of a set, e.g. a random player out of all players online.",
+  "examples" : "give a diamond to a random player out of all players\\ngive a random item out of all items to the player"
+},
+{
+  "id" : "ExprRandomCharacter",
+  "name" : "Random Character",
+  "patterns" : [
+    "[a|%integer%] random [alphanumeric] character[s] (from|between) %<a href='./classes.html#string'>text</a>% (to|and) %<a href='./classes.html#string'>text</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "One or more random characters between two given characters. Use 'alphanumeric' if you want only alphanumeric characters.
+This expression uses the Unicode numerical code of a character to determine which characters are between the two given characters.
+If strings of more than one character are given, only the first character of each is used.",
+  "examples" : "set {_captcha} to join (5 random characters between \"a\" and \"z\") with \"\"\\nsend 3 random alphanumeric characters between \"0\" and \"z\""
+},
+{
+  "id" : "ExprRandomNumber",
+  "name" : "Random Number",
+  "patterns" : [
+    "[a] random (integer|number) (from|between) %<a href='./classes.html#number'>number</a>% (to|and) %<a href='./classes.html#number'>number</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.4",
+  "description" : "A random number or integer between two given numbers. Use 'number' if you want any number with decimal parts, or use use 'integer' if you only want whole numbers.
+Please note that the order of the numbers doesn't matter, i.e. <code>random number between 2 and 1</code> will work as well as <code>random number between 1 and 2</code>.",
+  "examples" : "set the player's health to a random number between 5 and 10\\nsend \"You rolled a %random integer from 1 to 6%!\" to the player"
+},
+{
+  "id" : "ExprRandomUUID",
+  "name" : "Random UUID",
+  "patterns" : [
+    "[a] random uuid",
+
+    "pattern_end"
+  ],
+  "since" : "2.5.1",
+  "description" : "Returns a random UUID.",
+  "examples" : "set {_uuid} to random uuid"
+},
+{
+  "id" : "ExprRepeat",
+  "name" : "Repeat String",
+  "patterns" : [
+    "%<a href='./classes.html#string'>texts</a>% repeated %integer% time[s]",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Repeats inputted strings a given amount of times.",
+  "examples" : "broadcast nl and nl repeated 200 times\\nbroadcast \"Hello World \" repeated 5 times\\nif \"aa\" repeated 2 times is \"aaaa\":\\n    broadcast \"Ahhhh\" repeated 100 times"
+},
+{
+  "id" : "ExprReversedList",
+  "name" : "Reversed List",
+  "patterns" : [
+    "reversed %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.4",
+  "description" : "Reverses given list.",
+  "examples" : "set {_list::*} to reversed {_list::*}"
+},
+{
+  "id" : "ExprRound",
+  "name" : "Rounding",
+  "patterns" : [
+    "[(a|the)] round[ed] down %<a href='./classes.html#number'>number</a>%",
+"[(a|the)] round[ed] %<a href='./classes.html#number'>number</a>%",
+"[(a|the)] round[ed] up %<a href='./classes.html#number'>number</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Rounds numbers normally, up (ceiling) or down (floor) respectively.",
+  "examples" : "set {var} to rounded health of player\\nset line 1 of the block to rounded \"%(1.5 * player's level)%\"\\nadd rounded down argument to the player's health"
+},
+{
+  "id" : "ExprScript",
+  "name" : "Script Name",
+  "patterns" : [
+    "[the] script[['s] name]",
+"name of [the] script",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Holds the current script's name (the file name without '.sk').",
+  "examples" : "on script load:\\n    set {running::%script%} to true\\non script unload:\\n    set {running::%script%} to false"
+},
+{
+  "id" : "ExprSets",
+  "name" : "Sets",
+  "patterns" : [
+    "[all [[of] the]|the|every] %*<a href='./classes.html#classinfo'>type</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.0 pre-5, 2.7 (classinfo)",
+  "description" : "Returns a list of all the values of a type. Useful for looping.",
+  "examples" : "loop all attribute types:\\n    set loop-value attribute of player to 10\\n    message \"Set attribute %loop-value% to 10!\""
+},
+{
+  "id" : "ExprShuffledList",
+  "name" : "Shuffled List",
+  "patterns" : [
+    "shuffled %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev32",
+  "description" : "Shuffles given list randomly. This is done by replacing indices by random numbers in resulting list.",
+  "examples" : "set {_list::*} to shuffled {_list::*}"
+},
+{
+  "id" : "ExprSortedList",
+  "name" : "Sorted List",
+  "patterns" : [
+    "sorted %<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev19",
+  "description" : "Sorts given list in natural order. All objects in list must be comparable; if they're not, this expression will return nothing.",
+  "examples" : "set {_sorted::*} to sorted {_players::*}"
+},
+{
+  "id" : "ExprSubstring",
+  "name" : "Substring",
+  "patterns" : [
+    "[the] (part|sub[ ](text|string)) of %<a href='./classes.html#string'>texts</a>% (between|from) [ind(ex|ices)|character[s]] %<a href='./classes.html#number'>number</a>% (and|to) [(index|character)] %<a href='./classes.html#number'>number</a>%",
+"[the] (first|last) [%<a href='./classes.html#number'>number</a>%] character[s] of %<a href='./classes.html#string'>texts</a>%",
+"[the] %<a href='./classes.html#number'>number</a>% (first|last) characters of %<a href='./classes.html#string'>texts</a>%",
+"[the] character[s] at [(index|position|indexes|indices|positions)] %<a href='./classes.html#number'>numbers</a>% (in|of) %<a href='./classes.html#string'>texts</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1, 2.5.2 (character at, multiple strings support)",
+  "description" : "Extracts part of a text. You can either get the first &lt;x&gt; characters, the last &lt;x&gt; characters, the character at index &lt;x&gt;, or the characters between indices &lt;x&gt; and &lt;y&gt;. The indices &lt;x&gt; and &lt;y&gt; should be between 1 and the <a href='#ExprLength'>length</a> of the text (other values will be fit into this range).",
+  "examples" : "set {_s} to the first 5 characters of the text argument\\nmessage \"%subtext of {_s} from characters 2 to (the length of {_s} - 1)%\" # removes the first and last character from {_s} and sends it to the player or console\\nset {_characters::*} to characters at 1, 2 and 7 in player's display name\\nsend the last character of all players' names"
+},
+{
+  "id" : "ExprTimeSince",
+  "name" : "Time Since",
+  "patterns" : [
+    "[the] time since %<a href='./classes.html#date'>dates</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "The time that has passed since a date. If the given date is in the future, a value will not be returned.",
+  "examples" : "send \"%time since 5 minecraft days ago% has passed since 5 minecraft days ago!\" to player"
+},
+{
+  "id" : "ExprUnixDate",
+  "name" : "Unix Date",
+  "patterns" : [
+    "[the] unix date of %<a href='./classes.html#number'>numbers</a>%",
+"%<a href='./classes.html#number'>numbers</a>%'[s] unix date",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Converts given Unix timestamp to a date. The Unix timespan represents the number of seconds elapsed since 1 January 1970.",
+  "examples" : "unix date of 946684800 #1 January 2000 12:00 AM (UTC Time)"
+},
+{
+  "id" : "ExprUnixTicks",
+  "name" : "Unix Timestamp",
+  "patterns" : [
+    "[the] unix timestamp of %<a href='./classes.html#date'>dates</a>%",
+"%<a href='./classes.html#date'>dates</a>%'[s] unix timestamp",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev31",
+  "description" : "Converts given date to Unix timestamp. This is roughly how many seconds have elapsed since 1 January 1970.",
+  "examples" : "unix timestamp of now"
+},
+{
+  "id" : "ExprValueWithin",
+  "name" : "Value Within",
+  "patterns" : [
+    "[the] (%*<a href='./classes.html#classinfo'>type</a>%|value[s]) (within|in) %~<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.7",
+  "description" : "Gets the value within objects. Usually used with variables to get the value they store rather than the variable itself, or with lists to get the values of a type.",
+  "examples" : "set {_entity} to a random entity out of all entities\\ndelete entity within {_entity} # This deletes the entity itself and not the value stored in the variable\\n\\nset {_list::*} to \"something\", 10, \"test\" and a zombie\\nbroadcast the strings within {_list::*} # \"something\", \"test\""
+},
+
+    {"end" : true}
+  ],
+
+  "functions" : [
+    {
+  "id" : "abs",
+  "name" : "abs",
+  "patterns" : [
+    "abs(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Returns the absolute value of the argument, i.e. makes the argument positive.",
+  "examples" : "abs(3) = 3\\nabs(-2) = 2"
+},
+{
+  "id" : "acos",
+  "name" : "acos",
+  "patterns" : [
+    "acos(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The inverse of the <a href='#cos'>cosine</a>, also called arccos. Returns result in degrees, not radians. Only returns values from 0 to 180.",
+  "examples" : "acos(0) = 90\\nacos(1) = 0\\nacos(0.5) = 30"
+},
+{
+  "id" : "asin",
+  "name" : "asin",
+  "patterns" : [
+    "asin(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The inverse of the <a href='#sin'>sine</a>, also called arcsin. Returns result in degrees, not radians. Only returns values from -90 to 90.",
+  "examples" : "asin(0) = 0\\nasin(1) = 90\\nasin(0.5) = 30"
+},
+{
+  "id" : "atan",
+  "name" : "atan",
+  "patterns" : [
+    "atan(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The inverse of the <a href='#tan'>tangent</a>, also called arctan. Returns result in degrees, not radians. Only returns values from -90 to 90.",
+  "examples" : "atan(0) = 0\\natan(1) = 45\\natan(10000) = 89.9943"
+},
+{
+  "id" : "atan2",
+  "name" : "atan2",
+  "patterns" : [
+    "atan2(x: number, y: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Similar to <a href='#atan'>atan</a>, but requires two coordinates and returns values from -180 to 180.\\nThe returned angle is measured counterclockwise in a standard mathematical coordinate system (x to the right, y to the top).",
+  "examples" : "atan2(0, 1) = 0\\natan2(10, 0) = 90\\natan2(-10, 5) = -63.4349"
+},
+{
+  "id" : "calcExperience",
+  "name" : "calcExperience",
+  "patterns" : [
+    "calcExperience(level: long)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev32",
+  "description" : "Calculates the total amount of experience needed to achieve given level from scratch in Minecraft.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "ceil",
+  "name" : "ceil",
+  "patterns" : [
+    "ceil(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Rounds a number up, i.e. returns the closest integer larger than or equal to the argument.",
+  "examples" : "ceil(2.34) = 3\\nceil(2) = 2\\nceil(2.99) = 3"
+},
+{
+  "id" : "ceiling",
+  "name" : "ceiling",
+  "patterns" : [
+    "ceiling(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Alias of <a href='#ceil'>ceil</a>.",
+  "examples" : "ceiling(2.34) = 3\\nceiling(2) = 2\\nceiling(2.99) = 3"
+},
+{
+  "id" : "clamp",
+  "name" : "clamp",
+  "patterns" : [
+    "clamp(values: numbers, min: number, max: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Clamps one or more values between two numbers.",
+  "examples" : "clamp(5, 0, 10) = 5\\nclamp(5.5, 0, 5) = 5\\nclamp(0.25, 0, 0.5) = 0.25\\nclamp(5, 7, 10) = 7\\nclamp((5, 0, 10, 9, 13), 7, 10) = (7, 7, 10, 9, 10)\\nset {_clamped::*} to clamp({_values::*}, 0, 10)"
+},
+{
+  "id" : "cos",
+  "name" : "cos",
+  "patterns" : [
+    "cos(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The cosine function. This is basically the <a href='#sin'>sine</a> shifted by 90°, i.e. <code>cos(a) = sin(a + 90°)</code>, for any number a. Uses degrees, not radians.",
+  "examples" : "cos(0) = 1\\ncos(90) = 0"
+},
+{
+  "id" : "date",
+  "name" : "date",
+  "patterns" : [
+    "date(year: number, month: number, day: number, hour: number = [[integer:0]], minute: number = [[integer:0]], second: number = [[integer:0]], millisecond: number = [[integer:0]], zone_offset: number = [[double:NaN]], dst_offset: number = [[double:NaN]])",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Creates a date from a year, month, and day, and optionally also from hour, minute, second and millisecond.\\nA time zone and DST offset can be specified as well (in minutes), if they are left out the server's time zone and DST offset are used (the created date will not retain this information).",
+  "examples" : "date(2014, 10, 1) # 0:00, 1st October 2014\\ndate(1990, 3, 5, 14, 30) # 14:30, 5th May 1990\\ndate(1999, 12, 31, 23, 59, 59, 999, -3*60, 0) # almost year 2000 in parts of Brazil (-3 hours offset, no DST)"
+},
+{
+  "id" : "exp",
+  "name" : "exp",
+  "patterns" : [
+    "exp(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The exponential function. You probably don't need this if you don't know what this is.",
+  "examples" : "exp(0) = 1\\nexp(1) = 2.7183"
+},
+{
+  "id" : "floor",
+  "name" : "floor",
+  "patterns" : [
+    "floor(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Rounds a number down, i.e. returns the closest integer smaller than or equal to the argument.",
+  "examples" : "floor(2.34) = 2\\nfloor(2) = 2\\nfloor(2.99) = 2"
+},
+{
+  "id" : "isNaN",
+  "name" : "isNaN",
+  "patterns" : [
+    "isNaN(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.8.0",
+  "description" : "Returns true if the input is NaN (not a number).",
+  "examples" : "isNaN(0) # false\\nisNaN(0/0) # true\\nisNaN(sqrt(-1)) # true"
+},
+{
+  "id" : "ln",
+  "name" : "ln",
+  "patterns" : [
+    "ln(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The natural logarithm. You probably don't need this if you don't know what this is.\\nReturns NaN (not a number) if the argument is negative.",
+  "examples" : "ln(1) = 0\\nln(exp(5)) = 5\\nln(2) = 0.6931"
+},
+{
+  "id" : "log",
+  "name" : "log",
+  "patterns" : [
+    "log(n: number, base: number = [[integer:10]])",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "A logarithm, with base 10 if none is specified. This is the inverse operation to exponentiation (for positive bases only), i.e. <code>log(base ^ exponent, base) = exponent</code> for any positive number 'base' and any number 'exponent'.\\nAnother useful equation is <code>base ^ log(a, base) = a</code> for any numbers 'base' and 'a'.\\nPlease note that due to how numbers are represented in computers, these equations do not hold for all numbers, as the computed values may slightly differ from the correct value.\\nReturns NaN (not a number) if any of the arguments are negative.",
+  "examples" : "log(100) = 2 # 10^2 = 100\\nlog(16, 2) = 4 # 2^4 = 16"
+},
+{
+  "id" : "max",
+  "name" : "max",
+  "patterns" : [
+    "max(ns: numbers)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Returns the maximum number from a list of numbers.",
+  "examples" : "max(1) = 1\\nmax(1, 2, 3, 4) = 4\\nmax({some list variable::*})"
+},
+{
+  "id" : "min",
+  "name" : "min",
+  "patterns" : [
+    "min(ns: numbers)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Returns the minimum number from a list of numbers.",
+  "examples" : "min(1) = 1\\nmin(1, 2, 3, 4) = 1\\nmin({some list variable::*})"
+},
+{
+  "id" : "mod",
+  "name" : "mod",
+  "patterns" : [
+    "mod(d: number, m: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Returns the modulo of the given arguments, i.e. the remainder of the division <code>d/m</code>, where d and m are the arguments of this function.\\nThe returned value is always positive. Returns NaN (not a number) if the second argument is zero.",
+  "examples" : "mod(3, 2) = 1\\nmod(256436, 100) = 36\\nmod(-1, 10) = 9"
+},
+{
+  "id" : "product",
+  "name" : "product",
+  "patterns" : [
+    "product(ns: numbers)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Calculates the product of a list of numbers.",
+  "examples" : "product(1) = 1\\nproduct(2, 3, 4) = 24\\nproduct({some list variable::*})\\nproduct(2, {_v::*}, and the player's y-coordinate)"
+},
+{
+  "id" : "rgb",
+  "name" : "rgb",
+  "patterns" : [
+    "rgb(red: long, green: long, blue: long)",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Returns a RGB color from the given red, green and blue parameters.",
+  "examples" : "dye player's leggings rgb(120, 30, 45)"
+},
+{
+  "id" : "round",
+  "name" : "round",
+  "patterns" : [
+    "round(n: number, d: number = [[integer:0]])",
+
+    "pattern_end"
+  ],
+  "since" : "2.2, 2.7 (decimal placement)",
+  "description" : "Rounds a number, i.e. returns the closest integer to the argument. Place a second argument to define the decimal placement.",
+  "examples" : "round(2.34) = 2\\nround(2) = 2\\nround(2.99) = 3\\nround(2.5) = 3"
+},
+{
+  "id" : "sin",
+  "name" : "sin",
+  "patterns" : [
+    "sin(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The sine function. It starts at 0° with a value of 0, goes to 1 at 90°, back to 0 at 180°, to -1 at 270° and then repeats every 360°. Uses degrees, not radians.",
+  "examples" : "sin(90) = 1\\nsin(60) = 0.866"
+},
+{
+  "id" : "sqrt",
+  "name" : "sqrt",
+  "patterns" : [
+    "sqrt(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The square root, which is the inverse operation to squaring a number (for positive numbers only). This is the same as <code>(argument) ^ (1/2)</code> – other roots can be calculated via <code>number ^ (1/root)</code>, e.g. <code>set {_l} to {_volume}^(1/3)</code>.\\nReturns NaN (not a number) if the argument is negative.",
+  "examples" : "sqrt(4) = 2\\nsqrt(2) = 1.4142\\nsqrt(-1) = NaN"
+},
+{
+  "id" : "sum",
+  "name" : "sum",
+  "patterns" : [
+    "sum(ns: numbers)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "Sums a list of numbers.",
+  "examples" : "sum(1) = 1\\nsum(2, 3, 4) = 9\\nsum({some list variable::*})\\nsum(2, {_v::*}, and the player's y-coordinate)"
+},
+{
+  "id" : "tan",
+  "name" : "tan",
+  "patterns" : [
+    "tan(n: number)",
+
+    "pattern_end"
+  ],
+  "since" : "2.2",
+  "description" : "The tangent function. This is basically <code><a href='#sin'>sin</a>(arg)/<a href='#cos'>cos</a>(arg)</code>. Uses degrees, not radians.",
+  "examples" : "tan(0) = 0\\ntan(45) = 1\\ntan(89.99) = 5729.5779"
+},
+
+    {"end" : true}
+  ]
+}
