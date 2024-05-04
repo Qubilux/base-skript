@@ -29,7 +29,7 @@ You can find the downloads for each version with their release notes in the [rel
 Two major feature updates are expected each year in January and July, with monthly patches occurring in between. For full details, please review our [release model](CLOCKWORK_RELEASE_MODEL.md).
 
 ## Documentation
-Documentation is available [here](https://docs.skriptlang.org/) for the
+Documentation is available [here](https://xypercode.github.io/base-skript/) for the
 latest version of Skript.
 
 ## Reporting Issues

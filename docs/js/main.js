@@ -1,5 +1,5 @@
 const siteVersion = "2.2.0"; // site version is different from skript version
-const ghAPI = "https://api.github.com/repos/SkriptLang/Skript";
+const ghAPI = "https://api.github.com/repos/XyperCode/base-skript";
 
 // ID Scroll
 const links = document.querySelectorAll("div.item-wrapper");

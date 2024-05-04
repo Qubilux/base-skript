@@ -111,8 +111,8 @@ skript command:
 			next page: <grey>page %s sur %s. Utilisez <gold>/skript update changes %s<gray> pour la page suivante (astuce : utilisez la touche flèche du haut)
 	info:
 		aliases: Les alias de Skript se trouvent ici : <aqua>https://github.com/SkriptLang/skript-aliases<reset> (en anglais)
-		documentation: La documentation de Skript se trouve ici : <aqua>https://docs.skriptlang.org/<reset> (en anglais)
-		tutorials: Les tutoriels de Skript se trouvent ici : <aqua>https://docs.skriptlang.org/tutorials<reset> (en anglais)
+		documentation: La documentation de Skript se trouve ici : <aqua>https://xypercode.github.io/base-skript/<reset> (en anglais)
+		tutorials: Les tutoriels de Skript se trouvent ici : <aqua>https://xypercode.github.io/base-skript/tutorials<reset> (en anglais)
 		version: Version de Skript : <aqua>%s
 		server: Version du serveur : <aqua>%s
 		addons: Addons Skript installés : <aqua>%s

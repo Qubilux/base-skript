@@ -111,8 +111,8 @@ skript command:
 			next page: <grey>(%s/%s) <gold>/skript update changes %s<gray> で次のページを表示します。 (ヒント: 上矢印キーを押すと良いかもしれません)
 	info:
 		aliases: Skriptのエイリアス一覧はこちらからご覧いただけます: <aqua>https://github.com/SkriptLang/skript-aliases
-		documentation: Skriptのドキュメントはこちらからご覧いただけます: <aqua>https://docs.skriptlang.org/
-		tutorials: Skriptのチュートリアルはこちらからご覧いただけます: <aqua>https://docs.skriptlang.org/tutorials
+		documentation: Skriptのドキュメントはこちらからご覧いただけます: <aqua>https://xypercode.github.io/base-skript/
+		tutorials: Skriptのチュートリアルはこちらからご覧いただけます: <aqua>https://xypercode.github.io/base-skript/tutorials
 		version: Skriptのバージョン: <aqua>%s
 		server: サーバーのバージョン: <aqua>%s
 		addons: インストール済みのSkriptアドオン: <aqua>%s

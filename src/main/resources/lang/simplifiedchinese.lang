@@ -111,8 +111,8 @@ skript command:
 			next page: <grey>第%s/%s页。使用<gold>/skript update changes %s<gray>查看下一页（提示：使用上箭头键）
 	info:
 		aliases: Skript的alias可以在这里找到：<aqua>https://github.com/SkriptLang/skript-aliases
-		documentation: Skript的文档可以在这里找到：<aqua>https://docs.skriptlang.org/
-		tutorials: Skript的教程可以在这里找到：<aqua>https://docs.skriptlang.org/tutorials
+		documentation: Skript的文档可以在这里找到：<aqua>https://xypercode.github.io/base-skript/
+		tutorials: Skript的教程可以在这里找到：<aqua>https://xypercode.github.io/base-skript/tutorials
 		version: Skript版本：<aqua>%s
 		server: 服务器版本：<aqua>%s
 		addons: 已安装的Skript插件：<aqua>%s

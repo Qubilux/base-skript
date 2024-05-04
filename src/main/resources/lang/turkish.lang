@@ -109,8 +109,8 @@ skript command:
 			next page: <grey>sayfa %s / %s. Bir sonraki sayfa için <gold>/skript update changes %s<gray> kullan. (ipucu: yukarı ok tuşunu kullan)
 	info:
 		aliases: Skript alias'ları: <aqua>https://github.com/SkriptLang/skript-aliases
-		documentation: Skript dökümantasyonları: <aqua>https://docs.skriptlang.org/
-		tutorials: Skript dersleri: <aqua>https://docs.skriptlang.org/tutorials
+		documentation: Skript dökümantasyonları: <aqua>https://xypercode.github.io/base-skript/
+		tutorials: Skript dersleri: <aqua>https://xypercode.github.io/base-skript/tutorials
 		version: Skript sürümleri: <aqua>%s
 		server: Sunucu sürümü: <aqua>%s
 		addons: Skript addon'ları: <aqua>%s
