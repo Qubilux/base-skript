@@ -228,3 +228,6 @@ test_runners/
 **/.DS_Store
 /run/
 /.skript/
+/logs/
+
+test_results.json*
