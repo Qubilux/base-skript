@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class ChoicePatternElement extends PatternElement {
 
-	private final List<PatternElement> patternElements = new ArrayList<>();
+	private final List<PatternElement> patternElements = new ArrayList<PatternElement>();
 
 	public void add(PatternElement patternElement) {
 		patternElements.add(patternElement);

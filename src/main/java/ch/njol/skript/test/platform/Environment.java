@@ -18,13 +18,11 @@
  */
 package ch.njol.skript.test.platform;
 
+import ch.njol.skript.test.utils.TestResults;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import ch.njol.skript.test.utils.TestResults;
-
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;
@@ -38,12 +36,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Test environment information.
@@ -208,7 +202,7 @@ public class Environment {
 			Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
 		}
 
-		List<Resource> downloads = new ArrayList<>();
+		List<Resource> downloads = new ArrayList<Resource>();
 		if (this.downloads != null)
 			downloads.addAll(this.downloads);
 		if (this.paperDownloads != null)
@@ -233,7 +227,7 @@ public class Environment {
 		Path env = runnerRoot.resolve(name);
 		Path resultsPath = env.resolve("test_results.json");
 		Files.deleteIfExists(resultsPath);
-		List<String> args = new ArrayList<>();
+		List<String> args = new ArrayList<String>();
 		args.add(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java");
 		args.add("-ea");
 		args.add("-Dskript.testing.enabled=true");
@@ -250,7 +244,13 @@ public class Environment {
 		if (debug)
 			args.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000");
 		args.addAll(jvmArgs);
-		args.addAll(Arrays.asList(commandLine));
+		args.addAll(Arrays.asList(commandLine).stream().filter(Objects::nonNull).map(s -> {
+			try {
+				return s.formatted(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+		}).toList());
 
 		Process process = new ProcessBuilder(args)
 				.directory(env.toFile())

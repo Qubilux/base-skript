@@ -23,9 +23,6 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
@@ -33,12 +30,7 @@ import ch.njol.util.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Static methods to work with functions.
@@ -59,7 +51,7 @@ public abstract class Functions {
 	/**
 	 * Function namespaces.
 	 */
-	private static final Map<Namespace.Key, Namespace> namespaces = new HashMap<>();
+	private static final Map<Namespace.Key, Namespace> namespaces = new HashMap<Namespace.Key, Namespace>();
 
 	/**
 	 * Namespace of Java functions.
@@ -74,7 +66,7 @@ public abstract class Functions {
 	/**
 	 * Namespaces of functions that are globally available.
 	 */
-	private static final Map<String, Namespace> globalFunctions = new HashMap<>();
+	private static final Map<String, Namespace> globalFunctions = new HashMap<String, Namespace>();
 
 	static boolean callFunctionEvents = false;
 
@@ -128,8 +120,6 @@ public abstract class Functions {
 
 		return f;
 	}
-
-
 	/**
 	 * Parses the signature from the given arguments.
 	 * @param script Script file name (<b>might</b> be used for some checks).
@@ -162,7 +152,7 @@ public abstract class Functions {
 			if (returnClass == null)
 				return signError("Cannot recognise the type '" + returnType + "'");
 		}
-		return new Signature<>(script, name, parameters.toArray(new Parameter[0]), local, (ClassInfo<Object>) returnClass, singleReturn, null);
+		return new Signature<Object>(script, name, parameters.toArray(new Parameter[0]), local, (ClassInfo<Object>) returnClass, singleReturn, null);
 	}
 
 	/**
@@ -361,7 +351,7 @@ public abstract class Functions {
 		return namespaces.get(new Namespace.Key(Namespace.Origin.SCRIPT, script));
 	}
 
-	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<>();
+	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<FunctionReference<?>>();
 
 	/**
 	 * Remember to call {@link #validateFunctions()} after calling this

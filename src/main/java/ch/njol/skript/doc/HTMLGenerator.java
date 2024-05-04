@@ -21,13 +21,7 @@ package ch.njol.skript.doc;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.EffectSection;
-import ch.njol.skript.lang.ExpressionInfo;
-import ch.njol.skript.lang.Section;
-import ch.njol.skript.lang.SkriptEventInfo;
-import ch.njol.skript.lang.SyntaxElementInfo;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
@@ -45,12 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -111,7 +100,7 @@ public class HTMLGenerator {
 	 * @return The sorted (by name) iterator.
 	 */
 	private static <T> Iterator<SyntaxElementInfo<? extends T>> sortedAnnotatedIterator(Iterator<SyntaxElementInfo<? extends T>> it) {
-		List<SyntaxElementInfo<? extends T>> list = new ArrayList<>();
+		List<SyntaxElementInfo<? extends T>> list = new ArrayList<SyntaxElementInfo<? extends T>>();
 		while (it.hasNext()) {
 			SyntaxElementInfo<? extends T> item = it.next();
 			// Filter unnamed expressions (mostly caused by addons) to avoid throwing exceptions and stop the generation process
@@ -342,7 +331,7 @@ public class HTMLGenerator {
 					}
 				}
 				if (genType.equals("events") || isDocsPage) {
-					List<SkriptEventInfo<?>> events = new ArrayList<>(Skript.getEvents());
+					List<SkriptEventInfo<?>> events = new ArrayList<SkriptEventInfo<?>>(Skript.getEvents());
 					events.sort(eventComparator);
 					for (SkriptEventInfo<?> info : events) {
 						assert info != null;
@@ -352,7 +341,7 @@ public class HTMLGenerator {
 					}
 				}
 				if (genType.equals("classes") || isDocsPage) {
-					List<ClassInfo<?>> classes = new ArrayList<>(Classes.getClassInfos());
+					List<ClassInfo<?>> classes = new ArrayList<ClassInfo<?>>(Classes.getClassInfos());
 					classes.sort(classInfoComparator);
 					for (ClassInfo<?> info : classes) {
 						if (!info.hasDocs())
@@ -362,7 +351,7 @@ public class HTMLGenerator {
 					}
 				}
 				if (genType.equals("functions") || isDocsPage) {
-					List<JavaFunction<?>> functions = new ArrayList<>(Functions.getJavaFunctions());
+					List<JavaFunction<?>> functions = new ArrayList<JavaFunction<?>>(Functions.getJavaFunctions());
 					functions.sort(functionComparator);
 					for (JavaFunction<?> info : functions) {
 						assert info != null;
@@ -517,7 +506,7 @@ public class HTMLGenerator {
 		// Structure - EntryData
 		if (info instanceof StructureInfo) {
 			EntryValidator entryValidator = ((StructureInfo<?>) info).entryValidator;
-			List<EntryData<?>> entryDataList = new ArrayList<>();
+			List<EntryData<?>> entryDataList = new ArrayList<EntryData<?>>();
 			if (entryValidator != null)
 				entryDataList.addAll(entryValidator.getEntryData());
 

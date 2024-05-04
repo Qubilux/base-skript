@@ -18,12 +18,10 @@
  */
 package ch.njol.util;
 
+import javax.annotation.Nullable;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
-
-import javax.annotation.Nullable;
-
-
 
 /**
  * A string which is compared ignoring it's case.
@@ -32,7 +30,8 @@ import javax.annotation.Nullable;
  */
 public class CaseInsensitiveString implements Serializable, Comparable<CharSequence>, CharSequence {
 	
-	private static final long serialVersionUID = 1205018864604639962L;
+	@Serial
+    private static final long serialVersionUID = 1205018864604639962L;
 	
 	private final String s;
 	private final String lc;

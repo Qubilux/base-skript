@@ -18,15 +18,14 @@
  */
 package ch.njol.util.coll;
 
+import ch.njol.util.coll.iterator.ReversedListIterator;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.util.coll.iterator.ReversedListIterator;
 
 /**
  * @author Peter Güttinger
@@ -57,17 +56,17 @@ public class ReversedListView<T> implements List<T> {
 	
 	@Override
 	public Iterator<T> iterator() {
-		return new ReversedListIterator<>(list);
+		return new ReversedListIterator<T>(list);
 	}
 	
 	@Override
 	public ListIterator<T> listIterator() {
-		return new ReversedListIterator<>(list);
+		return new ReversedListIterator<T>(list);
 	}
 	
 	@Override
 	public ListIterator<T> listIterator(final int index) {
-		return new ReversedListIterator<>(list, index);
+		return new ReversedListIterator<T>(list, index);
 	}
 	
 	@Override
@@ -183,7 +182,7 @@ public class ReversedListView<T> implements List<T> {
 		final List<T> l = list.subList(size() - toIndex, size() - fromIndex);
 		if (l == null)
 			throw new UnsupportedOperationException("" + list);
-		return new ReversedListView<>(l);
+		return new ReversedListView<T>(l);
 	}
 	
 	@Override

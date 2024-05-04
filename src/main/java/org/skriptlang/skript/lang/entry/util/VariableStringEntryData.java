@@ -19,12 +19,9 @@
 package org.skriptlang.skript.lang.entry.util;
 
 import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.parser.ParserInstance;
-import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 import ch.njol.skript.util.StringMode;
-import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 
 /**
  * A type of {@link KeyValueEntryData} designed to parse its value as a {@link VariableString}.

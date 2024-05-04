@@ -18,27 +18,26 @@
  */
 package ch.njol.skript.log;
 
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.LogHandler.LogResult;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.CommandSender;
+import io.github.ultreon.skript.ConsoleCommandSender;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Collection;
 /**
  * @author Peter Güttinger
  */
 public abstract class SkriptLogger {
 	
 	@SuppressWarnings("null")
-	public final static Level SEVERE = Level.SEVERE;
+	public final static Level FATAL = Level.FATAL;
 	
 	private static Verbosity verbosity = Verbosity.NORMAL;
 	
@@ -48,7 +47,7 @@ public abstract class SkriptLogger {
 	public final static Level DEBUG = Level.INFO; // CraftBukkit 1.7+ uses the worst logging library I've ever encountered
 
 	@SuppressWarnings("null")
-	public final static Logger LOGGER = Bukkit.getServer() != null ? Bukkit.getLogger() : Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // cannot use Bukkit in tests
+	public final static Logger LOGGER = LogManager.getLogger("Skript"); // cannot use Bukkit in tests
 	
 	private static HandlerList getHandlers() {
 		return ParserInstance.get().getHandlers();
@@ -106,7 +105,7 @@ public abstract class SkriptLogger {
 			int i = 1;
 			while (!h.equals(handlers.remove()))
 				i++;
-			LOGGER.severe("[Skript] " + i + " log handler" + (i == 1 ? " was" : "s were") + " not stopped properly!" +
+			LOGGER.fatal("[Skript] " + i + " log handler" + (i == 1 ? " was" : "s were") + " not stopped properly!" +
 				" (at " + getCaller() + ") " +
 				"[if you're a server admin and you see this message please file a bug report at https://github.com/SkriptLang/skript/issues if there is not already one]");
 		}
@@ -183,7 +182,7 @@ public abstract class SkriptLogger {
 			}
 		}
 		entry.logged();
-		sendFormatted(Bukkit.getConsoleSender(), "[Skript] " + entry.toFormattedString());
+		sendFormatted(BaseSkript.getConsoleSender(), "[Skript] " + entry.toFormattedString());
 	}
 	
 	public static void logAll(Collection<LogEntry> entries) {
@@ -210,7 +209,7 @@ public abstract class SkriptLogger {
 	public static void sendFormatted(CommandSender commandSender, String message) {
 		if (commandSender instanceof ConsoleCommandSender) {
 			for (String s : message.split("\n"))
-				Bukkit.getConsoleSender().sendMessage(s);
+				BaseSkript.getConsoleSender().sendMessage(s);
 		} else {
 			commandSender.sendMessage(message);
 		}

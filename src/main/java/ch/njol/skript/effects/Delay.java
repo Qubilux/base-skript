@@ -23,19 +23,16 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -55,12 +52,11 @@ public class Delay extends Effect {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}
 
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	protected Expression<Timespan> duration;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
 
 		duration = (Expression<Timespan>) exprs[0];
@@ -76,7 +72,7 @@ public class Delay extends Effect {
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(@NotNull Event event) {
 		debug(event, true);
 		long start = Skript.debug() ? System.nanoTime() : 0;
 		TriggerItem next = getNext();
@@ -90,7 +86,7 @@ public class Delay extends Effect {
 			// Back up local variables
 			Object localVars = Variables.removeLocals(event);
 			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
+			BaseSkript.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
 				Skript.debug(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1_000_000_000. + "s");
 
 				// Re-set local variables
@@ -114,17 +110,17 @@ public class Delay extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void execute(@NotNull Event event) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "wait for " + duration.toString(event, debug) + (event == null ? "" : "...");
 	}
 
 	private static final Set<Event> DELAYED =
-		Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+		Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<Event, Boolean>()));
 
 	/**
 	 * The main method for checking if the execution of {@link TriggerItem}s has been delayed.

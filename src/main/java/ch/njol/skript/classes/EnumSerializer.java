@@ -18,12 +18,11 @@
  */
 package ch.njol.skript.classes;
 
-import java.io.StreamCorruptedException;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.yggdrasil.ClassResolver;
 import ch.njol.yggdrasil.Fields;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.StreamCorruptedException;
 
 /**
  * Mainly kept for backwards compatibility, but also serves as {@link ClassResolver} for enums.
@@ -55,7 +54,6 @@ public class EnumSerializer<T extends Enum<T>> extends Serializer<T> {
 		return false;
 	}
 	
-	@Override
 	public boolean canBeInstantiated() {
 		assert false;
 		return false;

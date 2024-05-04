@@ -23,15 +23,14 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.events.EvtClick;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.structures.StructEvent.EventData;
-import org.skriptlang.skript.lang.script.Script;
-import org.skriptlang.skript.lang.entry.EntryContainer;
-import org.skriptlang.skript.lang.structure.Structure;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
+import ch.njol.skript.structures.StructEvent;
+import io.github.ultreon.skript.event.Event;
+import io.github.ultreon.skript.event.EventPriority;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.entry.EntryContainer;
+import org.skriptlang.skript.lang.script.Script;
+import org.skriptlang.skript.lang.structure.Structure;
 
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +38,6 @@ import java.util.Locale;
 /**
  * A SkriptEvent is like a condition. It is called when any of the registered events occurs.
  * An instance of this class should then check whether the event applies
- * (e.g. the rightclick event is included in the PlayerInteractEvent which also includes lefclicks, thus the SkriptEvent {@link EvtClick} checks whether it was a rightclick or
  * not).<br/>
  * It is also needed if the event has parameters.
  *
@@ -65,7 +63,7 @@ public abstract class SkriptEvent extends Structure {
 	public final boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, EntryContainer entryContainer) {
 		this.expr = parseResult.expr;
 
-		EventPriority priority = getParser().getData(EventData.class).getPriority();
+		EventPriority priority = getParser().getData(StructEvent.EventData.class).getPriority();
 		if (priority != null && !isEventPrioritySupported()) {
 			Skript.error("This event doesn't support event priority");
 			return false;
@@ -121,6 +119,7 @@ public abstract class SkriptEvent extends Structure {
 			trigger.setLineNumber(lineNumber); // Set line number for debugging
 			trigger.setDebugLabel(script + ": line " + lineNumber);
 		} finally {
+			Skript.warning("Failed to load event: " + expr);
 			getParser().deleteCurrentEvent();
 		}
 

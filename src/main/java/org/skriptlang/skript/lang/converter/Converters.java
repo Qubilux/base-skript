@@ -25,12 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Converters are used to provide Skript with specific instructions for converting an object to a different type.
@@ -43,7 +38,7 @@ public final class Converters {
 	/**
 	 * A List containing information for all registered converters.
 	 */
-	private static final List<ConverterInfo<?, ?>> CONVERTERS = new ArrayList<>(50);
+	private static final List<ConverterInfo<?, ?>> CONVERTERS = new ArrayList<ConverterInfo<?, ?>>(50);
 
 	/**
 	 * @return An unmodifiable list containing all registered {@link ConverterInfo}s.
@@ -62,7 +57,7 @@ public final class Converters {
 	 * Some pairs may point to a null value, indicating that no converter exists between the two types.
 	 * This is useful for skipping complex lookups that may require chaining.
 	 */
-	private static final Map<Pair<Class<?>, Class<?>>, ConverterInfo<?, ?>> QUICK_ACCESS_CONVERTERS = new HashMap<>(50);
+	private static final Map<Pair<Class<?>, Class<?>>, ConverterInfo<?, ?>> QUICK_ACCESS_CONVERTERS = new HashMap<Pair<Class<?>, Class<?>>, ConverterInfo<?, ?>>(50);
 
 	/**
 	 * Registers a new Converter with Skript's collection of Converters.
@@ -84,7 +79,7 @@ public final class Converters {
 	public static <F, T> void registerConverter(Class<F> fromType, Class<T> toType, Converter<F, T> converter, int flags) {
 		Skript.checkAcceptRegistrations();
 
-		ConverterInfo<F, T> info = new ConverterInfo<>(fromType, toType, converter, flags);
+		ConverterInfo<F, T> info = new ConverterInfo<F, T>(fromType, toType, converter, flags);
 
 		synchronized (CONVERTERS) {
 			if (exactConverterExists_i(fromType, toType)) {
@@ -126,10 +121,10 @@ public final class Converters {
 						ConverterInfo<F, M> info1 = (ConverterInfo<F, M>) unknownInfo1;
 						ConverterInfo<M, T> info2 = (ConverterInfo<M, T>) unknownInfo2;
 
-						CONVERTERS.add(new ConverterInfo<>(
+						CONVERTERS.add(new ConverterInfo<F, T>(
 							info1.getFrom(),
 							info2.getTo(),
-							new ChainedConverter<>(info1, info2),
+							new ChainedConverter<F, M, T>(info1, info2),
 							info1.getFlags() | info2.getFlags()
 						));
 					}
@@ -146,10 +141,10 @@ public final class Converters {
 						ConverterInfo<M, T> info1 = (ConverterInfo<M, T>) unknownInfo1;
 						ConverterInfo<F, M> info2 = (ConverterInfo<F, M>) unknownInfo2;
 
-						CONVERTERS.add(new ConverterInfo<>(
+						CONVERTERS.add(new ConverterInfo<F, T>(
 							info2.getFrom(),
 							info1.getTo(),
-							new ChainedConverter<>(info2, info1),
+							new ChainedConverter<F, M, T>(info2, info1),
 							info2.getFlags() | info1.getFlags()
 						));
 					}
@@ -244,7 +239,7 @@ public final class Converters {
 	public static <F, T> ConverterInfo<F, T> getConverterInfo(Class<F> fromType, Class<T> toType) {
 		assertIsDoneLoading();
 
-		Pair<Class<?>, Class<?>> pair = new Pair<>(fromType, toType);
+		Pair<Class<?>, Class<?>> pair = new Pair<Class<?>, Class<?>>(fromType, toType);
 		ConverterInfo<F, T> converter;
 
 		synchronized (QUICK_ACCESS_CONVERTERS) {
@@ -297,7 +292,7 @@ public final class Converters {
 		// We don't want to create "maybe" converters for 'Object -> X' conversions
 		// Instead, we should just try and convert during runtime when we have a better idea of the fromType
 		if (fromType == Object.class) {
-			return new ConverterInfo<>(
+			return new ConverterInfo<F, T>(
 				fromType, toType, fromObject -> Converters.convert(fromObject, toType), Converter.NO_LEFT_CHAINING
 			);
 		}
@@ -309,7 +304,7 @@ public final class Converters {
 
 				// 'to' doesn't exactly match and needs to be filtered
 				// Basically, this converter might convert 'F' into something that's shares a parent with 'T'
-				return new ConverterInfo<>(fromType, toType, fromObject -> {
+				return new ConverterInfo<F, T>(fromType, toType, fromObject -> {
 					Object converted = info.getConverter().convert(fromObject);
 					if (toType.isInstance(converted)) {
 						return (T) converted;
@@ -322,7 +317,7 @@ public final class Converters {
 
 				// 'from' doesn't exactly match and needs to be filtered
 				// Basically, this converter will only convert certain 'F' objects
-				return new ConverterInfo<>(fromType, toType, fromObject -> {
+				return new ConverterInfo<F, T>(fromType, toType, fromObject -> {
 					if (!info.getFrom().isInstance(fromObject)) {
 						return null;
 					}
@@ -340,7 +335,7 @@ public final class Converters {
 				// 'from' and 'to' both don't exactly match and need to be filtered
 				// Basically, this converter will only convert certain 'F' objects
 				//   and some conversion results will only share a parent with 'T'
-				return new ConverterInfo<>(fromType, toType, fromObject -> {
+				return new ConverterInfo<F, T>(fromType, toType, fromObject -> {
 					if (!info.getFrom().isInstance(fromObject)) {
 						return null;
 					}
@@ -353,8 +348,6 @@ public final class Converters {
 
 			}
 		}
-
-
 		// No converter available
 		return null;
 	}
@@ -435,7 +428,7 @@ public final class Converters {
 			return (To[]) from;
 		}
 
-		List<To> converted = new ArrayList<>(from.length);
+		List<To> converted = new ArrayList<To>(from.length);
 		for (Object fromSingle : from) {
 			To convertedSingle = convert(fromSingle, toType);
 			if (convertedSingle != null) {
@@ -471,7 +464,7 @@ public final class Converters {
 			}
 		}
 
-		List<To> converted = new ArrayList<>(from.length);
+		List<To> converted = new ArrayList<To>(from.length);
 		for (Object fromSingle : from) {
 			To convertedSingle = convert(fromSingle, toTypes);
 			if (convertedSingle != null) {

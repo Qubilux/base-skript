@@ -18,13 +18,12 @@
  */
 package ch.njol.skript.test.runner;
 
+import ch.njol.skript.test.utils.TestResults;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.test.utils.TestResults;
 
 /**
  * Static utilities for Skript's 'test mode'.

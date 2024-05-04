@@ -18,6 +18,7 @@
  */
 package org.skriptlang.skript.lang.entry;
 
+import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import org.eclipse.jdt.annotation.Nullable;
@@ -35,7 +36,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * From the above, it can be seen that EntryData is found at the level immediately after a {@link SectionNode}.
  * It can also be seen that entries come in many forms.
  * In fact, all entries are based upon a {@link Node}.
- * This could be something like a {@link ch.njol.skript.config.SimpleNode} or {@link SectionNode},
+ * This could be something like a {@link SimpleNode} or {@link SectionNode},
  *  but it may also be something totally different.
  * Every entry data class must define a validator-type method for {@link Node}s, along with
  *  a method of obtaining a value from that {@link Node}.

@@ -18,12 +18,6 @@
  */
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-import java.util.Locale;
-
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
@@ -32,6 +26,11 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.YggdrasilSerializable;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { // REMIND unit
 
@@ -45,15 +44,12 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	private static final Noun m_year = new Noun("time.year");
 	static final Noun[] names = {m_tick, m_second, m_minute, m_hour, m_day, m_week, m_month, m_year};
 	static final long[] times = {50L, 1000L, 1000L * 60L, 1000L * 60L * 60L, 1000L * 60L * 60L * 24L,  1000L * 60L * 60L * 24L * 7L,  1000L * 60L * 60L * 24L * 30L,  1000L * 60L * 60L * 24L * 365L};
-	static final HashMap<String, Long> parseValues = new HashMap<>();
+	static final HashMap<String, Long> parseValues = new HashMap<String, Long>();
 	static {
-		Language.addListener(new LanguageChangeListener() {
-			@Override
-			public void onLanguageChange() {
-				for (int i = 0; i < names.length; i++) {
-					parseValues.put(names[i].getSingular().toLowerCase(Locale.ENGLISH), times[i]);
-					parseValues.put(names[i].getPlural().toLowerCase(Locale.ENGLISH), times[i]);
-				}
+		Language.addListener(() -> {
+			for (int i = 0; i < names.length; i++) {
+				parseValues.put(names[i].getSingular().toLowerCase(Locale.ENGLISH), times[i]);
+				parseValues.put(names[i].getPlural().toLowerCase(Locale.ENGLISH), times[i]);
 			}
 		});
 	}
@@ -193,10 +189,10 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	
 	@SuppressWarnings("unchecked")
 	static final NonNullPair<Noun, Long>[] simpleValues = new NonNullPair[] {
-			new NonNullPair<>(m_day,  1000L * 60 * 60 * 24),
-			new NonNullPair<>(m_hour, 1000L * 60 * 60),
-			new NonNullPair<>(m_minute, 1000L * 60),
-			new NonNullPair<>(m_second, 1000L)
+			new NonNullPair<Noun, Long>(m_day,  1000L * 60 * 60 * 24),
+			new NonNullPair<Noun, Long>(m_hour, 1000L * 60 * 60),
+			new NonNullPair<Noun, Long>(m_minute, 1000L * 60),
+			new NonNullPair<Noun, Long>(m_second, 1000L)
 	};
 	
 	public static String toString(final long millis) {

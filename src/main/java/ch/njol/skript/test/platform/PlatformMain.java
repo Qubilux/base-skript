@@ -24,23 +24,14 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +39,7 @@ import java.util.stream.Collectors;
  * multiple testing environments.
  */
 public class PlatformMain {
-	
+
 	public static void main(String... args) throws IOException, InterruptedException {
 		System.out.println("Initializing Skript test platform...");
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -90,10 +81,10 @@ public class PlatformMain {
 		}
 		System.out.println("Test environments: " + String.join(", ",
 				envs.stream().map(Environment::getName).collect(Collectors.toList())));
-		
-		Set<String> allTests = new HashSet<>();
-		Map<String, List<NonNullPair<Environment, String>>> failures = new HashMap<>();
-		
+
+		Set<String> allTests = new HashSet<String>();
+		Map<String, List<NonNullPair<Environment, String>>> failures = new HashMap<String, List<NonNullPair<Environment, String>>>();
+
 		boolean docsFailed = false;
 		// Run tests and collect the results
 		envs.sort(Comparator.comparing(Environment::getName));
@@ -111,7 +102,7 @@ public class PlatformMain {
 				System.exit(3);
 				return;
 			}
-			
+
 			// Collect results
 			docsFailed = results.docsFailed();
 			allTests.addAll(results.getSucceeded());
@@ -119,8 +110,8 @@ public class PlatformMain {
 			for (Map.Entry<String, String> fail : results.getFailed().entrySet()) {
 				String error = fail.getValue();
 				assert error != null;
-				failures.computeIfAbsent(fail.getKey(), (k) -> new ArrayList<>())
-						.add(new NonNullPair<>(env, error));
+				failures.computeIfAbsent(fail.getKey(), (k) -> new ArrayList<NonNullPair<Environment, String>>())
+						.add(new NonNullPair<Environment, String>(env, error));
 			}
 		}
 
@@ -139,7 +130,7 @@ public class PlatformMain {
 		// Sort results in alphabetical order
 		List<String> succeeded = allTests.stream().filter(name -> !failures.containsKey(name)).collect(Collectors.toList());
 		Collections.sort(succeeded);
-		List<String> failNames = new ArrayList<>(failures.keySet());
+		List<String> failNames = new ArrayList<String>(failures.keySet());
 		Collections.sort(failNames);
 
 		// All succeeded tests in a single line
@@ -158,12 +149,12 @@ public class PlatformMain {
 				}
 			}
 			output.append(String.format("%n%n%s", StringUtils.repeat("-", 60)));
-			System.err.print(output.toString());
+			System.err.print(output);
 			System.exit(failNames.size()); // Error code to indicate how many tests failed.
 			return;
 		}
 		output.append(String.format("%n%n%s", StringUtils.repeat("-", 60)));
-		System.out.print(output.toString());
+		System.out.print(output);
 	}
 
 }

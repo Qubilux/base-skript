@@ -19,8 +19,8 @@
 package ch.njol.util;
 
 import ch.njol.skript.Skript;
-import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
 import java.util.Arrays;
 

@@ -26,6 +26,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import io.github.ultreon.skript.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -34,12 +36,8 @@ import ch.njol.util.Kleenean;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.bukkit.event.Event;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -69,7 +67,7 @@ public class ExprScripts extends SimpleExpression<String> {
 	private boolean noPaths;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
 		includeEnabled = matchedPattern <= 1;
 		includeDisabled = matchedPattern != 1;
 		noPaths = parseResult.mark == 1;
@@ -77,8 +75,8 @@ public class ExprScripts extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event event) {
-		List<Path> scripts = new ArrayList<>();
+	protected String @NotNull [] get(@NotNull Event event) {
+		List<Path> scripts = new ArrayList<Path>();
 		if (includeEnabled) {
 			for (Script script : ScriptLoader.getLoadedScripts())
 				scripts.add(script.getConfig().getPath());
@@ -108,12 +106,12 @@ public class ExprScripts extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		return "scripts";
 	}
 

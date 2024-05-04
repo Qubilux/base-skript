@@ -18,20 +18,13 @@
  */
 package ch.njol.skript.test.runner;
 
-import ch.njol.skript.doc.NoDoc;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.doc.NoDoc;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @NoDoc
 public class EvtTestCase extends SkriptEvent {
@@ -42,20 +35,6 @@ public class EvtTestCase extends SkriptEvent {
 					.description("Contents represent one test case.")
 					.examples("")
 					.since("2.5");
-			EventValues.registerEventValue(SkriptTestEvent.class, Block.class, new Getter<Block, SkriptTestEvent>() {
-				@Override
-				@Nullable
-				public Block get(SkriptTestEvent ignored) {
-					return SkriptJUnitTest.getBlock();
-				}
-			}, EventValues.TIME_NOW);
-			EventValues.registerEventValue(SkriptTestEvent.class, Location.class, new Getter<Location, SkriptTestEvent>() {
-				@Override
-				@Nullable
-				public Location get(SkriptTestEvent ignored) {
-					return SkriptJUnitTest.getTestLocation();
-				}
-			}, EventValues.TIME_NOW);
 		}
 	}
 

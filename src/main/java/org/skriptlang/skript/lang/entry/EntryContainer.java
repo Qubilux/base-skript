@@ -54,7 +54,7 @@ public class EntryContainer {
 	 * @return An EntryContainer where <i>all</i> nodes will be {@link EntryContainer#getUnhandledNodes()}.
 	 */
 	public static EntryContainer withoutValidator(SectionNode source) {
-		List<Node> unhandledNodes = new ArrayList<>();
+		List<Node> unhandledNodes = new ArrayList<Node>();
 		for (Node node : source) // All nodes are unhandled
 			unhandledNodes.add(node);
 		return new EntryContainer(source, null, null, unhandledNodes);

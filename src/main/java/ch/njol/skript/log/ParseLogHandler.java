@@ -18,20 +18,20 @@
  */
 package ch.njol.skript.log;
 
+import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class ParseLogHandler extends LogHandler {
 	
 	@Nullable
 	private LogEntry error = null;
 	
-	private final List<LogEntry> log = new ArrayList<>();
+	private final List<LogEntry> log = new ArrayList<LogEntry>();
 
 	/**
 	 * Internal method for creating a backup of this log.
@@ -58,7 +58,7 @@ public class ParseLogHandler extends LogHandler {
 	
 	@Override
 	public LogResult log(LogEntry entry) {
-		if (entry.getLevel().intValue() >= Level.SEVERE.intValue()
+		if (entry.getLevel().intLevel() >= Level.FATAL.intLevel()
 				&& (error == null || entry.getQuality() > error.getQuality())) {
 			error = entry;
 		}
@@ -76,7 +76,7 @@ public class ParseLogHandler extends LogHandler {
 	}
 	
 	public void error(String error, ErrorQuality quality) {
-		log(new LogEntry(SkriptLogger.SEVERE, quality, error));
+		log(new LogEntry(SkriptLogger.FATAL, quality, error));
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class ParseLogHandler extends LogHandler {
 		printedErrorOrLog = true;
 		stop();
 		for (LogEntry logEntry : log)
-			if (includeErrors || logEntry.getLevel().intValue() < Level.SEVERE.intValue())
+			if (includeErrors || logEntry.getLevel().intLevel() < Level.FATAL.intLevel())
 				SkriptLogger.log(logEntry);
 		if (error != null)
 			error.discarded("not printed");
@@ -127,7 +127,7 @@ public class ParseLogHandler extends LogHandler {
 		if (error != null)
 			SkriptLogger.log(error);
 		else if (def != null)
-			SkriptLogger.log(new LogEntry(SkriptLogger.SEVERE, ErrorQuality.SEMANTIC_ERROR, def));
+			SkriptLogger.log(new LogEntry(SkriptLogger.FATAL, ErrorQuality.SEMANTIC_ERROR, def));
 		for (LogEntry e : log)
 			e.discarded("not printed");
 	}
@@ -139,7 +139,7 @@ public class ParseLogHandler extends LogHandler {
 		if (error != null && error.quality >= quality.quality())
 			SkriptLogger.log(error);
 		else
-			SkriptLogger.log(new LogEntry(SkriptLogger.SEVERE, quality, def));
+			SkriptLogger.log(new LogEntry(SkriptLogger.FATAL, quality, def));
 		for (LogEntry e : log)
 			e.discarded("not printed");
 	}

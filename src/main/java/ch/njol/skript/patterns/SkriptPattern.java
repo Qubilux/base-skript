@@ -73,7 +73,7 @@ public class SkriptPattern {
 	}
 
 	public static String[] getKeywords(PatternElement first) {
-		List<String> keywords = new ArrayList<>();
+		List<String> keywords = new ArrayList<String>();
 		PatternElement next = first;
 		while (next != null) {
 			if (next instanceof LiteralPatternElement) {
@@ -160,11 +160,11 @@ public class SkriptPattern {
 	public <T extends PatternElement> List<T> getElements(Class<T> type) {
 		if (type == TypePatternElement.class) {
 			if (types == null)
-				types = ImmutableList.copyOf(getElements(TypePatternElement.class, first, new ArrayList<>()));
+				types = ImmutableList.copyOf(getElements(TypePatternElement.class, first, new ArrayList<TypePatternElement>()));
 			//noinspection unchecked - checked with type == TypePatternElement
 			return (List<T>) types;
 		}
-		return getElements(type, first, new ArrayList<>());
+		return getElements(type, first, new ArrayList<T>());
 	}
 
 	/**

@@ -27,8 +27,9 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 
 @Name("Locally Suppress Warning")
@@ -50,7 +51,7 @@ public class EffSuppressWarnings extends Effect {
 	private int mark = 0;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parseResult) {
 		if (!getParser().isActive()) {
 			Skript.error("You can't suppress warnings outside of a script!");
 			return false;
@@ -66,10 +67,10 @@ public class EffSuppressWarnings extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) { }
+	protected void execute(@NotNull Event event) { }
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		String word;
 		switch (mark) {
 			case CONFLICT:

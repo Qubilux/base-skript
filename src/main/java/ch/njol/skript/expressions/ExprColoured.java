@@ -30,8 +30,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Colored / Uncolored")
 @Description({"Parses &lt;color&gt;s and, optionally, chat styles in a message or removes",
@@ -67,7 +68,7 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parseResult) {
 		setExpr((Expression<? extends String>) exprs[0]);
 		color = matchedPattern <= 1; // colored and formatted
 		format = matchedPattern == 1;
@@ -75,17 +76,17 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	protected String[] get(final Event e, final String[] source) {
-		return get(source, s -> color ? Utils.replaceChatStyles(s) : "" + ChatMessages.stripStyles(s));
+	protected String @NotNull [] get(final @NotNull Event e, final String @NotNull [] source) {
+		return get(source, s -> color ? Utils.replaceEnglishChatStyles(s) : ChatMessages.stripStyles(s));
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return (color ? "" : "un") + "colored " + getExpr().toString(e, debug);
 	}
 	

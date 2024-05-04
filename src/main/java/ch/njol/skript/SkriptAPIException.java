@@ -18,12 +18,15 @@
  */
 package ch.njol.skript;
 
+import java.io.Serial;
+
 /**
  * This exception is thrown if the API is used incorrectly.
  * 
  * @author Peter Güttinger
  */
 public class SkriptAPIException extends RuntimeException {
+	@Serial
 	private final static long serialVersionUID = -4556442222803379002L;
 	
 	public SkriptAPIException(final String message) {

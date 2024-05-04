@@ -24,10 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ch.njol.yggdrasil.Tag.T_ARRAY;
-import static ch.njol.yggdrasil.Tag.T_REFERENCE;
-import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
-import static ch.njol.yggdrasil.Tag.getType;
+import static ch.njol.yggdrasil.Tag.*;
 
 public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	
@@ -51,7 +48,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 		out.write(tag.tag);
 	}
 	
-	private final Map<String, Integer> writtenShortStrings = new HashMap<>();
+	private final Map<String, Integer> writtenShortStrings = new HashMap<String, Integer>();
 	int nextShortStringID = 0;
 	
 	/**

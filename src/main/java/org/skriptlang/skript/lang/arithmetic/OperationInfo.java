@@ -66,7 +66,7 @@ public class OperationInfo<L, R, T> {
 			return null;
 		if (!Converters.converterExists(fromLeft, left) || !Converters.converterExists(fromRight, right) || !Converters.converterExists(returnType, toReturnType))
 			return null;
-		return new OperationInfo<>(fromLeft, fromRight, toReturnType, (left, right) -> {
+		return new OperationInfo<L2, R2, T2>(fromLeft, fromRight, toReturnType, (left, right) -> {
 			L convertedLeft = Converters.convert(left, this.left);
 			R convertedRight = Converters.convert(right, this.right);
 		if (convertedLeft == null || convertedRight == null)

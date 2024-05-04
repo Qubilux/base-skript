@@ -18,25 +18,19 @@
  */
 package ch.njol.skript.log;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import ch.njol.skript.Skript;
+import io.github.ultreon.skript.CommandSender;
+import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import java.util.*;
 
 /**
  * @author Peter Güttinger
  */
 public class RetainingLogHandler extends LogHandler {
 	
-	private final Deque<LogEntry> log = new LinkedList<>();
+	private final Deque<LogEntry> log = new LinkedList<LogEntry>();
 	private int numErrors = 0;
 	
 	boolean printedErrorOrLog = false;
@@ -44,7 +38,7 @@ public class RetainingLogHandler extends LogHandler {
 	@Override
 	public LogResult log(LogEntry entry) {
 		log.add(entry);
-		if (entry.getLevel().intValue() >= Level.SEVERE.intValue())
+		if (entry.getLevel().intLevel() >= Level.FATAL.intLevel())
 			numErrors++;
 		printedErrorOrLog = false;
 		return LogResult.CACHED;
@@ -53,7 +47,7 @@ public class RetainingLogHandler extends LogHandler {
 	@Override
 	public void onStop() {
 		if (!printedErrorOrLog && Skript.testing())
-			SkriptLogger.LOGGER.warning("Retaining log wasn't instructed to print anything at " + SkriptLogger.getCaller());
+			SkriptLogger.LOGGER.warn("Retaining log wasn't instructed to print anything at {}", SkriptLogger.getCaller());
 	}
 	
 	@Override
@@ -85,7 +79,7 @@ public class RetainingLogHandler extends LogHandler {
 		
 		boolean hasError = false;
 		for (LogEntry e : log) {
-			if (e.getLevel().intValue() >= Level.SEVERE.intValue()) {
+			if (e.getLevel().intLevel() >= Level.FATAL.intLevel()) {
 				SkriptLogger.log(e);
 				hasError = true;
 			} else {
@@ -94,7 +88,7 @@ public class RetainingLogHandler extends LogHandler {
 		}
 		
 		if (!hasError && def != null)
-			SkriptLogger.log(SkriptLogger.SEVERE, def);
+			SkriptLogger.log(SkriptLogger.FATAL, def);
 		
 		return hasError;
 	}
@@ -115,7 +109,7 @@ public class RetainingLogHandler extends LogHandler {
 
 		boolean hasError = false;
 		for (LogEntry e : log) {
-			if (e.getLevel().intValue() >= Level.SEVERE.intValue()) {
+			if (e.getLevel().intLevel() >= Level.FATAL.intLevel()) {
 				SkriptLogger.sendFormatted(recipient, e.toFormattedString());
 				e.logged();
 				hasError = true;
@@ -149,7 +143,7 @@ public class RetainingLogHandler extends LogHandler {
 	@Nullable
 	public LogEntry getFirstError() {
 		for (LogEntry e : log) {
-			if (e.getLevel().intValue() >= Level.SEVERE.intValue())
+			if (e.getLevel().intLevel() >= Level.FATAL.intLevel())
 				return e;
 		}
 		return null;
@@ -157,10 +151,10 @@ public class RetainingLogHandler extends LogHandler {
 	
 	public LogEntry getFirstError(String def) {
 		for (LogEntry e : log) {
-			if (e.getLevel().intValue() >= Level.SEVERE.intValue())
+			if (e.getLevel().intLevel() >= Level.FATAL.intLevel())
 				return e;
 		}
-		return new LogEntry(SkriptLogger.SEVERE, def);
+		return new LogEntry(SkriptLogger.FATAL, def);
 	}
 	
 	/**
@@ -185,9 +179,9 @@ public class RetainingLogHandler extends LogHandler {
 	}
 	
 	public Collection<LogEntry> getErrors() {
-		Collection<LogEntry> r = new ArrayList<>();
+		Collection<LogEntry> r = new ArrayList<LogEntry>();
 		for (LogEntry e : log) {
-			if (e.getLevel().intValue() >= Level.SEVERE.intValue())
+			if (e.getLevel().intLevel() >= Level.FATAL.intLevel())
 				r.add(e);
 		}
 		return r;

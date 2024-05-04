@@ -18,16 +18,18 @@
  */
 package ch.njol.util;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.Objects;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class Pair<T1, T2> implements Entry<T1, T2>, Cloneable, Serializable {
+	@Serial
 	private static final long serialVersionUID = 8296563685697678334L;
 	
 	@Nullable
@@ -125,7 +127,7 @@ public class Pair<T1, T2> implements Entry<T1, T2>, Cloneable, Serializable {
 	 */
 	@Override
 	public Pair<T1, T2> clone() {
-		return new Pair<>(this);
+		return new Pair<T1, T2>(this);
 	}
 	
 }

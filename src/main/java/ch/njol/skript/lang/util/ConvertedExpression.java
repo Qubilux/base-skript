@@ -27,7 +27,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
@@ -76,7 +76,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			ConverterInfo<? super F, ? extends T> conv = (ConverterInfo<? super F, ? extends T>) Converters.getConverterInfo(from.getReturnType(), type);
 			if (conv == null)
 				continue;
-			return new ConvertedExpression<>(from, type, conv);
+			return new ConvertedExpression<F, T>(from, type, conv);
 		}
 		return null;
 	}

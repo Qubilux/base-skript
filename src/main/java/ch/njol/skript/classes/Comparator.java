@@ -85,9 +85,9 @@ public interface Comparator<T1, T2> {
 					return false;
 				case SMALLER_OR_EQUAL:
 					return other == SMALLER || other == EQUAL;
+				default:
+					throw new IllegalArgumentException();
 			}
-			assert false;
-			return false;
 		}
 
 		/**
@@ -108,9 +108,9 @@ public interface Comparator<T1, T2> {
 					return "smaller than";
 				case SMALLER_OR_EQUAL:
 					return "smaller than or equal to";
+				default:
+					throw new IllegalArgumentException();
 			}
-			assert false;
-			return "";
 		}
 
 		/**
@@ -132,9 +132,9 @@ public interface Comparator<T1, T2> {
 					return GREATER_OR_EQUAL;
 				case SMALLER_OR_EQUAL:
 					return GREATER;
+				default:
+					throw new IllegalArgumentException();
 			}
-			assert false;
-			return NOT_EQUAL;
 		}
 
 		/**
@@ -156,9 +156,9 @@ public interface Comparator<T1, T2> {
 					return GREATER;
 				case SMALLER_OR_EQUAL:
 					return GREATER_OR_EQUAL;
+				default:
+					throw new IllegalArgumentException();
 			}
-			assert false;
-			return NOT_EQUAL;
 		}
 
 		public boolean isEqualOrInverse() {
@@ -176,9 +176,9 @@ public interface Comparator<T1, T2> {
 				case SMALLER:
 				case SMALLER_OR_EQUAL:
 					return -1;
+				default:
+					throw new IllegalArgumentException();
 			}
-			assert false;
-			return 0;
 		}
 	}
 

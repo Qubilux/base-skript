@@ -29,8 +29,9 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -59,7 +60,7 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 	private boolean isAlphanumeric;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		amount = (Expression<Integer>) exprs[0];
 		from = (Expression<String>) exprs[1];
 		to = (Expression<String>) exprs[2];
@@ -69,7 +70,7 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
+	protected String @NotNull [] get(@NotNull Event event) {
 		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.getSingle(event);
 		if (amount == null || amount <= 0)
 			return new String[0];
@@ -125,12 +126,12 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return (amount != null ? amount.toString(event, debug) : "a") + " random character between " + from.toString(event, debug) + " and " + to.toString(event, debug);
 	}
 }

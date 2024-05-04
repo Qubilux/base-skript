@@ -26,7 +26,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.events.bukkit.SkriptParseEvent;
+import ch.njol.skript.events.util.SkriptParseEvent;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
@@ -38,7 +38,7 @@ import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
 
@@ -76,7 +76,7 @@ import java.util.List;
 public class SecConditional extends Section {
 
 	private static final SkriptPattern THEN_PATTERN = PatternCompiler.compile("then [run]");
-	private static final Patterns<ConditionalType> CONDITIONAL_PATTERNS = new Patterns<>(new Object[][] {
+	private static final Patterns<ConditionalType> CONDITIONAL_PATTERNS = new Patterns<ConditionalType>(new Object[][] {
 		{"else", ConditionalType.ELSE},
 		{"else [:parse] if <.+>", ConditionalType.ELSE_IF},
 		{"else [:parse] if (:any|any:at least one [of])", ConditionalType.ELSE_IF},
@@ -97,7 +97,7 @@ public class SecConditional extends Section {
 	}
 
 	private ConditionalType type;
-	private List<Condition> conditions = new ArrayList<>();
+	private List<Condition> conditions = new ArrayList<Condition>();
 	private boolean ifAny;
 	private boolean parseIf;
 	private boolean parseIfPassed;
@@ -306,22 +306,22 @@ public class SecConditional extends Section {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		String parseIf = this.parseIf ? "parse " : "";
-		switch (type) {
-			case IF:
-				if (multiline)
-					return parseIf + "if " + (ifAny ? "any" : "all");
-				return parseIf + "if " + conditions.get(0).toString(event, debug);
-			case ELSE_IF:
-				if (multiline)
-					return "else " + parseIf + "if " + (ifAny ? "any" : "all");
-				return "else " + parseIf + "if " + conditions.get(0).toString(event, debug);
-			case ELSE:
-				return "else";
-			case THEN:
-				return "then";
-			default:
-				throw new IllegalStateException();
-		}
+        switch (type) {
+            case IF:
+                if (multiline)
+                    return parseIf +"if " + (ifAny ? "any" : "all");
+                return parseIf +"if " + conditions.get(0).toString(event, debug);
+            case ELSE_IF:
+                if (multiline)
+                    return "else " + parseIf + "if " + (ifAny ? "any" : "all");
+                return "else " + parseIf + "if " + conditions.get(0).toString(event, debug);
+            case ELSE:
+                return "else";
+            case THEN:
+                return "then";
+            default:
+                throw new IllegalStateException();
+        }
 	}
 
 	private Kleenean getHasDelayAfter() {
@@ -358,7 +358,7 @@ public class SecConditional extends Section {
 	}
 
 	private static List<SecConditional> getElseIfs(List<TriggerItem> triggerItems) {
-		List<SecConditional> list = new ArrayList<>();
+		List<SecConditional> list = new ArrayList<SecConditional>();
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
 			if (triggerItem instanceof SecConditional) {

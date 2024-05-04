@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.log;
 
-import java.util.logging.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * @author Peter Güttinger
@@ -28,12 +28,12 @@ public class FilteringLogHandler extends LogHandler {
 	private final int minimum;
 	
 	public FilteringLogHandler(Level minimum) {
-		this.minimum = minimum.intValue();
+		this.minimum = minimum.intLevel();
 	}
 	
 	@Override
 	public LogResult log(LogEntry entry) {
-		return entry.level.intValue() >= minimum ? LogResult.LOG : LogResult.DO_NOT_LOG;
+		return entry.level.intLevel() >= minimum ? LogResult.LOG : LogResult.DO_NOT_LOG;
 	}
 	
 	@Override

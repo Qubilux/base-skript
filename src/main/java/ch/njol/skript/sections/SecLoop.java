@@ -35,7 +35,7 @@ import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
@@ -89,8 +89,8 @@ public class SecLoop extends LoopSection {
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> expr;
 
-	private final transient Map<Event, Object> current = new WeakHashMap<>();
-	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
+	private final transient Map<Event, Object> current = new WeakHashMap<Event, Object>();
+	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<Event, Iterator<?>>();
 
 	@Nullable
 	private TriggerItem actualNext;

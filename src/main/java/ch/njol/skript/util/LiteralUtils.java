@@ -18,13 +18,13 @@
  */
 package ch.njol.skript.util;
 
-import java.util.stream.Stream;
-
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.registrations.Classes;
+
+import java.util.stream.Stream;
 
 /**
  * A class that contains methods based around
@@ -53,7 +53,7 @@ public class LiteralUtils {
 				newExpressions[i] = LiteralUtils.defendExpression(oldExpressions[i]);
 				returnTypes[i] = newExpressions[i].getReturnType();
 			}
-			return new ExpressionList<>(newExpressions, (Class<T>) Classes.getSuperClassInfo(returnTypes).getC(), expr.getAnd());
+			return new ExpressionList<T>(newExpressions, (Class<T>) Classes.getSuperClassInfo(returnTypes).getC(), expr.getAnd());
 		} else if (expr instanceof UnparsedLiteral) {
 			Literal<?> parsedLiteral = ((UnparsedLiteral) expr).getConvertedExpression(Object.class);
 			return (Expression<T>) (parsedLiteral == null ? expr : parsedLiteral);

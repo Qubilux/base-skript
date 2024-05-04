@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -31,6 +31,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Peter Güttinger
@@ -54,7 +55,7 @@ public class ExprIndexOf extends SimpleExpression<Long> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final ParseResult parseResult) {
 		first = parseResult.mark == 0;
 		needle = (Expression<String>) exprs[0];
 		haystack = (Expression<String>) exprs[1];
@@ -63,7 +64,7 @@ public class ExprIndexOf extends SimpleExpression<Long> {
 	
 	@Override
 	@Nullable
-	protected Long[] get(final Event e) {
+	protected Long @NotNull [] get(final @NotNull Event e) {
 		final String h = haystack.getSingle(e), n = needle.getSingle(e);
 		if (h == null || n == null)
 			return new Long[0];
@@ -77,12 +78,12 @@ public class ExprIndexOf extends SimpleExpression<Long> {
 	}
 	
 	@Override
-	public Class<? extends Long> getReturnType() {
+	public @NotNull Class<? extends Long> getReturnType() {
 		return Long.class;
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "the " + (first ? "first" : "last") + " index of " + needle.toString(e, debug) + " in " + haystack.toString(e, debug);
 	}
 	

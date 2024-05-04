@@ -39,7 +39,7 @@ public abstract class Converters {
 		return org.skriptlang.skript.lang.converter.Converters.getConverterInfos().stream()
 			.map(unknownInfo -> {
 				org.skriptlang.skript.lang.converter.ConverterInfo<F, T> info = (org.skriptlang.skript.lang.converter.ConverterInfo<F, T>) unknownInfo;
-				return new ConverterInfo<>(info.getFrom(), info.getTo(), info.getConverter()::convert, info.getFlags());
+				return new ConverterInfo<F, T>(info.getFrom(), info.getTo(), info.getConverter()::convert, info.getFlags());
 			})
 			.collect(Collectors.toList());
 	}
@@ -121,7 +121,7 @@ public abstract class Converters {
 
 	/**
 	 * Strictly converts an array to a non-null array of the specified class.
-	 * Uses registered {@link ch.njol.skript.registrations.Converters} to convert.
+	 * Uses registered {@link Converters} to convert.
 	 *
 	 * @param original The array to convert
 	 * @param to       What to convert {@code original} to
@@ -189,7 +189,7 @@ public abstract class Converters {
 			org.skriptlang.skript.lang.converter.Converters.getConverterInfo(from, to);
 		if (info == null)
 			return null;
-		return new ConverterInfo<>(info.getFrom(), info.getTo(), info.getConverter()::convert, info.getFlags());
+		return new ConverterInfo<F, T>(info.getFrom(), info.getTo(), info.getConverter()::convert, info.getFlags());
 	}
 	
 	/**

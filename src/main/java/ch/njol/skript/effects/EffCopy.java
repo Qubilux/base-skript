@@ -20,11 +20,7 @@ package ch.njol.skript.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Keywords;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
@@ -33,8 +29,9 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -64,7 +61,7 @@ public class EffCopy extends Effect {
 	private List<Variable<?>> destinations;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		source = exprs[0];
 		rawDestination = exprs[1];
 		if (exprs[1] instanceof Variable<?>) {
@@ -87,7 +84,7 @@ public class EffCopy extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void execute(Event event) {
+	protected void execute(@NotNull Event event) {
 		if (!(source instanceof Variable) || source.isSingle()) {
 			ChangeMode mode = ChangeMode.SET;
 			Object[] clone = (Object[]) Classes.clone(source.getArray(event));
@@ -116,7 +113,7 @@ public class EffCopy extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "copy " + source.toString(event, debug) + " into " + rawDestination.toString(event, debug);
 	}
 

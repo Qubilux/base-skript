@@ -18,19 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.logging.Level;
-
-import org.skriptlang.skript.lang.script.Script;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
@@ -43,14 +30,22 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.lang.script.Script;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Locale;
+import org.apache.logging.log4j.Level;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Log")
-@Description({"Writes text into a .log file. Skript will write these files to /plugins/Skript/logs.",
+@Description({"Writes text into a .log file. Skript will write these files to /.skript/logs.",
 		"NB: Using 'server.log' as the log file will write to the default server log. Omitting the log file altogether will log the message as '[Skript] [&lt;script&gt;.sk] &lt;message&gt;' in the server log."})
 @Examples({"on place of TNT:",
 		"	log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
@@ -64,12 +59,9 @@ public class EffLog extends Effect {
 	
 	final static HashMap<String, PrintWriter> writers = new HashMap<>();
 	static {
-		Skript.closeOnDisable(new Closeable() {
-			@Override
-			public void close() {
-				for (final PrintWriter pw : writers.values())
-					pw.close();
-			}
+		Skript.closeOnDisable(() -> {
+			for (final PrintWriter pw : writers.values())
+				pw.close();
 		});
 	}
 	
@@ -80,15 +72,14 @@ public class EffLog extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parser) {
 		messages = (Expression<String>) exprs[0];
 		files = (Expression<String>) exprs[1];
 		return true;
 	}
 	
-	@SuppressWarnings("resource")
 	@Override
-	protected void execute(final Event e) {
+	protected void execute(final @NotNull Event e) {
 		for (final String message : messages.getArray(e)) {
 			if (files != null) {
 				for (String s : files.getArray(e)) {
@@ -128,7 +119,7 @@ public class EffLog extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "log " + messages.toString(e, debug) + (files != null ? " to " + files.toString(e, debug) : "");
 	}
 }

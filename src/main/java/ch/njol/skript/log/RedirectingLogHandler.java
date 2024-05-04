@@ -18,11 +18,9 @@
  */
 package ch.njol.skript.log;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import io.github.ultreon.skript.CommandSender;
+import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.logging.Level;
 
 /**
  * Redirects the log to a {@link CommandSender}.
@@ -43,7 +41,7 @@ public class RedirectingLogHandler extends LogHandler {
 	@Override
 	public LogResult log(LogEntry entry) {
 		SkriptLogger.sendFormatted(recipient, prefix + entry.toFormattedString());
-		if (entry.level == Level.SEVERE)
+		if (entry.level == Level.FATAL)
 			numErrors++;
 		return LogResult.DO_NOT_LOG;
 	}

@@ -18,18 +18,14 @@
  */
 package ch.njol.skript.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.skriptlang.skript.lang.converter.Converter;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.skriptlang.skript.lang.converter.Converter;
 
 /**
  * @author Peter Güttinger
@@ -57,7 +53,7 @@ public abstract class FileUtils {
 	 */
 	public static String getBackupSuffix() {
 		synchronized (backupFormat) {
-			return "" + backupFormat.format(System.currentTimeMillis());
+			return backupFormat.format(System.currentTimeMillis());
 		}
 	}
 	
@@ -143,7 +139,7 @@ public abstract class FileUtils {
 	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed already.
 	 */
 	public static Collection<File> renameAll(final File directory, final Converter<String, String> renamer) throws IOException {
-		final Collection<File> changed = new ArrayList<>();
+		final Collection<File> changed = new ArrayList<File>();
 		for (final File f : directory.listFiles()) {
 			if (f.isDirectory()) {
 				changed.addAll(renameAll(f, renamer));

@@ -30,8 +30,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Date Ago/Later")
 @Description("A date the specified timespan before/after another date.")
@@ -55,7 +56,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
 
     @Override
     @SuppressWarnings({"unchecked", "null"})
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         timespan = (Expression<Timespan>) exprs[0];
         date = (Expression<Date>) exprs[1];
         ago = matchedPattern == 0;
@@ -65,7 +66,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     @Override
     @Nullable
     @SuppressWarnings("null")
-    protected Date[] get(Event e) {
+    protected Date @NotNull [] get(@NotNull Event e) {
         Timespan timespan = this.timespan.getSingle(e);
 		Date date = this.date != null ? this.date.getSingle(e) : new Date();
 		if (timespan == null || date == null)
@@ -80,12 +81,12 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     }
 
     @Override
-    public Class<? extends Date> getReturnType() {
+    public @NotNull Class<? extends Date> getReturnType() {
         return Date.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean debug) {
+    public @NotNull String toString(@Nullable Event e, boolean debug) {
         return timespan.toString(e, debug) + " " + (ago ? (date != null ? "before " + date.toString(e, debug) : "ago")
 			: (date != null ? "after " + date.toString(e, debug) : "later"));
     }

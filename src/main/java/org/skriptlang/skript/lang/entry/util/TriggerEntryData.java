@@ -23,12 +23,10 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.parser.ParserInstance;
+import ch.njol.skript.lang.util.SimpleEvent;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryData;
 import org.skriptlang.skript.lang.entry.SectionEntryData;
-import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * An entry data class designed to take a {@link SectionNode} and parse it into a Trigger.

@@ -39,8 +39,8 @@ public class MatchResult {
 	Expression<?>[] expressions = new Expression[0];
 	String expr;
 	int mark;
-	List<String> tags = new ArrayList<>();
-	List<java.util.regex.MatchResult> regexResults = new ArrayList<>();
+	List<String> tags = new ArrayList<String>();
+	List<java.util.regex.MatchResult> regexResults = new ArrayList<java.util.regex.MatchResult>();
 
 	// SkriptParser stuff
 	ParseContext parseContext = ParseContext.DEFAULT;
@@ -53,8 +53,8 @@ public class MatchResult {
 		matchResult.expressions = this.expressions.clone();
 		matchResult.expr = this.expr;
 		matchResult.mark = this.mark;
-		matchResult.tags = new ArrayList<>(this.tags);
-		matchResult.regexResults = new ArrayList<>(this.regexResults);
+		matchResult.tags = new ArrayList<String>(this.tags);
+		matchResult.regexResults = new ArrayList<java.util.regex.MatchResult>(this.regexResults);
 		matchResult.parseContext = this.parseContext;
 		matchResult.flags = this.flags;
 		return matchResult;

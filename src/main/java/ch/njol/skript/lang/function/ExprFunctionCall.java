@@ -21,12 +21,12 @@ package ch.njol.skript.lang.function;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.converter.Converters;
 
 public class ExprFunctionCall<T> extends SimpleExpression<T> {
 
@@ -70,7 +70,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> {
 			return (Expression<? extends R>) this;
 		assert function.getReturnType() != null;
 		if (Converters.converterExists(function.getReturnType(), to)) {
-			return new ExprFunctionCall<>(function, to);
+			return new ExprFunctionCall<R>(function, to);
 		}
 		return null;
 	}

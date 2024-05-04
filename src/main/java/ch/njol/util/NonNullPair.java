@@ -18,11 +18,14 @@
  */
 package ch.njol.util;
 
+import java.io.Serial;
+
 /**
  * @author Peter Güttinger
  */
 public class NonNullPair<T1, T2> extends Pair<T1, T2> {
-	private static final long serialVersionUID = 820250942098905541L;
+	@Serial
+    private static final long serialVersionUID = 820250942098905541L;
 	
 	public NonNullPair(final T1 first, final T2 second) {
 		this.first = first;
@@ -83,7 +86,7 @@ public class NonNullPair<T1, T2> extends Pair<T1, T2> {
 	 */
 	@Override
 	public NonNullPair<T1, T2> clone() {
-		return new NonNullPair<>(this);
+		return new NonNullPair<T1, T2>(this);
 	}
 	
 }

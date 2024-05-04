@@ -18,9 +18,8 @@
  */
 package ch.njol.skript.lang.function;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.ClassInfo;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -32,7 +31,7 @@ public abstract class JavaFunction<T> extends Function<T> {
 	}
 
 	public JavaFunction(String name, Parameter<?>[] parameters, ClassInfo<T> returnType, boolean single) {
-		this(new Signature<>("none", name, parameters, false, returnType, single, Thread.currentThread().getStackTrace()[3].getClassName()));
+		this(new Signature<T>("none", name, parameters, false, returnType, single, Thread.currentThread().getStackTrace()[3].getClassName()));
 	}
 	
 	@Override

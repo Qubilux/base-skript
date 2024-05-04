@@ -18,16 +18,15 @@
  */
 package ch.njol.skript.config;
 
-import java.io.PrintWriter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -129,7 +128,7 @@ public abstract class Node {
 	 */
 	public static NonNullPair<String, String> splitLine(final String line) {
 		if (line.trim().startsWith("#"))
-			return new NonNullPair<>("", line.substring(line.indexOf('#')));
+			return new NonNullPair<String, String>("", line.substring(line.indexOf('#')));
 		final Matcher m = linePattern.matcher(line);
 		boolean matches = false;
 		try {
@@ -138,8 +137,8 @@ public abstract class Node {
 			handleNodeStackOverflow(e, line);
 		}
 		if (matches)
-			return new NonNullPair<>("" + m.group(1).replace("##", "#"), "" + m.group(2));
-		return new NonNullPair<>("" + line.replace("##", "#"), "");
+			return new NonNullPair<String, String>("" + m.group(1).replace("##", "#"), "" + m.group(2));
+		return new NonNullPair<String, String>("" + line.replace("##", "#"), "");
 	}
 	
 	static void handleNodeStackOverflow(StackOverflowError e, String line) {

@@ -29,10 +29,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
-import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptData;
 import org.skriptlang.skript.lang.structure.Structure;
 
@@ -114,7 +113,7 @@ public class StructOptions extends Structure {
 
 	public static final class OptionsData implements ScriptData {
 
-		private final Map<String, String> options = new HashMap<>();
+		private final Map<String, String> options = new HashMap<String, String>();
 
 		/**
 		 * Replaces all options in the provided String using the options of this data.

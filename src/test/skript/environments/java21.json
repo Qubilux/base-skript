@@ -1,0 +1,13 @@
+{
+	"name": "java21",
+	"resources": [
+
+	],
+	"paperDownloads": [
+
+	],
+	"skriptTarget": "plugins/Skript.jar",
+	"commandLine": [
+		"-jar", "%1$s"
+	]
+}

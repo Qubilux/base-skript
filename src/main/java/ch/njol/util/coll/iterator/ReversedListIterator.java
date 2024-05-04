@@ -18,10 +18,10 @@
  */
 package ch.njol.util.coll.iterator;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.List;
 import java.util.ListIterator;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger

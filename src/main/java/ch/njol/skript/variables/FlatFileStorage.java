@@ -23,21 +23,11 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.skript.util.FileUtils;
-import ch.njol.skript.util.Task;
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.Version;
+import ch.njol.skript.util.*;
 import ch.njol.util.NotifyingReference;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -83,7 +73,7 @@ public class FlatFileStorage extends VariablesStorage {
 	 * if that lock is used
 	 * (and thus also after {@link Variables#getReadLock()}).
 	 */
-	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<>();
+	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<PrintWriter>();
 
 	/**
 	 * Whether the storage has been loaded.
@@ -347,7 +337,7 @@ public class FlatFileStorage extends VariablesStorage {
 	}
 
 	@Override
-	protected boolean save(String name, @Nullable String type, @Nullable byte[] value) {
+	protected boolean save(String name, @Nullable String type, byte @Nullable [] value) {
 		synchronized (connectionLock) {
 			synchronized (changesWriter) {
 				if (!loaded && type == null) {
@@ -564,7 +554,7 @@ public class FlatFileStorage extends VariablesStorage {
 		Matcher matcher = CSV_LINE_PATTERN.matcher(line);
 
 		int lastEnd = 0;
-		ArrayList<String> result = new ArrayList<>();
+		ArrayList<String> result = new ArrayList<String>();
 
 		while (matcher.find()) {
 			if (lastEnd != matcher.start())

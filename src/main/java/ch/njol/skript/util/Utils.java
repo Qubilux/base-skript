@@ -18,51 +18,26 @@
  */
 package ch.njol.skript.util;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.util.*;
+import ch.njol.util.coll.CollectionUtils;
+import ch.njol.util.coll.iterator.EnumerationIterable;
+import io.github.ultreon.skript.ChatColor;
+import io.github.ultreon.skript.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.Messenger;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.Iterables;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.effects.EffTeleport;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.util.Callback;
-import ch.njol.util.Checker;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.Pair;
-import ch.njol.util.StringUtils;
-import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.EnumerationIterable;
-import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class.
@@ -70,11 +45,13 @@ import org.jetbrains.annotations.NotNull;
  * @author Peter Güttinger
  */
 public abstract class Utils {
-	
+
+	public static final boolean COPY_SUPPORTED = true;
+
 	private Utils() {}
 	
 	public final static Random random = new Random();
-	
+
 	public static String join(final Object[] objects) {
 		assert objects != null;
 		final StringBuilder b = new StringBuilder();
@@ -83,9 +60,9 @@ public abstract class Utils {
 				b.append(", ");
 			b.append(Classes.toString(objects[i]));
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
-	
+
 	public static String join(final Iterable<?> objects) {
 		assert objects != null;
 		final StringBuilder b = new StringBuilder();
@@ -97,23 +74,23 @@ public abstract class Utils {
 				first = false;
 			b.append(Classes.toString(o));
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isEither(@Nullable T compared, @Nullable T... types) {
 		return CollectionUtils.contains(types, compared);
 	}
-	
+
 	public static Pair<String, Integer> getAmount(String s) {
 		if (s.matches("\\d+ of .+")) {
-			return new Pair<>(s.split(" ", 3)[2], Utils.parseInt("" + s.split(" ", 2)[0]));
+			return new Pair<String, Integer>(s.split(" ", 3)[2], Utils.parseInt(s.split(" ", 2)[0]));
 		} else if (s.matches("\\d+ .+")) {
-			return new Pair<>(s.split(" ", 2)[1], Utils.parseInt("" + s.split(" ", 2)[0]));
+			return new Pair<String, Integer>(s.split(" ", 2)[1], Utils.parseInt(s.split(" ", 2)[0]));
 		} else if (s.matches("an? .+")) {
-			return new Pair<>(s.split(" ", 2)[1], 1);
+			return new Pair<String, Integer>(s.split(" ", 2)[1], 1);
 		}
-		return new Pair<>(s, Integer.valueOf(-1));
+		return new Pair<String, Integer>(s, Integer.valueOf(-1));
 	}
 	
 //	public final static class AmountResponse {
@@ -163,7 +140,7 @@ public abstract class Utils {
 
 	/**
 	 * Loads classes of the plugin by package. Useful for registering many syntax elements like Skript does it.
-	 * 
+	 *
 	 * @param basePackage The base package to add to all sub packages, e.g. <tt>"ch.njol.skript"</tt>.
 	 * @param subPackages Which subpackages of the base package should be loaded, e.g. <tt>"expressions", "conditions", "effects"</tt>. Subpackages of these packages will be loaded
 	 *            as well. Use an empty array to load all subpackages of the base package.
@@ -216,25 +193,17 @@ public abstract class Utils {
 
 	/**
 	 * The first invocation of this method uses reflection to invoke the protected method {@link JavaPlugin#getFile()} to get the plugin's jar file.
-	 * 
+	 *
 	 * @return The jar file of the plugin.
 	 */
 	@Nullable
 	public static File getFile(Plugin plugin) {
 		try {
-			Method getFile = JavaPlugin.class.getDeclaredMethod("getFile");
-			getFile.setAccessible(true);
-			return (File) getFile.invoke(plugin);
-		} catch (NoSuchMethodException e) {
-			Skript.outdatedError(e);
+			return plugin.getFile();
 		} catch (IllegalArgumentException e) {
 			Skript.outdatedError(e);
-		} catch (IllegalAccessException e) {
-			assert false;
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e.getCause());
 		}
 		return null;
 	}
@@ -284,14 +253,14 @@ public abstract class Utils {
 	public static NonNullPair<String, Boolean> getEnglishPlural(final String s) {
 		assert s != null;
 		if (s.isEmpty())
-			return new NonNullPair<>("", Boolean.FALSE);
+			return new NonNullPair<String, Boolean>("", Boolean.FALSE);
 		for (final String[] p : plurals) {
 			if (s.endsWith(p[1]))
-				return new NonNullPair<>(s.substring(0, s.length() - p[1].length()) + p[0], Boolean.TRUE);
+				return new NonNullPair<String, Boolean>(s.substring(0, s.length() - p[1].length()) + p[0], Boolean.TRUE);
 			if (s.endsWith(p[1].toUpperCase(Locale.ENGLISH)))
-				return new NonNullPair<>(s.substring(0, s.length() - p[1].length()) + p[0].toUpperCase(Locale.ENGLISH), Boolean.TRUE);
+				return new NonNullPair<String, Boolean>(s.substring(0, s.length() - p[1].length()) + p[0].toUpperCase(Locale.ENGLISH), Boolean.TRUE);
 		}
-		return new NonNullPair<>(s, Boolean.FALSE);
+		return new NonNullPair<String, Boolean>(s, Boolean.FALSE);
 	}
 	
 	/**
@@ -367,231 +336,56 @@ public abstract class Utils {
 			return "a " + s;
 		}
 	}
+
+	final static ChatColor[] styles = new ChatColor[]{ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
+	final static Map<String, String> chat = new HashMap<String, String>();
+	final static Map<String, String> englishChat = new HashMap<String, String>();
 	
-	/**
-	 * Gets the collision height of solid or partially-solid blocks at the center of the block.
-	 * This is mostly for use in the {@link EffTeleport teleport effect}.
-	 * <p>
-	 * This version operates on numeric ids, thus only working on
-	 * Minecraft 1.12 or older.
-	 * 
-	 * @param type
-	 * @return The block's height at the center
-	 */
-	public static double getBlockHeight(final int type, final byte data) {
-		switch (type) {
-			case 26: // bed
-				return 9. / 16;
-			case 44: // slabs
-			case 126:
-				return (data & 0x8) == 0 ? 0.5 : 1;
-			case 78: // snow layer
-				return data == 0 ? 1 : (data % 8) * 2. / 16;
-			case 85: // fences & gates
-			case 107:
-			case 113:
-			case 139: // cobblestone wall
-				return 1.5;
-			case 88: // soul sand
-				return 14. / 16;
-			case 92: // cake
-				return 7. / 16;
-			case 93: // redstone repeater
-			case 94:
-			case 149: // redstone comparator
-			case 150:
-				return 2. / 16;
-			case 96: // trapdoor
-				return (data & 0x4) == 0 ? ((data & 0x8) == 0 ? 3. / 16 : 1) : 0;
-			case 116: // enchantment table
-				return 12. / 16;
-			case 117: // brewing stand
-				return 14. / 16;
-			case 118: // cauldron
-				return 5. / 16;
-			case 120: // end portal frame
-				return (data & 0x4) == 0 ? 13. / 16 : 1;
-			case 127: // cocoa plant
-				return 12. / 16;
-			case 140: // flower pot
-				return 6. / 16;
-			case 144: // mob head
-				return 0.5;
-			case 151: // daylight sensor
-				return 6. / 16;
-			case 154: // hopper
-				return 10. / 16;
-			default:
-				return 1;
-		}
-	}
+	public final static boolean HEX_SUPPORTED = true;
 
-	/**
-	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
-	 *
-	 * The next plugin message to be received through {@code channel} will be assumed to be
-	 * the response.
-	 *
-	 * @param channel the channel for this plugin message
-	 * @param data the data to add to the outgoing message
-	 * @return a completable future for the message of the responding plugin message, if there is one.
-	 * this completable future will complete exceptionally if no players are online.
-	 */
-	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel, String... data) {
-		return sendPluginMessage(channel, r -> true, data);
-	}
-
-	/**
-	 * Sends a plugin message using the from {@code player}.
-	 *
-	 * The next plugin message to be received through {@code channel} will be assumed to be
-	 * the response.
-	 *
-	 * @param player the player to send the plugin message through
-	 * @param channel the channel for this plugin message
-	 * @param data the data to add to the outgoing message
-	 * @return a completable future for the message of the responding plugin message, if there is one.
-	 * this completable future will complete exceptionally if no players are online.
-	 */
-	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel, String... data) {
-		return sendPluginMessage(player, channel, r -> true, data);
-	}
-
-	/**
-	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
-	 *
-	 * @param channel the channel for this plugin message
-	 * @param messageVerifier verifies that a plugin message is the response to the sent message
-	 * @param data the data to add to the outgoing message
-	 * @return a completable future for the message of the responding plugin message, if there is one.
-	 * this completable future will complete exceptionally if the player is null.
-	 * @throws IllegalStateException when there are no players online
-	 */
-	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel,
-			Predicate<ByteArrayDataInput> messageVerifier, String... data) throws IllegalStateException {
-		Player firstPlayer = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-		if (firstPlayer == null)
-			throw new IllegalStateException("There are no players online");
-		return sendPluginMessage(firstPlayer, channel, messageVerifier, data);
-	}
-
-	/**
-	 * Sends a plugin message.
-	 *
-	 * Example usage using the "GetServers" bungee plugin message channel via an overload:
-	 * <code>
-	 *     Utils.sendPluginMessage("BungeeCord", r -> "GetServers".equals(r.readUTF()), "GetServers")
-	 *     			.thenAccept(response -> Bukkit.broadcastMessage(response.readUTF()) // comma delimited server broadcast
-	 *     			.exceptionally(ex -> {
-	 *     			 	Skript.warning("Failed to get servers because there are no players online");
-	 *     			 	return null;
-	 *     			});
-	 * </code>
-	 *
-	 * @param player the player to send the plugin message through
-	 * @param channel the channel for this plugin message
-	 * @param messageVerifier verifies that a plugin message is the response to the sent message
-	 * @param data the data to add to the outgoing message
-	 * @return a completable future for the message of the responding plugin message, if there is one.
-	 * this completable future will complete exceptionally if the player is null.
-	 */
-	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel,
-			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
-		CompletableFuture<ByteArrayDataInput> completableFuture = new CompletableFuture<>();
-
-		Skript skript = Skript.getInstance();
-		Messenger messenger = Bukkit.getMessenger();
-
-		messenger.registerOutgoingPluginChannel(skript, channel);
-
-		PluginMessageListener listener = (sendingChannel, sendingPlayer, message) -> {
-			ByteArrayDataInput input = ByteStreams.newDataInput(message);
-			if (channel.equals(sendingChannel) && sendingPlayer == player && !completableFuture.isDone()
-					&& !completableFuture.isCancelled() && messageVerifier.test(input)) {
-				completableFuture.complete(input);
-			}
-		};
-
-		messenger.registerIncomingPluginChannel(skript, channel, listener);
-
-		completableFuture.whenComplete((r, ex) -> messenger.unregisterIncomingPluginChannel(skript, channel, listener));
-
-		// if we haven't gotten a response after a minute, let's just assume there wil never be one
-		Bukkit.getScheduler().scheduleSyncDelayedTask(skript, () -> {
-
-			if (!completableFuture.isDone())
-				completableFuture.cancel(true);
-
-		}, 60 * 20);
-
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		Stream.of(data).forEach(out::writeUTF);
-		player.sendPluginMessage(Skript.getInstance(), channel, out.toByteArray());
-
-		return completableFuture;
-	}
-	
-	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
-	final static Map<String, String> chat = new HashMap<>();
-	final static Map<String, String> englishChat = new HashMap<>();
-	
-	public final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
-	public final static boolean COPY_SUPPORTED = Skript.isRunningMinecraft(1, 15);
-	
 	static {
-		Language.addListener(new LanguageChangeListener() {
-			@Override
-			public void onLanguageChange() {
-				final boolean english = englishChat.isEmpty();
-				chat.clear();
-				for (final ChatColor style : styles) {
-					for (final String s : Language.getList("chat styles." + style.name())) {
-						chat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
-						if (english)
-							englishChat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
-					}
-				}
-			}
-		});
+		Language.addListener(() -> {
+            final boolean english = englishChat.isEmpty();
+            chat.clear();
+            for (final ChatColor style : styles) {
+                for (final String s : Language.getList("chat styles." + style.name())) {
+                    chat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
+                    if (english)
+                        englishChat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
+                }
+            }
+        });
 	}
-	
-	@Nullable
-	public static String getChatStyle(final String s) {
-		SkriptColor color = SkriptColor.fromName(s);
-		
-		if (color != null)
-			return color.getFormattedChat();
-		return chat.get(s);
-	}
-	
+
+    static {
+        Pattern.compile("<([^<>]+)>");
+    }
+
 	private final static Pattern stylePattern = Pattern.compile("<([^<>]+)>");
-	
+
 	/**
 	 * Replaces &lt;chat styles&gt; in the message
-	 * 
+	 *
 	 * @param message
 	 * @return message with localised chat styles converted to Minecraft's format
 	 */
 	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll(Matcher.quoteReplacement("" + message.replace("<<none>>", "")), stylePattern, new Callback<String, Matcher>() {
-			@Override
-			public String run(final Matcher m) {
-				SkriptColor color = SkriptColor.fromName("" + m.group(1));
-				if (color != null)
-					return color.getFormattedChat();
-				final String tag = m.group(1).toLowerCase(Locale.ENGLISH);
-				final String f = chat.get(tag);
-				if (f != null)
-					return f;
-				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
-					ChatColor chatColor = parseHexColor(tag);
-					if (chatColor != null)
-						return chatColor.toString();
-				}
-				return "" + m.group();
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement("" + message.replace("<<none>>", "")), stylePattern, m1 -> {
+			SkriptColor color = SkriptColor.fromName("" + m1.group(1));
+			if (color != null)
+				return color.getFormattedChat();
+			final String tag = m1.group(1).toLowerCase(Locale.ENGLISH);
+			final String f = chat.get(tag);
+			if (f != null)
+				return f;
+			if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+				ChatColor chatColor = parseHexColor(tag);
+				if (chatColor != null)
+					return chatColor.toString();
 			}
+			return "" + m1.group();
 		});
 		assert m != null;
 		// Restore user input post-sanitization
@@ -602,8 +396,8 @@ public abstract class Utils {
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
 	}
-	
-	/**
+
+    /**
 	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the language of colour codes is not well defined while the language is
 	 * changing, and for some hardcoded messages.
 	 * 
@@ -611,57 +405,38 @@ public abstract class Utils {
 	 * @return message with english chat styles converted to Minecraft's format
 	 */
 	public static String replaceEnglishChatStyles(final String message) {
-		if (message.isEmpty())
-			return message;
-		String m = StringUtils.replaceAll(Matcher.quoteReplacement(message), stylePattern, new Callback<String, Matcher>() {
-			@Override
-			public String run(final Matcher m) {
-				SkriptColor color = SkriptColor.fromName("" + m.group(1));
-				if (color != null)
-					return color.getFormattedChat();
-				final String tag = m.group(1).toLowerCase(Locale.ENGLISH);
-				final String f = englishChat.get(tag);
-				if (f != null)
-					return f;
-				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
-					ChatColor chatColor = parseHexColor(tag);
-					if (chatColor != null)
-						return chatColor.toString();
-				}
-				return "" + m.group();
-			}
-		});
-		assert m != null;
-		// Restore user input post-sanitization
-		// Sometimes, the message has already been restored
-		if (!message.equals(m)) {
-			m = m.replace("\\$", "$").replace("\\\\", "\\");
-		}
-		m = ChatColor.translateAlternateColorCodes('&', "" + m);
-		return "" + m;
+		// TODO port to non-Minecraft.
+//		if (message.isEmpty())
+//			return message;
+//		String m = StringUtils.replaceAll(Matcher.quoteReplacement(message), stylePattern, new Callback<String, Matcher>() {
+//			@Override
+//			public String run(final Matcher m) {
+//				SkriptColor color = SkriptColor.fromName("" + m.group(1));
+//				if (color != null)
+//					return color.getFormattedChat();
+//				final String tag = m.group(1).toLowerCase(Locale.ENGLISH);
+//				final String f = englishChat.get(tag);
+//				if (f != null)
+//					return f;
+//				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+//					ChatColor chatColor = parseHexColor(tag);
+//					if (chatColor != null)
+//						return chatColor.toString();
+//				}
+//				return "" + m.group();
+//			}
+//		});
+//		assert m != null;
+//		// Restore user input post-sanitization
+//		// Sometimes, the message has already been restored
+//		if (!message.equals(m)) {
+//			m = m.replace("\\$", "$").replace("\\\\", "\\");
+//		}
+//		m = ChatColor.translateAlternateColorCodes('&', "" + m);
+//		return "" + m;
+		return message;
 	}
 
-	private static final Pattern HEX_PATTERN = Pattern.compile("(?i)#?[0-9a-f]{6}");
-
-	/**
-	 * Tries to get a {@link ChatColor} from the given string.
-	 * @param hex The hex code to parse.
-	 * @return The ChatColor, or null if it couldn't be parsed.
-	 */
-	@SuppressWarnings("null")
-	@Nullable
-	public static ChatColor parseHexColor(String hex) {
-		if (!HEX_SUPPORTED || !HEX_PATTERN.matcher(hex).matches()) // Proper hex code validation
-			return null;
-		
-		hex = hex.replace("#", "");
-		try {
-			return ChatColor.of('#' + hex.substring(0, 6));
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
-	
 	/**
 	 * Gets a random value between <tt>start</tt> (inclusive) and <tt>end</tt> (exclusive)
 	 * 
@@ -807,5 +582,12 @@ public abstract class Utils {
 		}
 		return true;
 	}
-	
+
+	public static ChatColor parseHexColor(String name) {
+		try {
+			return ChatColor.ofHex(name);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
 }

@@ -18,12 +18,6 @@
  */
 package ch.njol.skript.test.runner;
 
-import java.util.Arrays;
-import java.util.logging.Logger;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
@@ -38,6 +32,11 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 @Name("Debug")
 @Description({

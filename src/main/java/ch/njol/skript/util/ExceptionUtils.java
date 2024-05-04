@@ -18,12 +18,11 @@
  */
 package ch.njol.skript.util;
 
-import java.io.IOException;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Language;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.IOException;
 
 public abstract class ExceptionUtils {
 	private ExceptionUtils() {}

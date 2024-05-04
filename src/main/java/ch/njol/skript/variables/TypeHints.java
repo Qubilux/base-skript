@@ -18,12 +18,12 @@
  */
 package ch.njol.skript.variables;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * This is used to manage local variable type hints.
@@ -37,7 +37,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public class TypeHints {
 	
-	private static final Deque<Map<String, Class<?>>> typeHints = new ArrayDeque<>();
+	private static final Deque<Map<String, Class<?>>> typeHints = new ArrayDeque<Map<String, Class<?>>>();
 	
 	static {
 		clear(); // Initialize type hints
@@ -65,7 +65,7 @@ public class TypeHints {
 	}
 	
 	public static void enterScope() {
-		typeHints.push(new HashMap<>());
+		typeHints.push(new HashMap<String, Class<?>>());
 	}
 	
 	public static void exitScope() {
@@ -74,6 +74,6 @@ public class TypeHints {
 	
 	public static void clear() {
 		typeHints.clear();
-		typeHints.push(new HashMap<>());
+		typeHints.push(new HashMap<String, Class<?>>());
 	}
 }

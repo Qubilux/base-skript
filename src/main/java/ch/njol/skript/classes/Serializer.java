@@ -18,21 +18,18 @@
  */
 package ch.njol.skript.classes;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.Callable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.util.Task;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializer;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.Callable;
 
 /**
  * @author Peter Güttinger
@@ -73,16 +70,11 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 			final Constructor<E> constr = c.getDeclaredConstructor();
 			constr.setAccessible(true);
 			return constr.newInstance();
-		} catch (final InstantiationException e) {
-			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
-		} catch (final NoSuchMethodException e) {
+		} catch (final InstantiationException | NoSuchMethodException e) {
 			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
 		} catch (final SecurityException e) {
 			throw Skript.exception("Security manager present");
-		} catch (final IllegalArgumentException e) {
-			assert false;
-			return null;
-		} catch (final IllegalAccessException e) {
+		} catch (final IllegalArgumentException | IllegalAccessException e) {
 			assert false;
 			return null;
 		} catch (final InvocationTargetException e) {
@@ -138,7 +130,6 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	 * @param fields The Fields object that holds the information about the serialised object
 	 * @return The deserialised object. Must not be null (throw an exception instead).
 	 * @throws StreamCorruptedException If the given data is invalid or incomplete
-	 * @throws NotSerializableException
 	 */
 	@SuppressWarnings("unused")
 	protected T deserialize(final Fields fields) throws StreamCorruptedException, NotSerializableException {
@@ -152,7 +143,6 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	 * <p>
 	 * This method must only be called from Bukkit's main thread if {@link #mustSyncDeserialization()} returned true.
 	 * 
-	 * @param s
 	 * @return The deserialised object or null if the input is invalid. An error message may be logged to specify the cause.
 	 */
 	@Deprecated

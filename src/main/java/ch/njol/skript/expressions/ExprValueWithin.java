@@ -35,8 +35,9 @@ import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Value Within")
 @Description(
@@ -66,7 +67,7 @@ public class ExprValueWithin extends WrapperExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		boolean plural;
 		if (exprs[0] != null) {
 			UnparsedLiteral unparsedLiteral = (UnparsedLiteral) exprs[0].getSource();
@@ -94,7 +95,7 @@ public class ExprValueWithin extends WrapperExpression<Object> {
 	}
 
 	@Override
-	public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+	public Class<?> @Nullable [] acceptChange(@NotNull ChangeMode mode) {
 		changer = Classes.getSuperClassInfo(getReturnType()).getChanger();
 		if (changer == null)
 			return null;
@@ -103,14 +104,14 @@ public class ExprValueWithin extends WrapperExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(@NotNull Event event, @Nullable Object @NotNull [] delta, @NotNull ChangeMode mode) {
 		if (changer == null)
 			throw new UnsupportedOperationException();
 		changer.change(getArray(event), delta, mode);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return (classInfo == null ? "value" : classInfo.toString(event, debug)) + " within " + getExpr();
 	}
 

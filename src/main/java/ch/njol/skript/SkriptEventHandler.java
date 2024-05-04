@@ -18,37 +18,22 @@
  */
 package ch.njol.skript;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Result;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.RegisteredListener;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Task;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.eventbus.EventBus;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.event.*;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public final class SkriptEventHandler {
 
@@ -57,13 +42,11 @@ public final class SkriptEventHandler {
 	/**
 	 * An event listener for one priority.
 	 * Also stores the registered events for this listener, and
-	 * the {@link EventExecutor} to be used with this listener.
+	 * the {@link EventBus} to be used with this listener.
 	 */
-	public static class PriorityListener implements Listener {
+	public static class PriorityListener extends Listener {
 
 		public final EventPriority priority;
-
-		public final EventExecutor executor = (listener, event) -> check(event, ((PriorityListener) listener).priority);
 
 		public PriorityListener(EventPriority priority) {
 			this.priority = priority;
@@ -135,7 +118,7 @@ public final class SkriptEventHandler {
 		}
 
 		boolean isCancelled = event instanceof Cancellable && ((Cancellable) event).isCancelled() && !listenCancelled.contains(event.getClass());
-		boolean isResultDeny = !(event instanceof PlayerInteractEvent && (((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR) && ((PlayerInteractEvent) event).useItemInHand() != Result.DENY);
+		boolean isResultDeny = false;
 
 		if (isCancelled && isResultDeny) {
 			if (Skript.logVeryHigh())
@@ -225,7 +208,7 @@ public final class SkriptEventHandler {
 
 	/**
 	 * @deprecated This method no longer does anything as self registered Triggers
-	 * 	are unloaded when the {@link ch.njol.skript.lang.SkriptEvent} is unloaded (no need to keep tracking them here).
+	 * 	are unloaded when the {@link SkriptEvent} is unloaded (no need to keep tracking them here).
 	 */
 	@Deprecated
 	public static void addSelfRegisteringTrigger(Trigger t) { }
@@ -262,8 +245,19 @@ public final class SkriptEventHandler {
 
 		if (!isEventRegistered(handlerList, priority)) { // Check if event is registered
 			PriorityListener listener = listeners[priority.ordinal()];
-			Bukkit.getPluginManager().registerEvent(event, listener, priority, listener.executor, Skript.getInstance());
+			BaseSkript.getPluginManager().registerEvent(event, listener, priority, listener.executor, Skript.getInstance());
 		}
+	}
+
+	private static boolean isEventRegistered(HandlerList handlerList, EventPriority priority) {
+		for (Listener listener : handlerList.getRegisteredListeners()) {
+			if (listener instanceof PriorityListener) {
+				PriorityListener pl = (PriorityListener) listener;
+				if (pl.priority == priority)
+					return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -309,17 +303,17 @@ public final class SkriptEventHandler {
 	/**
 	 * Events which are listened even if they are cancelled.
 	 */
-	public static final Set<Class<? extends Event>> listenCancelled = new HashSet<>();
+	public static final Set<Class<? extends Event>> listenCancelled = new HashSet<Class<? extends Event>>();
 
 	/**
 	 * A cache for the getHandlerList methods of Event classes.
 	 */
-	private static final Map<Class<? extends Event>, Method> handlerListMethods = new HashMap<>();
+	private static final Map<Class<? extends Event>, Method> handlerListMethods = new HashMap<Class<? extends Event>, Method>();
 
 	/**
 	 * A cache for obtained HandlerLists.
 	 */
-	private static final Map<Method, WeakReference<HandlerList>> handlerListCache = new HashMap<>();
+	private static final Map<Method, WeakReference<HandlerList>> handlerListCache = new HashMap<Method, WeakReference<HandlerList>>();
 
 	@Nullable
 	private static HandlerList getHandlerList(Class<? extends Event> eventClass) {
@@ -331,10 +325,10 @@ public final class SkriptEventHandler {
 			if (handlerList == null) {
 				method.setAccessible(true);
 				handlerList = (HandlerList) method.invoke(null);
-				handlerListCache.put(method, new WeakReference<>(handlerList));
+				handlerListCache.put(method, new WeakReference<HandlerList>(handlerList));
 			}
 
-			return handlerList;
+			return null;
 		} catch (Exception ex) {
 			//noinspection ThrowableNotThrown
 			Skript.exception(ex, "Failed to get HandlerList for event " + eventClass.getName());
@@ -378,18 +372,18 @@ public final class SkriptEventHandler {
 		}
 	}
 
-	private static boolean isEventRegistered(HandlerList handlerList, EventPriority priority) {
-		for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-			Listener listener = registeredListener.getListener();
-			if (
-				registeredListener.getPlugin() == Skript.getInstance()
-				&& listener instanceof PriorityListener
-				&& ((PriorityListener) listener).priority == priority
-			) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private static boolean isEventRegistered(HandlerList handlerList, EventPriority priority) {
+//		for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
+//			Listener listener = registeredListener.getListener();
+//			if (
+//				registeredListener.getPlugin() == Skript.getInstance()
+//				&& listener instanceof PriorityListener
+//				&& ((PriorityListener) listener).priority == priority
+//			) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 }

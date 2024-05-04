@@ -18,10 +18,6 @@
  */
 package ch.njol.skript.test.runner;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-import org.skriptlang.skript.lang.script.Script;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
@@ -34,6 +30,9 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.script.Script;
 
 @Name("Assert")
 @Description("Assert that condition is true. Test fails when it is not.")
@@ -91,11 +90,6 @@ public class EffAssert extends Effect  {
 		if (condition.check(event) == shouldFail) {
 			String message = errorMsg.getSingle(event);
 			assert message != null; // Should not happen, developer needs to fix test.
-			if (SkriptJUnitTest.getCurrentJUnitTest() != null) {
-				TestTracker.junitTestFailed(SkriptJUnitTest.getCurrentJUnitTest(), message);
-			} else {
-				TestTracker.testFailed(message, script);
-			}
 			return null;
 		}
 		return getNext();

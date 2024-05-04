@@ -102,9 +102,9 @@ public enum Tag {
 		return byID[tag - MIN_PRIMITIVE + MIN_WRAPPER];
 	}
 	
-	private static final Map<Class<?>, Tag> types = new HashMap<>();
+	private static final Map<Class<?>, Tag> types = new HashMap<Class<?>, Tag>();
 	private static final Tag[] byID = new Tag[256];
-	private static final Map<String, Tag> byName = new HashMap<>();
+	private static final Map<String, Tag> byName = new HashMap<String, Tag>();
 	static {
 		for (Tag tag : Tag.values()) {
 			types.put(tag.type, tag);
@@ -139,7 +139,7 @@ public enum Tag {
 		return byName.get(name);
 	}
 	
-	private static final HashMap<Class<?>, Tag> wrapperTypes = new HashMap<>();
+	private static final HashMap<Class<?>, Tag> wrapperTypes = new HashMap<Class<?>, Tag>();
 	static {
 		wrapperTypes.put(Byte.class, T_BYTE);
 		wrapperTypes.put(Short.class, T_SHORT);

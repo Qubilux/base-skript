@@ -31,7 +31,7 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
@@ -327,7 +327,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	@Override
 	@Nullable
 	public Iterator<? extends T> iterator(Event event) {
-		return new ArrayIterator<>(getArray(event));
+		return new ArrayIterator<T>(getArray(event));
 	}
 
 	@Override

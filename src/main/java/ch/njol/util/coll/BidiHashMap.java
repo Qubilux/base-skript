@@ -18,19 +18,21 @@
  */
 package ch.njol.util.coll;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, T2> {
 	
-	private static final long serialVersionUID = -9011678701069901061L;
+	@Serial
+    private static final long serialVersionUID = -9011678701069901061L;
 	
 	private final BidiHashMap<T2, T1> other;
 	
@@ -39,11 +41,11 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 	}
 	
 	public BidiHashMap() {
-		other = new BidiHashMap<>(this);
+		other = new BidiHashMap<T2, T1>(this);
 	}
 	
 	public BidiHashMap(final Map<? extends T1, ? extends T2> values) {
-		other = new BidiHashMap<>(this);
+		other = new BidiHashMap<T2, T1>(this);
 		putAll(values);
 	}
 	

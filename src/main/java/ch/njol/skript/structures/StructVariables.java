@@ -18,26 +18,6 @@
  */
 package ch.njol.skript.structures;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.skriptlang.skript.lang.converter.Converters;
-import org.skriptlang.skript.lang.entry.EntryContainer;
-import org.skriptlang.skript.lang.script.Script;
-import org.skriptlang.skript.lang.script.ScriptData;
-import org.skriptlang.skript.lang.structure.Structure;
-
-import com.google.common.collect.ImmutableList;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.EntryNode;
@@ -58,6 +38,17 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import com.google.common.collect.ImmutableList;
+import io.github.ultreon.skript.event.Event;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+import org.skriptlang.skript.lang.converter.Converters;
+import org.skriptlang.skript.lang.entry.EntryContainer;
+import org.skriptlang.skript.lang.script.Script;
+import org.skriptlang.skript.lang.script.ScriptData;
+import org.skriptlang.skript.lang.structure.Structure;
+
+import java.util.*;
 
 @Name("Variables")
 @Description({
@@ -85,7 +76,7 @@ public class StructVariables extends Structure {
 
 	public static class DefaultVariables implements ScriptData {
 
-		private final Deque<Map<String, Class<?>[]>> hints = new ArrayDeque<>();
+		private final Deque<Map<String, Class<?>[]>> hints = new ArrayDeque<Map<String, Class<?>[]>>();
 		private final List<NonNullPair<String, Object>> variables;
 		private boolean loaded;
 
@@ -105,7 +96,7 @@ public class StructVariables extends Structure {
 		}
 
 		public void enterScope() {
-			hints.push(new HashMap<>());
+			hints.push(new HashMap<String, Class<?>[]>());
 		}
 
 		public void exitScope() {
@@ -154,9 +145,9 @@ public class StructVariables extends Structure {
 		Script script = getParser().getCurrentScript();
 		DefaultVariables existing = script.getData(DefaultVariables.class); // if the user has TWO variables: sections
 		if (existing != null && existing.hasDefaultVariables()) {
-			variables = new ArrayList<>(existing.variables);
+			variables = new ArrayList<NonNullPair<String, Object>>(existing.variables);
 		} else {
-			variables = new ArrayList<>();
+			variables = new ArrayList<NonNullPair<String, Object>>();
 		}
 		for (Node n : node) {
 			if (!(n instanceof EntryNode)) {
@@ -235,7 +226,7 @@ public class StructVariables extends Structure {
 					continue;
 				}
 			}
-			variables.add(new NonNullPair<>(name, o));
+			variables.add(new NonNullPair<String, Object>(name, o));
 		}
 		script.addData(new DefaultVariables(variables)); // we replace the previous entry
 		return true;

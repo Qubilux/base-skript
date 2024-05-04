@@ -30,8 +30,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
@@ -60,14 +61,14 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		list = LiteralUtils.defendExpression(exprs[0]);
 		return LiteralUtils.canInitSafely(list);
 	}
 
 	@Override
 	@Nullable
-	protected Object[] get(Event event) {
+	protected Object @NotNull [] get(@NotNull Event event) {
 		try {
 			return list.stream(event)
 					.sorted(ExprSortedList::compare)
@@ -92,7 +93,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
+	public <R> Expression<? extends R> getConvertedExpression(Class<R> @NotNull ... to) {
 		if (CollectionUtils.containsSuperclass(to, getReturnType()))
 			return (Expression<? extends R>) this;
 
@@ -109,12 +110,12 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public Class<?> getReturnType() {
+	public @NotNull Class<?> getReturnType() {
 		return list.getReturnType();
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		return "sorted " + list.toString(e, debug);
 	}
 

@@ -23,16 +23,8 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
 
 /**
  * Utils for collections and arrays. All methods will not print any errors for <tt>null</tt> collections/arrays, but will return false/-1/etc.
@@ -103,19 +95,19 @@ public abstract class CollectionUtils {
 		return true;
 	}
 	
-	public static int indexOf(final @Nullable int[] array, final int num) {
+	public static int indexOf(final int @Nullable [] array, final int num) {
 		if (array == null)
 			return -1;
 		return indexOf(array, num, 0, array.length);
 	}
 	
-	public static int indexOf(final @Nullable int[] array, final int num, final int start) {
+	public static int indexOf(final int @Nullable [] array, final int num, final int start) {
 		if (array == null)
 			return -1;
 		return indexOf(array, num, start, array.length);
 	}
 	
-	public static int indexOf(final @Nullable int[] array, final int num, final int start, final int end) {
+	public static int indexOf(final int @Nullable [] array, final int num, final int start, final int end) {
 		if (array == null)
 			return -1;
 		for (int i = start; i < end; i++) {
@@ -125,7 +117,7 @@ public abstract class CollectionUtils {
 		return -1;
 	}
 	
-	public static boolean contains(final @Nullable int[] array, final int num) {
+	public static boolean contains(final int @Nullable [] array, final int num) {
 		return indexOf(array, num) != -1;
 	}
 	
@@ -200,7 +192,7 @@ public abstract class CollectionUtils {
 		if (map == null)
 			return null;
 		if (map.containsKey(key))
-			return new Pair<>(key, map.get(key));
+			return new Pair<T, U>(key, map.get(key));
 		return null;
 	}
 	
@@ -314,7 +306,7 @@ public abstract class CollectionUtils {
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
 			return sets[0];
-		final Set<E> l = new HashSet<>(sets[0]);
+		final Set<E> l = new HashSet<E>(sets[0]);
 		for (int i = 1; i < sets.length; i++) {
 			if (sets[i] == null)
 				continue;
@@ -335,7 +327,7 @@ public abstract class CollectionUtils {
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
 			return sets[0];
-		final Set<E> l = new HashSet<>(sets[0]);
+		final Set<E> l = new HashSet<E>(sets[0]);
 		for (int i = 1; i < sets.length; i++) {
 			if (sets[i] == null)
 				continue;
@@ -463,7 +455,7 @@ public abstract class CollectionUtils {
 		return r;
 	}
 	
-	public static float[] toFloats(final @Nullable double[] doubles) {
+	public static float[] toFloats(final double @Nullable [] doubles) {
 		if (doubles == null)
 			return new float[0];
 		final float[] floats = new float[doubles.length];

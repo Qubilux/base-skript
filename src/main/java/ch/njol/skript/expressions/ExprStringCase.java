@@ -18,8 +18,8 @@
  */
 package ch.njol.skript.expressions;
 
+import io.github.ultreon.skript.event.Event;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,6 +32,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Case Text")
 @Description("Copy of given text in Lowercase, Uppercase, Proper Case, camelCase, PascalCase, Snake_Case, and Kebab-Case")
@@ -80,7 +81,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		expr = (Expression<String>) exprs[0];
 		if (matchedPattern <= 1) { // Basic Case Change 
 			casemode = (parseResult.mark == 0) ? 1 : 2;
@@ -113,7 +114,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String @NotNull [] get(@NotNull Event e) {
 		String[] strs = expr.getArray(e);
 		for (int i = 0; i < strs.length; i++) {
 			if (strs[i] != null) {
@@ -148,12 +149,12 @@ public class ExprStringCase extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		switch (type) {
 			case 0: // Basic Case Change 
 				return (casemode == 1) ? "uppercase" : "lowercase";

@@ -18,17 +18,16 @@
  */
 package ch.njol.skript.util;
 
+import ch.njol.skript.Skript;
+import ch.njol.util.Closeable;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
-import ch.njol.util.Closeable;
 
 /**
  * @author Peter Güttinger
@@ -74,15 +73,15 @@ public abstract class Task implements Runnable, Closeable {
 		
 		if (period == -1) {
 			if (async) {
-				taskID = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay).getTaskId();
+				taskID = BaseSkript.getScheduler().runTaskLaterAsynchronously(plugin, this, delay);
 			} else {
-				taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, delay);
+				taskID = BaseSkript.getScheduler().scheduleSyncDelayedTask(plugin, this, delay);
 			}
 		} else {
 			if (async) {
-				taskID = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period).getTaskId();
+				taskID = BaseSkript.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period);
 			} else {
-				taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
+				taskID = BaseSkript.getScheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
 			}
 		}
 		assert taskID != -1;
@@ -94,7 +93,7 @@ public abstract class Task implements Runnable, Closeable {
 	public final boolean isAlive() {
 		if (taskID == -1)
 			return false;
-		return Bukkit.getScheduler().isQueued(taskID) || Bukkit.getScheduler().isCurrentlyRunning(taskID);
+		return BaseSkript.getScheduler().isQueued(taskID) || BaseSkript.getScheduler().isCurrentlyRunning(taskID);
 	}
 	
 	/**
@@ -102,7 +101,7 @@ public abstract class Task implements Runnable, Closeable {
 	 */
 	public final void cancel() {
 		if (taskID != -1) {
-			Bukkit.getScheduler().cancelTask(taskID);
+			BaseSkript.getScheduler().cancelTask(taskID);
 			taskID = -1;
 		}
 	}
@@ -159,23 +158,23 @@ public abstract class Task implements Runnable, Closeable {
 	 */
 	@Nullable
 	public static <T> T callSync(final Callable<T> c, final Plugin p) {
-		if (Bukkit.isPrimaryThread()) {
+		if (BaseSkript.isPrimaryThread()) {
 			try {
 				return c.call();
 			} catch (final Exception e) {
 				Skript.exception(e);
 			}
 		}
-		final Future<T> f = Bukkit.getScheduler().callSyncMethod(p, c);
+		final Future<T> f = BaseSkript.getScheduler().callSyncMethod(p, c);
 		try {
 			while (true) {
 				try {
 					return f.get();
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException ignored) {}
 			}
 		} catch (final ExecutionException e) {
 			Skript.exception(e);
-		} catch (final CancellationException e) {} catch (final ThreadDeath e) {}// server shutting down
+		} catch (final CancellationException | ThreadDeath ignored) {} // server shutting down
 		return null;
 	}
 	

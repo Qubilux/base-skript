@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,6 +32,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Now")
 @Description("The current <a href='classes.html#date'>system time</a> of the server. Use <a href='#ExprTime'>time</a> to get the <a href='classes.html#time'>Minecraft time</a> of a world.")
@@ -44,12 +45,12 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?> @NotNull [] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parseResult) {
 		return true;
 	}
 	
 	@Override
-	protected Date[] get(final Event e) {
+	protected Date @NotNull [] get(final @NotNull Event e) {
 		return new Date[] {new Date()};
 	}
 	
@@ -59,12 +60,12 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	public Class<? extends Date> getReturnType() {
+	public @NotNull Class<? extends Date> getReturnType() {
 		return Date.class;
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "now";
 	}
 	

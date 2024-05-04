@@ -19,8 +19,6 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
-import org.skriptlang.skript.lang.converter.Converter;
-import org.skriptlang.skript.lang.converter.ConverterInfo;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -32,12 +30,15 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.ConverterInfo;
+import org.skriptlang.skript.lang.converter.Converters;
 
 import java.lang.reflect.Array;
 import java.util.Map.Entry;
@@ -84,7 +85,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	private static final Pattern LOOP_PATTERN = Pattern.compile("^(.+)-(\\d+)$");
 
 	@Override
-	public boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public boolean init(Expression<?> @NotNull [] vars, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parser) {
 		name = parser.expr;
 		String s = "" + parser.regexes.get(0).group();
 		int i = -1;
@@ -137,11 +138,11 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	protected <R> ConvertedExpression<Object, ? extends R> getConvertedExpr(Class<R>... to) {
+	protected <R> ConvertedExpression<Object, ? extends R> getConvertedExpr(Class<R> @NotNull ... to) {
 		if (isVariableLoop && !isIndex) {
 			Class<R> superType = (Class<R>) Utils.getSuperType(to);
-			return new ConvertedExpression<>(this, superType,
-					new ConverterInfo<>(Object.class, superType, new Converter<Object, R>() {
+			return new ConvertedExpression<Object, R>(this, superType,
+					new ConverterInfo<Object, R>(Object.class, superType, new Converter<Object, R>() {
 				@Override
 				@Nullable
 				public R convert(Object o) {
@@ -154,7 +155,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public Class<? extends Object> getReturnType() {
+	public @NotNull Class<? extends Object> getReturnType() {
 		if (isIndex)
 			return String.class;
 		return loop.getLoopedExpression().getReturnType();
@@ -162,7 +163,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
+	protected Object @NotNull [] get(@NotNull Event e) {
 		if (isVariableLoop) {
 			@SuppressWarnings("unchecked") Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
 			if (current == null)
@@ -180,7 +181,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		if (e == null)
 			return name;
 		if (isVariableLoop) {

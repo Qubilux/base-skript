@@ -19,15 +19,16 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.SkriptAPIException;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.structure.StructureInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<E> {
-
+	private static final List<Class<? extends Event>> ignoredEvents = new ArrayList<Class<? extends Event>>();
 	public Class<? extends Event>[] events;
 	public final String name;
 
@@ -51,9 +52,12 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<
 		for (int i = 0; i < events.length; i++) {
 			for (int j = i + 1; j < events.length; j++) {
 				if (events[i].isAssignableFrom(events[j]) || events[j].isAssignableFrom(events[i])) {
-					if (events[i].equals(PlayerInteractAtEntityEvent.class)
-							|| events[j].equals(PlayerInteractAtEntityEvent.class))
-						continue; // Spigot seems to have an exception for those two events...
+					for (Class<? extends Event> e : this.ignoredEvents) {
+						if (e.isAssignableFrom(events[i]))
+							events[i] = e;
+						if (e.isAssignableFrom(events[j]))
+							events[j] = e;
+					}
 
 					throw new SkriptAPIException("The event " + name + " (" + eventClass.getName() + ") registers with super/subclasses " + events[i].getName() + " and " + events[j].getName());
 				}
@@ -70,6 +74,10 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<
 
 		// uses the name without 'on ' or '*'
 		this.id = "" + name.toLowerCase(Locale.ENGLISH).replaceAll("[#'\"<>/&]", "").replaceAll("\\s+", "_");
+	}
+
+	public static void registerIgnoredEvent(Class<? extends Event> event) {
+		SkriptEventInfo.ignoredEvents.add(event);
 	}
 
 	/**
@@ -148,8 +156,6 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<
 		this.requiredPlugins = pluginNames;
 		return this;
 	}
-
-
 	public String getId() {
 		return id;
 	}

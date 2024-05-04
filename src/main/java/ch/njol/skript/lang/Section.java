@@ -24,7 +24,7 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
 
@@ -138,7 +138,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		parser.setCurrentEvent(name, events);
 		SkriptEvent skriptEvent = new SectionSkriptEvent(name, this);
 		parser.setCurrentStructure(skriptEvent);
-		parser.setCurrentSections(new ArrayList<>());
+		parser.setCurrentSections(new ArrayList<TriggerSection>());
 		parser.setHasDelayBefore(Kleenean.FALSE);
 		List<TriggerItem> triggerItems = ScriptLoader.loadItems(sectionNode);
 

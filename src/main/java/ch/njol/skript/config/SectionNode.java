@@ -18,17 +18,6 @@
  */
 package ch.njol.skript.config;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.regex.Pattern;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.validate.EntryValidator;
@@ -38,13 +27,22 @@ import ch.njol.util.NonNullPair;
 import ch.njol.util.NullableChecker;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 public class SectionNode extends Node implements Iterable<Node> {
 	
-	private final ArrayList<Node> nodes = new ArrayList<>();
+	private final ArrayList<Node> nodes = new ArrayList<Node>();
 	
 	public SectionNode(final String key, final String comment, final SectionNode parent, final int lineNum) {
 		super(key, comment, parent, lineNum);
@@ -140,12 +138,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 		@SuppressWarnings("null")
 		@NonNull
 		final Iterator<Node> iter = nodes.iterator();
-		return new CheckedIterator<Node>(iter, new NullableChecker<Node>() {
-			@Override
-			public boolean check(final @Nullable Node n) {
-				return n != null && !n.isVoid();
-			}
-		}) {
+		return new CheckedIterator<Node>(iter, n -> n != null && !n.isVoid()) {
 			@Override
 			public boolean hasNext() {
 				final boolean hasNext = super.hasNext();
@@ -436,7 +429,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	}
 	
 	HashMap<String, String> toMap(final String prefix, final String separator) {
-		final HashMap<String, String> r = new HashMap<>();
+		final HashMap<String, String> r = new HashMap<String, String>();
 		for (final Node n : this) {
 			if (n instanceof EntryNode) {
 				r.put(prefix + n.getKey(), ((EntryNode) n).getValue());

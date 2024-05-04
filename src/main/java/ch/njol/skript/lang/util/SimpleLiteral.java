@@ -33,7 +33,7 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -139,7 +139,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 		R[] parsedData = Converters.convert(data, to, (Class<R>) Utils.getSuperType(to));
 		if (parsedData.length != data.length)
 			return null;
-		return new ConvertedLiteral<>(this, parsedData, (Class<R>) Utils.getSuperType(to));
+		return new ConvertedLiteral<T, R>(this, parsedData, (Class<R>) Utils.getSuperType(to));
 	}
 
 	@Override

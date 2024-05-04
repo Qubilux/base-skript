@@ -26,7 +26,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Keywords;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -36,6 +36,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Peter Güttinger
@@ -65,11 +66,11 @@ public class ExprSubstring extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parseResult) {
 		usedSubstring = matchedPattern == 0;
 		string = (Expression<String>) exprs[usedSubstring ? 0 : 1];
-		start = (Expression<Number>) (usedSubstring ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
-		end = (Expression<Number>) (usedSubstring ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
+		start = (Expression<Number>) (usedSubstring ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<Integer>(1, false) : exprs[0]);
+		end = (Expression<Number>) (usedSubstring ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<Integer>(1, false) : exprs[0]);
 		assert end != null || start != null;
 		return true;
 	}
@@ -77,8 +78,8 @@ public class ExprSubstring extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected String[] get(final Event e) {
-		final List<String> parts = new ArrayList<>();
+	protected String @NotNull [] get(final @NotNull Event e) {
+		final List<String> parts = new ArrayList<String>();
 		final String[] strings = string.getArray(e);
 		if (strings == null)
 			return new String[0];
@@ -111,13 +112,13 @@ public class ExprSubstring extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	
 	@Override
 	@SuppressWarnings("null")
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		if (start == null) {
 			assert end != null;
 			return "the first " + end.toString(e, debug) + " characters of " + string.toString(e, debug);

@@ -18,17 +18,17 @@
  */
 package ch.njol.skript.config.validate;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.config.Node;
+import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.config.EntryNode;
+import ch.njol.skript.config.SectionNode;
+import ch.njol.util.Setter;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Parser;
-import ch.njol.skript.config.EntryNode;
-import ch.njol.skript.config.Node;
-import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.log.SkriptLogger;
-import ch.njol.util.Setter;
 
 /**
  * @author Peter Güttinger
@@ -45,7 +45,7 @@ public class SectionValidator implements NodeValidator {
 		}
 	}
 	
-	private final HashMap<String, NodeInfo> nodes = new HashMap<>();
+	private final HashMap<String, NodeInfo> nodes = new HashMap<String, NodeInfo>();
 	private boolean allowUndefinedSections = false;
 	private boolean allowUndefinedEntries = false;
 	
@@ -69,7 +69,7 @@ public class SectionValidator implements NodeValidator {
 	}
 	
 	public <T> SectionValidator addEntry(final String name, final Parser<? extends T> parser, final Setter<T> setter, final boolean optional) {
-		addNode(name, new ParsedEntryValidator<>(parser, setter), optional);
+		addNode(name, new ParsedEntryValidator<T>(parser, setter), optional);
 		return this;
 	}
 	

@@ -226,3 +226,5 @@ test_runners/
 
 ## Mac MetaData
 **/.DS_Store
+/run/
+/.skript/

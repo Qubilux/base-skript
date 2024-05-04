@@ -214,7 +214,7 @@ public class Noun extends Message {
 	 * @return (singular, plural)
 	 */
 	public static NonNullPair<String, String> getPlural(String s) {
-		NonNullPair<String, String> r = new NonNullPair<>("", "");
+		NonNullPair<String, String> r = new NonNullPair<String, String>("", "");
 		int part = 3; // 1 = singular, 2 = plural, 3 = both
 		int i = StringUtils.count(s, '¦');
 		int last = 0, c = -1;
@@ -261,7 +261,7 @@ public class Noun extends Message {
 		return s.substring(0, x) + "¦" + s.substring(x, g) + "¦" + s.substring(g);
 	}
 	
-	static final HashMap<String, Integer> genders = new HashMap<>();
+	static final HashMap<String, Integer> genders = new HashMap<String, Integer>();
 	
 	/**
 	 * @param gender Gender id as defined in [language].lang (i.e. without the leading @)
@@ -303,11 +303,11 @@ public class Noun extends Message {
 			g = getGender("" + s.substring(c + 1).trim(), key);
 			s = "" + s.substring(0, c).trim();
 		}
-		return new NonNullPair<>(s, g);
+		return new NonNullPair<String, Integer>(s, g);
 	}
 	
-	static final List<String> indefiniteArticles = new ArrayList<>(3);
-	static final List<String> definiteArticles = new ArrayList<>(3);
+	static final List<String> indefiniteArticles = new ArrayList<String>(3);
+	static final List<String> definiteArticles = new ArrayList<String>(3);
 	static String definitePluralArticle = "";
 	
 	static {

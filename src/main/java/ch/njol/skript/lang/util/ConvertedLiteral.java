@@ -24,7 +24,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -40,7 +40,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 
 	@SuppressWarnings("unchecked")
 	public ConvertedLiteral(Literal<F> source, T[] data, Class<T> to) {
-		super(source, to, new ConverterInfo<>((Class<F>) source.getReturnType(), to, from -> Converters.convert(from, to), 0));
+		super(source, to, new ConverterInfo<F, T>((Class<F>) source.getReturnType(), to, from -> Converters.convert(from, to), 0));
 		this.data = data;
 		assert data.length > 0;
 	}
@@ -89,7 +89,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	@Override
 	@Nullable
 	public Iterator<T> iterator(Event event) {
-		return new ArrayIterator<>(data);
+		return new ArrayIterator<T>(data);
 	}
 
 	@Override

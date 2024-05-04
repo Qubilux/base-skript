@@ -27,14 +27,7 @@ import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @NotThreadSafe
 public final class Fields implements Iterable<FieldContext> {
@@ -169,7 +162,7 @@ public final class Fields implements Iterable<FieldContext> {
 	@Nullable
 	private final Yggdrasil yggdrasil;
 	
-	private final Map<String, FieldContext> fields = new HashMap<>();
+	private final Map<String, FieldContext> fields = new HashMap<String, FieldContext>();
 	
 	/**
 	 * Creates an empty Fields object.
@@ -233,7 +226,7 @@ public final class Fields implements Iterable<FieldContext> {
 		}
 	}
 	
-	private static final Map<Class<?>, Collection<Field>> cache = new HashMap<>();
+	private static final Map<Class<?>, Collection<Field>> cache = new HashMap<Class<?>, Collection<Field>>();
 	
 	/**
 	 * Gets all serializable fields of the provided class, including superclasses.
@@ -247,8 +240,8 @@ public final class Fields implements Iterable<FieldContext> {
 		Collection<Field> fields = cache.get(type);
 		if (fields != null)
 			return fields;
-		fields = new ArrayList<>();
-		Set<String> ids = new HashSet<>();
+		fields = new ArrayList<Field>();
+		Set<String> ids = new HashSet<String>();
 		for (Class<?> superClass = type; superClass != null; superClass = superClass.getSuperclass()) {
 			Field[] declaredFields = superClass.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -278,7 +271,7 @@ public final class Fields implements Iterable<FieldContext> {
 		Yggdrasil yggdrasil = this.yggdrasil;
 		if (yggdrasil == null)
 			throw new YggdrasilException("");
-		Set<FieldContext> excessive = new HashSet<>(fields.values());
+		Set<FieldContext> excessive = new HashSet<FieldContext>(fields.values());
 		Class<?> type = object.getClass();
 		assert type != null;
 		for (Field field : getFields(type)) {

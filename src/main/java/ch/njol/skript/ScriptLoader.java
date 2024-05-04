@@ -18,11 +18,14 @@
  */
 package ch.njol.skript;
 
+import ch.njol.skript.events.util.PreScriptLoadEvent;
+import ch.njol.skript.log.LogEntry;
+import ch.njol.skript.log.RetainingLogHandler;
+import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
-import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Statement;
@@ -30,9 +33,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.CountingLogHandler;
-import ch.njol.skript.log.LogEntry;
-import ch.njol.skript.log.RetainingLogHandler;
-import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.structures.StructOptions.OptionsData;
 import ch.njol.skript.util.ExceptionUtils;
@@ -44,8 +44,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.OpenCloseable;
 import ch.njol.util.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -142,7 +142,7 @@ public class ScriptLoader {
 	 * All loaded scripts.
 	 */
 	@SuppressWarnings("null")
-	private static final Set<Script> loadedScripts = Collections.synchronizedSortedSet(new TreeSet<>(new Comparator<Script>() {
+	private static final Set<Script> loadedScripts = Collections.synchronizedSortedSet(new TreeSet<Script>(new Comparator<Script>() {
 		@Override
 		public int compare(Script s1, Script s2) {
 			File f1 = s1.getConfig().getFile();
@@ -204,7 +204,7 @@ public class ScriptLoader {
 	public static Set<Script> getScripts(File directory) {
 		if (!directory.isDirectory())
 			throw new IllegalArgumentException("Something other than a directory was provided.");
-		Set<Script> scripts = new HashSet<>();
+		Set<Script> scripts = new HashSet<Script>();
 		//noinspection ConstantConditions - If listFiles still manages to return null, we should probably let the exception print
 		for (File file : directory.listFiles(loadedScriptFilter)) {
 			if (file.isDirectory()) {
@@ -221,7 +221,7 @@ public class ScriptLoader {
 	/**
 	 * All disabled script files.
 	 */
-	private static final Set<File> disabledScripts = Collections.synchronizedSet(new HashSet<>());
+	private static final Set<File> disabledScripts = Collections.synchronizedSet(new HashSet<File>());
 
 	/**
 	 * Filter for disabled scripts and folders.
@@ -259,7 +259,7 @@ public class ScriptLoader {
 	 * otherwise this queue is not used.
 	 * @see AsyncLoaderThread
 	 */
-	private static final BlockingQueue<Runnable> loadQueue = new LinkedBlockingQueue<>();
+	private static final BlockingQueue<Runnable> loadQueue = new LinkedBlockingQueue<Runnable>();
 
 	/**
 	 * The {@link ThreadGroup} all async loaders belong to.
@@ -270,7 +270,7 @@ public class ScriptLoader {
 	/**
 	 * All active {@link AsyncLoaderThread}s.
 	 */
-	private static final List<AsyncLoaderThread> loaderThreads = new ArrayList<>();
+	private static final List<AsyncLoaderThread> loaderThreads = new ArrayList<AsyncLoaderThread>();
 
 	/**
 	 * The current amount of loader threads.
@@ -413,7 +413,7 @@ public class ScriptLoader {
 	 * the generic of the {@link Supplier} parameter.
 	 */
 	private static <T> CompletableFuture<T> makeFuture(Supplier<T> supplier, OpenCloseable openCloseable) {
-		CompletableFuture<T> future = new CompletableFuture<>();
+		CompletableFuture<T> future = new CompletableFuture<T>();
 		Runnable task = () -> {
 			try {
 				openCloseable.open();
@@ -432,7 +432,7 @@ public class ScriptLoader {
 			}
 		};
 		
-		if (isAsync() && Bukkit.isPrimaryThread()) {
+		if (isAsync() && BaseSkript.isPrimaryThread()) {
 			loadQueue.add(task);
 		} else {
 			task.run();
@@ -486,13 +486,13 @@ public class ScriptLoader {
 		if (configs.isEmpty()) // Nothing to load
 			return CompletableFuture.completedFuture(new ScriptInfo());
 
-		Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
+		BaseSkript.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
 		
 		ScriptInfo scriptInfo = new ScriptInfo();
 
-		List<NonNullPair<Script, List<Structure>>> scripts = new ArrayList<>();
+		List<NonNullPair<Script, List<Structure>>> scripts = new ArrayList<NonNullPair<Script, List<Structure>>>();
 
-		List<CompletableFuture<Void>> scriptInfoFutures = new ArrayList<>();
+		List<CompletableFuture<Void>> scriptInfoFutures = new ArrayList<CompletableFuture<Void>>();
 		for (Config config : configs) {
 			if (config == null)
 				throw new NullPointerException();
@@ -521,7 +521,7 @@ public class ScriptLoader {
 					List<NonNullPair<NonNullPair<Script, List<Structure>>, Structure>> pairs = scripts.stream()
 							.flatMap(pair -> { // Flatten each entry down to a stream of Script-Structure pairs
 								return pair.getSecond().stream()
-										.map(structure -> new NonNullPair<>(pair, structure));
+										.map(structure -> new NonNullPair<NonNullPair<Script, List<Structure>>, Structure>(pair, structure));
 							})
 							.sorted(Comparator.comparing(pair -> pair.getSecond().getPriority()))
 							.collect(Collectors.toCollection(ArrayList::new));
@@ -623,7 +623,7 @@ public class ScriptLoader {
 			throw new IllegalArgumentException("A config must have a file to be loaded.");
 
 		ParserInstance parser = getParser();
-		List<Structure> structures = new ArrayList<>();
+		List<Structure> structures = new ArrayList<Structure>();
 		Script script = new Script(config, structures);
 		parser.setActive(script);
 
@@ -631,7 +631,7 @@ public class ScriptLoader {
 			if (SkriptConfig.keepConfigsLoaded.value())
 				SkriptConfig.configs.add(config);
 			
-			try (CountingLogHandler ignored = new CountingLogHandler(SkriptLogger.SEVERE).start()) {
+			try (CountingLogHandler ignored = new CountingLogHandler(SkriptLogger.FATAL).start()) {
 				for (Node cnode : config.getMainNode()) {
 					if (!(cnode instanceof SectionNode)) {
 						Skript.error("invalid line - all code has to be put into triggers");
@@ -695,7 +695,7 @@ public class ScriptLoader {
 			}
 		}
 		
-		return new NonNullPair<>(script, structures);
+		return new NonNullPair<Script, List<Structure>>(script, structures);
 	}
 
 	/*
@@ -720,15 +720,15 @@ public class ScriptLoader {
 		} catch (IOException e) {
 			//noinspection ThrowableNotThrown
 			Skript.exception(e, "An exception occurred while trying to get the canonical file of: " + directory);
-			return new ArrayList<>();
+			return new ArrayList<Config>();
 		}
 		
 		File[] files = directory.listFiles(loadedScriptFilter);
 		assert files != null;
 		Arrays.sort(files);
 		
-		List<Config> loadedDirectories = new ArrayList<>(files.length);
-		List<Config> loadedFiles = new ArrayList<>(files.length);
+		List<Config> loadedDirectories = new ArrayList<Config>(files.length);
+		List<Config> loadedFiles = new ArrayList<Config>(files.length);
 		for (File file : files) {
 			if (file.isDirectory()) {
 				loadedDirectories.addAll(loadStructures(file));
@@ -887,7 +887,7 @@ public class ScriptLoader {
 	public static CompletableFuture<ScriptInfo> reloadScripts(Set<Script> scripts, OpenCloseable openCloseable) {
 		unloadScripts(scripts);
 
-		List<Config> configs = new ArrayList<>();
+		List<Config> configs = new ArrayList<Config>();
 		for (Script script : scripts) {
 			//noinspection ConstantConditions - getFile should never return null
 			Config config = loadStructure(script.getConfig().getFile());
@@ -928,7 +928,7 @@ public class ScriptLoader {
 		if (Skript.debug())
 			parser.setIndentation(parser.getIndentation() + "    ");
 		
-		ArrayList<TriggerItem> items = new ArrayList<>();
+		ArrayList<TriggerItem> items = new ArrayList<TriggerItem>();
 
 		for (Node subNode : node) {
 			parser.setNode(subNode);
@@ -975,12 +975,12 @@ public class ScriptLoader {
 				TypeHints.exitScope();
 			}
 		}
-		
+
 		for (int i = 0; i < items.size() - 1; i++)
 			items.get(i).setNext(items.get(i + 1));
 
 		parser.setNode(node);
-		
+
 		if (Skript.debug())
 			parser.setIndentation(parser.getIndentation().substring(0, parser.getIndentation().length() - 4));
 		
@@ -996,7 +996,7 @@ public class ScriptLoader {
 	 * Any changes to loaded scripts will not be reflected in the returned set.
 	 */
 	public static Set<Script> getLoadedScripts() {
-		return Collections.unmodifiableSet(new HashSet<>(loadedScripts));
+		return Collections.unmodifiableSet(new HashSet<Script>(loadedScripts));
 	}
 
 	/**
@@ -1004,7 +1004,7 @@ public class ScriptLoader {
 	 * Any changes to disabled scripts will not be reflected in the returned set.
 	 */
 	public static Set<File> getDisabledScripts() {
-		return Collections.unmodifiableSet(new HashSet<>(disabledScripts));
+		return Collections.unmodifiableSet(new HashSet<File>(disabledScripts));
 	}
 
 	/**

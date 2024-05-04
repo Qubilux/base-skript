@@ -141,11 +141,11 @@ final class VariablesMap {
 	/**
 	 * The map that stores all non-list variables.
 	 */
-	final HashMap<String, Object> hashMap = new HashMap<>();
+	final HashMap<String, Object> hashMap = new HashMap<String, Object>();
 	/**
 	 * The tree of variables, branched by the list structure of the variables.
 	 */
-	final TreeMap<String, Object> treeMap = new TreeMap<>();
+	final TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
 
 	/**
 	 * Returns the internal value of the requested variable.
@@ -234,7 +234,7 @@ final class VariablesMap {
 					break;
 				} else if (value != null) {
 					// Create child node, add it to parent and continue iteration
-					childNode = new TreeMap<>(VARIABLE_NAME_COMPARATOR);
+					childNode = new TreeMap<String, Object>(VARIABLE_NAME_COMPARATOR);
 
 					parent.put(childNodeName, childNode);
 					parent = (TreeMap<String, Object>) childNode;
@@ -287,7 +287,7 @@ final class VariablesMap {
 					break;
 				} else if (value != null) {
 					// Need to continue iteration, create new child node and put old value in it
-					TreeMap<String, Object> newChildNodeMap = new TreeMap<>(VARIABLE_NAME_COMPARATOR);
+					TreeMap<String, Object> newChildNodeMap = new TreeMap<String, Object>(VARIABLE_NAME_COMPARATOR);
 					newChildNodeMap.put(null, childNode);
 
 					// Add new child node to parent
@@ -352,7 +352,7 @@ final class VariablesMap {
 	 */
 	@SuppressWarnings("unchecked")
 	private static TreeMap<String, Object> copyTreeMap(TreeMap<String, Object> original) {
-		TreeMap<String, Object> copy = new TreeMap<>(VARIABLE_NAME_COMPARATOR);
+		TreeMap<String, Object> copy = new TreeMap<String, Object>(VARIABLE_NAME_COMPARATOR);
 
 		for (Entry<String, Object> child : original.entrySet()) {
 			String key = child.getKey();

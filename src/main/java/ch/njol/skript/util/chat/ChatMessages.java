@@ -25,18 +25,10 @@ import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.md_5.bungee.api.ChatColor;
+import io.github.ultreon.skript.ChatColor;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -57,12 +49,12 @@ public class ChatMessages {
 	/**
 	 * Chat codes, see {@link SkriptChatCode}.
 	 */
-	static final Map<String, ChatCode> codes = new HashMap<>();
+	static final Map<String, ChatCode> codes = new HashMap<String, ChatCode>();
 	
 	/**
 	 * Chat codes registered by addons, as backup for language changes.
 	 */
-	static final Set<ChatCode> addonCodes = new HashSet<>();
+	static final Set<ChatCode> addonCodes = new HashSet<ChatCode>();
 	
 	/**
 	 * Color chars, as used by Mojang's legacy chat colors.
@@ -86,34 +78,30 @@ public class ChatMessages {
 	 */
 	public static void registerListeners() {
 		// When language changes or server is loaded loop through all chatcodes
-		Language.addListener(new LanguageChangeListener() {
-			
-			@Override
-			public void onLanguageChange() {
-				codes.clear();
-				
-				Skript.debug("Parsing message style lang files");
-				for (SkriptChatCode code : SkriptChatCode.values()) {
-					assert code != null;
-					if (code == SkriptChatCode.copy_to_clipboard && !Utils.COPY_SUPPORTED)
-						continue;
-					registerChatCode(code);
-				}
-				
-				// Re-register any missing addon chat codes
-				for (ChatCode code : addonCodes) {
-					assert code != null;
-					registerChatCode(code);
-				}
-				
-				// Add formatting chars
-				addColorChar('k', SkriptChatCode.obfuscated);
-				addColorChar('l', SkriptChatCode.bold);
-				addColorChar('m', SkriptChatCode.strikethrough);
-				addColorChar('n', SkriptChatCode.underlined);
-				addColorChar('o', SkriptChatCode.italic);
-				addColorChar('r', SkriptChatCode.reset);
+		Language.addListener(() -> {
+			codes.clear();
+
+			Skript.debug("Parsing message style lang files");
+			for (SkriptChatCode code : SkriptChatCode.values()) {
+				assert code != null;
+				if (code == SkriptChatCode.copy_to_clipboard && !Utils.COPY_SUPPORTED)
+					continue;
+				registerChatCode(code);
 			}
+
+			// Re-register any missing addon chat codes
+			for (ChatCode code : addonCodes) {
+				assert code != null;
+				registerChatCode(code);
+			}
+
+			// Add formatting chars
+			addColorChar('k', SkriptChatCode.obfuscated);
+			addColorChar('l', SkriptChatCode.bold);
+			addColorChar('m', SkriptChatCode.strikethrough);
+			addColorChar('n', SkriptChatCode.underlined);
+			addColorChar('o', SkriptChatCode.italic);
+			addColorChar('r', SkriptChatCode.reset);
 		});
 	}
 	
@@ -190,7 +178,7 @@ public class ChatMessages {
 	public static List<MessageComponent> parse(String msg) {
 		char[] chars = msg.toCharArray();
 		
-		List<MessageComponent> components = new ArrayList<>();
+		List<MessageComponent> components = new ArrayList<MessageComponent>();
 		MessageComponent current = new MessageComponent();
 		components.add(current);
 		StringBuilder curStr = new StringBuilder();
@@ -423,7 +411,7 @@ public class ChatMessages {
 	public static List<MessageComponent> fromParsedString(String msg) {
 		char[] chars = msg.toCharArray();
 
-		List<MessageComponent> components = new ArrayList<>();
+		List<MessageComponent> components = new ArrayList<MessageComponent>();
 		MessageComponent current = new MessageComponent();
 		components.add(current);
 		StringBuilder curStr = new StringBuilder();

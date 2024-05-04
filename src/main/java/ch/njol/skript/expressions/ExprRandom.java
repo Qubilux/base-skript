@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.Description;
@@ -42,6 +33,15 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Name("Random")
 @Description("Gets a random item out of a set, e.g. a random player out of all players online.")
@@ -60,7 +60,7 @@ public class ExprRandom extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		if (LiteralUtils.hasUnparsedLiteral(exprs[1])) {
 			expr = LiteralUtils.defendExpression(exprs[1]);
 			if (expr instanceof ExpressionList) {
@@ -82,7 +82,7 @@ public class ExprRandom extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
+	protected Object @NotNull [] get(@NotNull Event event) {
 		Object[] set = expr.getAll(event);
 		if (set.length <= 1)
 			return set;
@@ -97,12 +97,12 @@ public class ExprRandom extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public Class<? extends Object> getReturnType() {
+	public @NotNull Class<? extends Object> getReturnType() {
 		return expr.getReturnType();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "a random element out of " + expr.toString(event, debug);
 	}
 

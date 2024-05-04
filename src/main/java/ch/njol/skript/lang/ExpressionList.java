@@ -26,15 +26,11 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A list of expressions.
@@ -99,7 +95,7 @@ public class ExpressionList<T> implements Expression<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public T[] getAll(Event event) {
-		List<T> values = new ArrayList<>();
+		List<T> values = new ArrayList<T>();
 		for (Expression<? extends T> expr : expressions)
 			values.addAll(Arrays.asList(expr.getAll(event)));
 		return values.toArray((T[]) Array.newInstance(returnType, values.size()));
@@ -178,7 +174,7 @@ public class ExpressionList<T> implements Expression<T> {
 				return null;
 			returnTypes[i] = exprs[i].getReturnType();
 		}
-		return new ExpressionList<>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), and, this);
+		return new ExpressionList<R>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), and, this);
 	}
 
 	@Override
@@ -204,7 +200,7 @@ public class ExpressionList<T> implements Expression<T> {
 		Class<?>[] exprClasses = expressions[0].acceptChange(mode);
 		if (exprClasses == null)
 			return null;
-		ArrayList<Class<?>> acceptedClasses = new ArrayList<>(Arrays.asList(exprClasses));
+		ArrayList<Class<?>> acceptedClasses = new ArrayList<Class<?>>(Arrays.asList(exprClasses));
 		for (int i = 1; i < expressions.length; i++) {
 			exprClasses = expressions[i].acceptChange(mode);
 			if (exprClasses == null)
@@ -305,11 +301,11 @@ public class ExpressionList<T> implements Expression<T> {
 			T[] values = (T[]) Array.newInstance(returnType, expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<>(values, returnType, and);
+			return new SimpleLiteral<T>(values, returnType, and);
 		}
 		if (isLiteralList) {
 			Literal<? extends T>[] ls = Arrays.copyOf(expressions, expressions.length, Literal[].class);
-			return new LiteralList<>(ls, returnType, and);
+			return new LiteralList<T>(ls, returnType, and);
 		}
 		return this;
 	}

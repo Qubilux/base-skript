@@ -18,17 +18,16 @@
  */
 package ch.njol.skript.log;
 
-import java.util.logging.Level;
-
-import ch.njol.skript.localization.ArgsMessage;
-import ch.njol.skript.util.Utils;
-
-import org.bukkit.ChatColor;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
+import ch.njol.skript.localization.ArgsMessage;
+import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.chat.ChatMessages;
+import ch.njol.skript.util.chat.MessageComponent;
+import io.github.ultreon.skript.ChatColor;
+import org.apache.logging.log4j.Level;
+import org.eclipse.jdt.annotation.Nullable;
 
 public class LogEntry {
 
@@ -78,7 +77,9 @@ public class LogEntry {
 	public LogEntry(Level level, int quality, String message, @Nullable Node node, boolean tracked) {
 		this.level = level;
 		this.quality = quality;
-		this.message = message;
+		this.message = String.join("\n", ChatMessages.parse(message).stream().map((MessageComponent messageComponent) -> {
+			return messageComponent.toString();
+		}).toList());
 		this.node = node;
 		this.tracked = tracked;
 		from = tracked || Skript.debug() ? findCaller() : "";
@@ -91,9 +92,8 @@ public class LogEntry {
 		for (int i = 0; i < es.length; i++) {
 			if (!es[i].getClassName().startsWith(skriptLogPackageName))
 				continue;
-			i++;
-			while (i < es.length - 1 && (es[i].getClassName().startsWith(skriptLogPackageName) || es[i].getClassName().equals(Skript.class.getName())))
-				i++;
+			do i++;
+			while (i < es.length - 1 && (es[i].getClassName().startsWith(skriptLogPackageName) || es[i].getClassName().equals(Skript.class.getName())));
 			if (i >= es.length)
 				i = es.length - 1;
 			return " (from " + es[i] + ")";
@@ -118,13 +118,13 @@ public class LogEntry {
 	void discarded(String info) {
 		used = true;
 		if (tracked)
-			SkriptLogger.LOGGER.warning(" # LogEntry '" + message + "'" + from + " discarded" + findCaller() + "; " + (new Exception()).getStackTrace()[1] + "; " + info);
+			SkriptLogger.LOGGER.warn(" # LogEntry '" + message + "'" + from + " discarded" + findCaller() + "; " + (new Exception()).getStackTrace()[1] + "; " + info);
 	}
 
 	void logged() {
 		used = true;
 		if (tracked)
-			SkriptLogger.LOGGER.warning(" # LogEntry '" + message + "'" + from + " logged" + findCaller());
+			SkriptLogger.LOGGER.warn(" # LogEntry '" + message + "'" + from + " logged" + findCaller());
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class LogEntry {
 
 	@Override
 	public String toString() {
-		if (node == null || level.intValue() < Level.WARNING.intValue())
+		if (node == null || level.intLevel() < Level.WARN.intLevel())
 			return message;
 
 		Config c = node.getConfig();
@@ -142,14 +142,14 @@ public class LogEntry {
 	}
 
 	public String toFormattedString() {
-		if (level.intValue() < Level.WARNING.intValue())
+		if (level.intLevel() < Level.WARN.intLevel())
 			return message;
 
 		ArgsMessage details;
 		ArgsMessage lineInfo = WARNING_LINE_INFO;
-		if (level.intValue() == Level.WARNING.intValue()) { // warnings
+		if (level.intLevel() == Level.WARN.intLevel()) { // warnings
 			details = WARNING_DETAILS;
-		} else if (level.intValue() == Level.SEVERE.intValue()) { // errors
+		} else if (level.intLevel() == Level.FATAL.intLevel()) { // errors
 			details = ERROR_DETAILS;
 			lineInfo = ERROR_LINE_INFO;
 		} else { // anything else
@@ -157,9 +157,9 @@ public class LogEntry {
 		}
 
 		// Replace configured messages chat styles without user variables
-		String lineInfoMsg = replaceNewline(Utils.replaceEnglishChatStyles(lineInfo.getValue() == null ? lineInfo.key : lineInfo.getValue()));
-		String detailsMsg = replaceNewline(Utils.replaceEnglishChatStyles(details.getValue() == null ? details.key : details.getValue()));
-		String lineDetailsMsg = replaceNewline(Utils.replaceEnglishChatStyles(LINE_DETAILS.getValue() == null ? LINE_DETAILS.key : LINE_DETAILS.getValue()));
+		String lineInfoMsg = replaceNewline(Utils.replaceChatStyles(lineInfo.getValue() == null ? lineInfo.key : lineInfo.getValue()));
+		String detailsMsg = replaceNewline(Utils.replaceChatStyles(details.getValue() == null ? details.key : details.getValue()));
+		String lineDetailsMsg = replaceNewline(Utils.replaceChatStyles(LINE_DETAILS.getValue() == null ? LINE_DETAILS.key : LINE_DETAILS.getValue()));
 
 		if (node == null)
 			return String.format(detailsMsg.replaceAll("^\\s+", ""), message); // Remove line beginning spaces

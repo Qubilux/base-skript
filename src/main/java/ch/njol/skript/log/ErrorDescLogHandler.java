@@ -18,11 +18,9 @@
  */
 package ch.njol.skript.log;
 
-import java.util.logging.Level;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
+import org.apache.logging.log4j.Level;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Does nothing but print messages before the first error encountered and/or a message at the end if no error were encountered.
@@ -47,7 +45,7 @@ public class ErrorDescLogHandler extends LogHandler {
 	
 	@Override
 	public LogResult log(LogEntry entry) {
-		if (!hadError && entry.getLevel() == Level.SEVERE) {
+		if (!hadError && entry.getLevel() == Level.FATAL) {
 			hadError = true;
 			beforeErrors();
 		}

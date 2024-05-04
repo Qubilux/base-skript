@@ -19,7 +19,6 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.expressions.ExprColoured;
@@ -42,9 +41,8 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import com.google.common.collect.Lists;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.ChatColor;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.Script;
@@ -117,11 +115,11 @@ public class VariableString implements Expression<String> {
 		this.script = parser.isActive() ? parser.getCurrentScript() : null;
 
 		// Construct unformatted string and components
-		List<MessageComponent> components = new ArrayList<>(strings.length);
+		List<MessageComponent> components = new ArrayList<MessageComponent>(strings.length);
 		for (int i = 0; i < strings.length; i++) {
 			Object object = strings[i];
 			if (object instanceof String) {
-				this.strings[i] = Utils.replaceChatStyles((String) object);
+				this.strings[i] = Utils.replaceEnglishChatStyles((String) object);
 				components.addAll(ChatMessages.parse((String) object));
 			} else {
 				this.strings[i] = object;
@@ -185,7 +183,7 @@ public class VariableString implements Expression<String> {
 			original = stringBuilder.toString();
 		}
 
-		List<Object> strings = new ArrayList<>(percentCount / 2 + 2); // List of strings and expressions
+		List<Object> strings = new ArrayList<Object>(percentCount / 2 + 2); // List of strings and expressions
 		int exprStart = original.indexOf('%');
 		if (exprStart != -1) {
 			if (exprStart != 0)
@@ -224,16 +222,6 @@ public class VariableString implements Expression<String> {
 							log.printErrors("Can't understand this expression: " + original.substring(exprStart + 1, exprEnd));
 							return null;
 						} else {
-							if (
-								mode == StringMode.VARIABLE_NAME &&
-								!SkriptConfig.usePlayerUUIDsInVariableNames.value() &&
-								OfflinePlayer.class.isAssignableFrom(expr.getReturnType())
-							) {
-								Skript.warning(
-										"In the future, players in variable names will use the player's UUID instead of their name. " +
-										"For information on how to make sure your scripts won't be impacted by this change, see https://github.com/SkriptLang/Skript/discussions/6270."
-								);
-							}
 							strings.add(expr);
 						}
 						log.printLog();
@@ -428,7 +416,7 @@ public class VariableString implements Expression<String> {
 		// Parse formatting
 		Object[] strings = this.stringsUnformatted;
 		assert strings != null;
-		List<MessageComponent> message = new ArrayList<>(components.length); // At least this much space
+		List<MessageComponent> message = new ArrayList<MessageComponent>(components.length); // At least this much space
 		int stringPart = -1;
 		MessageComponent previous = null;
 		for (MessageComponent component : components) {
@@ -538,7 +526,7 @@ public class VariableString implements Expression<String> {
 		Object[] string = this.strings;
 		assert string != null;
 		StringBuilder builder = new StringBuilder();
-		List<Class<?>> types = new ArrayList<>();
+		List<Class<?>> types = new ArrayList<Class<?>>();
 		for (Object object : string) {
 			if (object instanceof Expression<?>) {
 				Object[] objects = ((Expression<?>) object).getArray(event);
@@ -730,7 +718,7 @@ public class VariableString implements Expression<String> {
 
 	@Override
 	public Iterator<? extends String> iterator(Event event) {
-		return new SingleItemIterator<>(toString(event));
+		return new SingleItemIterator<String>(toString(event));
 	}
 
 	@Override

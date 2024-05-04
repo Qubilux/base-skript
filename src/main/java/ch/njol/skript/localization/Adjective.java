@@ -18,11 +18,10 @@
  */
 package ch.njol.skript.localization;
 
-import java.util.HashMap;
-
+import ch.njol.skript.Skript;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import java.util.HashMap;
 
 /**
  * @author Peter Güttinger
@@ -33,7 +32,7 @@ public class Adjective extends Message {
 	private final static int DEFINITE_ARTICLE = -100;
 	private final static String DEFINITE_ARTICLE_TOKEN = "+";
 	
-	private final HashMap<Integer, String> genders = new HashMap<>();
+	private final HashMap<Integer, String> genders = new HashMap<Integer, String>();
 	@Nullable
 	String def;
 	

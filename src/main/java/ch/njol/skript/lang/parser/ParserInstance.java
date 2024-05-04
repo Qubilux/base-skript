@@ -30,7 +30,7 @@ import ch.njol.skript.log.HandlerList;
 import ch.njol.skript.structures.StructOptions.OptionsData;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.Script;
@@ -257,7 +257,7 @@ public final class ParserInstance {
 
 	// Section API
 
-	private List<TriggerSection> currentSections = new ArrayList<>();
+	private List<TriggerSection> currentSections = new ArrayList<TriggerSection>();
 
 	/**
 	 * Updates the list of sections currently being handled by this ParserInstance.
@@ -298,7 +298,7 @@ public final class ParserInstance {
 	@NotNull
 	@SuppressWarnings("unchecked")
 	public <T extends TriggerSection> List<T> getCurrentSections(Class<T> sectionClass) {
-		List<T> list = new ArrayList<>();
+		List<T> list = new ArrayList<T>();
 		for (TriggerSection triggerSection : currentSections) {
 			if (sectionClass.isInstance(triggerSection))
 				list.add((T) triggerSection);
@@ -430,9 +430,9 @@ public final class ParserInstance {
 		
 	}
 	
-	private static final Map<Class<? extends Data>, Function<ParserInstance, ? extends Data>> dataRegister = new HashMap<>();
+	private static final Map<Class<? extends Data>, Function<ParserInstance, ? extends Data>> dataRegister = new HashMap<Class<? extends Data>, Function<ParserInstance, ? extends Data>>();
 	// Should be Map<Class<? extends Data>, ? extends Data>, but that caused issues (with generics) in #getData(Class)
-	private final Map<Class<? extends Data>, Data> dataMap = new HashMap<>();
+	private final Map<Class<? extends Data>, Data> dataMap = new HashMap<Class<? extends Data>, Data>();
 	
 	/**
 	 * Registers a data class to all {@link ParserInstance}s.
@@ -468,7 +468,7 @@ public final class ParserInstance {
 	
 	private List<? extends Data> getDataInstances() {
 		// List<? extends Data> gave errors, so using this instead
-		List<Data> dataList = new ArrayList<>();
+		List<Data> dataList = new ArrayList<Data>();
 		for (Class<? extends Data> dataClass : dataRegister.keySet()) {
 			// This will include all registered data, even if not already initiated
 			Data data = getData(dataClass);
@@ -487,11 +487,11 @@ public final class ParserInstance {
 	@Deprecated
 	public HashMap<String, String> getCurrentOptions() {
 		if (!isActive())
-			return new HashMap<>(0);
+			return new HashMap<String, String>(0);
 		OptionsData data = getCurrentScript().getData(OptionsData.class);
 		if (data == null)
-			return new HashMap<>(0);
-		return new HashMap<>(data.getOptions()); // ensure returned map is modifiable
+			return new HashMap<String, String>(0);
+		return new HashMap<String, String>(data.getOptions()); // ensure returned map is modifiable
 	}
 
 	/**

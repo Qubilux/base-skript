@@ -18,10 +18,9 @@
  */
 package ch.njol.skript.util.chat;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
 import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Chat codes that come with Skript by default.
@@ -96,32 +95,28 @@ public enum SkriptChatCode implements ChatCode {
 	open_url(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.open_url, param);
-			component.clickEvent = e;
+			component.clickEvent = new ClickEvent(ClickEvent.Action.open_url, param);
 		}
 	},
 	
 	run_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.run_command, param);
-			component.clickEvent = e;
+			component.clickEvent = new ClickEvent(ClickEvent.Action.run_command, param);
 		}
 	},
 	
 	suggest_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.suggest_command, param);
-			component.clickEvent = e;
+			component.clickEvent = new ClickEvent(ClickEvent.Action.suggest_command, param);
 		}
 	},
 	
 	change_page(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.change_page, param);
-			component.clickEvent = e;
+			component.clickEvent = new ClickEvent(ClickEvent.Action.change_page, param);
 		}
 	},
 	
@@ -139,8 +134,7 @@ public enum SkriptChatCode implements ChatCode {
 		public void updateComponent(MessageComponent component, String param) {
 			// TODO component based codes must be supported
 			// Especially since 1.13 might break the old ones completely...
-			HoverEvent e = new HoverEvent(HoverEvent.Action.show_text, param);
-			component.hoverEvent = e;
+			component.hoverEvent = new HoverEvent(HoverEvent.Action.show_text, param);
 		}
 	},
 
@@ -236,6 +230,44 @@ public enum SkriptChatCode implements ChatCode {
 	@Override
 	public char getColorChar() {
 		return colorChar;
+	}
+
+	public String toString() {
+		switch (this) {
+			case red:
+				return Ansi.Normal + Ansi.RED;
+			case aqua:
+				return Ansi.Normal + Ansi.CYAN;
+			case green:
+				return Ansi.Normal + Ansi.GREEN;
+			case yellow:
+				return Ansi.Normal + Ansi.YELLOW;
+			case blue:
+				return Ansi.Normal + Ansi.BLUE;
+			case light_purple:
+				return Ansi.Bold + Ansi.MAGENTA;
+			case dark_purple:
+				return Ansi.Normal + Ansi.MAGENTA;
+			case white:
+				return Ansi.Bold + Ansi.WHITE;
+			case gray:
+				return Ansi.Normal + Ansi.WHITE;
+			case dark_gray:
+				return Ansi.Normal + Ansi.BLACK;
+			case black:
+				return Ansi.Bold + Ansi.BLACK;
+			case underlined:
+			case strikethrough:
+				return Ansi.UNDERLINE;
+			case bold:
+				return Ansi.HIGH_INTENSITY;
+			case italic:
+				return Ansi.ITALIC;
+			case obfuscated:
+				return Ansi.REVERSE_VIDEO;
+			default:
+				return Ansi.SANE;
+		}
 	}
 	
 	@Override

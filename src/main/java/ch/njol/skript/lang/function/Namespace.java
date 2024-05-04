@@ -18,12 +18,12 @@
  */
 package ch.njol.skript.lang.function;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Contains a set of functions.
@@ -153,8 +153,8 @@ public class Namespace {
 	private final Map<Info, Function<?>> functions;
 
 	public Namespace() {
-		this.signatures = new HashMap<>();
-		this.functions = new HashMap<>();
+		this.signatures = new HashMap<Info, Signature<?>>();
+		this.functions = new HashMap<Info, Function<?>>();
 	}
 	
 	@Nullable

@@ -19,15 +19,16 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.events.bukkit.SkriptStartEvent;
-import ch.njol.skript.events.bukkit.SkriptStopEvent;
+import ch.njol.skript.events.util.SkriptStartEvent;
+import ch.njol.skript.events.util.SkriptStopEvent;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +45,8 @@ public class EvtSkript extends SkriptEvent {
 			.since("2.0");
 	}
 
-	private static final List<Trigger> START = Collections.synchronizedList(new ArrayList<>());
-	private static final List<Trigger> STOP = Collections.synchronizedList(new ArrayList<>());
+	private static final List<Trigger> START = Collections.synchronizedList(new ArrayList<Trigger>());
+	private static final List<Trigger> STOP = Collections.synchronizedList(new ArrayList<Trigger>());
 
 	public static void onSkriptStart() {
 		Event event = new SkriptStartEvent();
@@ -68,7 +69,7 @@ public class EvtSkript extends SkriptEvent {
 	private boolean isStart;
 	
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Literal<?> @NotNull [] args, int matchedPattern, @NotNull ParseResult parseResult) {
 		isStart = matchedPattern == 0;
 		if (parseResult.hasTag("server"))
 			Skript.warning(
@@ -90,7 +91,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(@NotNull Event event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -100,7 +101,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "on skript " + (isStart ? "start" : "stop");
 	}
 	

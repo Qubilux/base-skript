@@ -30,12 +30,10 @@ import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 @Name("While Loop")
 @Description("While Loop sections are loops that will just keep repeating as long as a condition is met.")

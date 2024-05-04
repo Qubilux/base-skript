@@ -29,8 +29,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Repeat String")
 @Description("Repeats inputted strings a given amount of times.")
@@ -42,7 +43,6 @@ import org.eclipse.jdt.annotation.Nullable;
 })
 @Since("2.8.0")
 public class ExprRepeat extends SimpleExpression<String> {
-
 	static {
 		Skript.registerExpression(ExprRepeat.class, String.class, ExpressionType.COMBINED, "%strings% repeated %integer% time[s]");
 	}
@@ -51,14 +51,14 @@ public class ExprRepeat extends SimpleExpression<String> {
 	private Expression<Integer> repeatCount;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		repeatCount = (Expression<Integer>) exprs[1];
 		return true;
 	}
 
 	@Override
-	protected @Nullable String[] get(Event event) {
+	protected @Nullable String @NotNull [] get(@NotNull Event event) {
 		int repeatCount = this.repeatCount.getOptionalSingle(event).orElse(0);
 		if (repeatCount < 1)
 			return new String[0];
@@ -71,12 +71,12 @@ public class ExprRepeat extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return strings.toString(event, debug) + " repeated " + repeatCount.toString(event, debug) + " times";
 	}
 

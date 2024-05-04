@@ -28,9 +28,10 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
 import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Characters Between")
 @Description({
@@ -62,7 +63,7 @@ public class ExprCharacters extends SimpleExpression<String> {
 	private boolean isAlphanumeric;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
 		start = (Expression<String>) exprs[0];
 		end = (Expression<String>) exprs[1];
 		isAlphanumeric = parseResult.hasTag("alphanumeric");
@@ -71,13 +72,13 @@ public class ExprCharacters extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
+	protected String @NotNull [] get(@NotNull Event event) {
 		String start = this.start.getSingle(event);
 		String end = this.end.getSingle(event);
 		if (start == null || end == null)
 			return new String[0];
 
-		if (start.length() < 1 || end.length() < 1)
+		if (start.isEmpty() || end.isEmpty())
 			return new String[0];
 
 		char startChar = start.charAt(0);
@@ -109,12 +110,12 @@ public class ExprCharacters extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "all the " + (isAlphanumeric ? "alphanumeric " : "") + "characters between " + start.toString(event, debug) + " and " + end.toString(event, debug);
 	}
 }

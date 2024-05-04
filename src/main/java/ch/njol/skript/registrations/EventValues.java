@@ -18,20 +18,19 @@
  */
 package ch.njol.skript.registrations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 import ch.njol.skript.Skript;
-import org.skriptlang.skript.lang.converter.Converter;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
+import com.google.common.collect.ImmutableList;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.Converters;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -98,9 +97,9 @@ public class EventValues {
 		}
 	}
 
-	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
-	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
-	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
+	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<EventValueInfo<?, ?>>(30);
+	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<EventValueInfo<?, ?>>();
+	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<EventValueInfo<?, ?>>();
 
 	/**
 	 * The past time of an event value. Represented by "past" or "former".
@@ -176,11 +175,11 @@ public class EventValues {
 			// If the events don't match, we prefer the highest subclass event.
 			// If the events match, we prefer the highest subclass type.
 			if (!info.event.equals(event) ? info.event.isAssignableFrom(event) : info.c.isAssignableFrom(type)) {
-				eventValues.add(i, new EventValueInfo<>(event, type, getter, excludeErrorMessage, excludes));
+				eventValues.add(i, new EventValueInfo<E, T>(event, type, getter, excludeErrorMessage, excludes));
 				return;
 			}
 		}
-		eventValues.add(new EventValueInfo<>(event, type, getter, excludeErrorMessage, excludes));
+		eventValues.add(new EventValueInfo<E, T>(event, type, getter, excludeErrorMessage, excludes));
 	}
 
 	/**
@@ -285,7 +284,7 @@ public class EventValues {
 	@SuppressWarnings("unchecked")
 	private static <T, E extends Event> List<Getter<? extends T, ? super E>> getEventValueGetters(Class<E> event, Class<T> type, int time, boolean allowDefault, boolean allowConverting) {
 		List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
-		List<Getter<? extends T, ? super E>> list = new ArrayList<>();
+		List<Getter<? extends T, ? super E>> list = new ArrayList<Getter<? extends T, ? super E>>();
 		// First check for exact classes matching the parameters.
 		Getter<? extends T, ? super E> exact = (Getter<? extends T, ? super E>) getExactEventValueGetter(event, type, time);
 		if (exact != null) {

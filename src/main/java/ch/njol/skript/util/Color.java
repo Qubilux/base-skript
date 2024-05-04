@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.util;
 
-import org.bukkit.DyeColor;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
 public interface Color extends YggdrasilExtendedSerializable {
@@ -29,16 +26,8 @@ public interface Color extends YggdrasilExtendedSerializable {
 	 * Gets Bukkit color representing this color.
 	 * @return Bukkit color.
 	 */
-	org.bukkit.Color asBukkitColor();
-	
-	
-	/**
-	 * Gets Bukkit dye color representing this color, if one exists.
-	 * @return Dye color or null.
-	 */
-	@Nullable
-	DyeColor asDyeColor();
-	
+	java.awt.Color asBukkitColor();
+
 	/**
 	 * @return Name of the color.
 	 */

@@ -40,7 +40,7 @@ public final class EnumUtils<E extends Enum<E>> {
 
 	@SuppressWarnings("NotNullFieldNotInitialized") // initialized in constructor's refresh() call
 	private String[] names;
-	private final HashMap<String, E> parseMap = new HashMap<>();
+	private final HashMap<String, E> parseMap = new HashMap<String, E>();
 	
 	public EnumUtils(Class<E> enumClass, String languageNode) {
 		assert enumClass.isEnum() : enumClass;

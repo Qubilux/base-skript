@@ -22,7 +22,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.ConfigurationSerializer;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
@@ -30,33 +29,20 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.SerializedVariable.Value;
-import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.SynchronizedReference;
 import ch.njol.yggdrasil.Yggdrasil;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -73,10 +59,6 @@ import java.util.regex.Pattern;
  * @see #getVariable(String, Event, boolean)
  */
 public class Variables {
-
-	/**
-	 * The version of {@link Yggdrasil} this class is using.
-	 */
 	public static final short YGGDRASIL_VERSION = 1;
 
 	/**
@@ -89,56 +71,50 @@ public class Variables {
 	 */
 	public static boolean caseInsensitiveVariables = true;
 
-	/**
-	 * The {@link ch.njol.yggdrasil.ClassResolver#getID(Class) ID} prefix
-	 * for {@link ConfigurationSerializable} classes.
-	 */
-	private static final String CONFIGURATION_SERIALIZABLE_PREFIX = "ConfigurationSerializable_";
-
 	private final static Multimap<Class<? extends VariablesStorage>, String> TYPES = HashMultimap.create();
 
 	// Register some things with Yggdrasil
 	static {
 		registerStorage(FlatFileStorage.class, "csv", "file", "flatfile");
-		registerStorage(SQLiteStorage.class, "sqlite");
-		registerStorage(MySQLStorage.class, "mysql");
-		yggdrasil.registerSingleClass(Kleenean.class, "Kleenean");
+//		registerStorage(SQLiteStorage.class, "sqlite");
+//		registerStorage(MySQLStorage.class, "mysql");
+//		yggdrasil.registerSingleClass(Kleenean.class, "Kleenean");
 		// Register ConfigurationSerializable, Bukkit's serialization system
-		yggdrasil.registerClassResolver(new ConfigurationSerializer<ConfigurationSerializable>() {
-			{
-				//noinspection unchecked
-				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo<?>) Classes.getExactClassInfo(Object.class);
-				// Info field is mostly unused in superclass, due to methods overridden below,
-				//  so this illegal cast is fine
-			}
-
-			@Override
-			@Nullable
-			public String getID(@NonNull Class<?> c) {
-				if (ConfigurationSerializable.class.isAssignableFrom(c)
-						&& Classes.getSuperClassInfo(c) == Classes.getExactClassInfo(Object.class))
-					return CONFIGURATION_SERIALIZABLE_PREFIX +
-							ConfigurationSerialization.getAlias(c.asSubclass(ConfigurationSerializable.class));
-
-				return null;
-			}
-
-			@Override
-			@Nullable
-			public Class<? extends ConfigurationSerializable> getClass(@NonNull String id) {
-				if (id.startsWith(CONFIGURATION_SERIALIZABLE_PREFIX))
-					return ConfigurationSerialization.getClassByAlias(
-							id.substring(CONFIGURATION_SERIALIZABLE_PREFIX.length()));
-
-				return null;
-			}
-		});
+//		yggdrasil.registerClassResolver(new ConfigurationSerializer<ConfigurationSerializable>() {
+//			{
+//				//noinspection unchecked
+//				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo<?>) Classes.getExactClassInfo(Object.class);
+//				// Info field is mostly unused in superclass, due to methods overridden below,
+//				//  so this illegal cast is fine
+//			}
+//
+//			@Override
+//			@Nullable
+//			public String getID(@NonNull Class<?> c) {
+//				if (ConfigurationSerializable.class.isAssignableFrom(c)
+//						&& Classes.getSuperClassInfo(c) == Classes.getExactClassInfo(Object.class))
+//					return CONFIGURATION_SERIALIZABLE_PREFIX +
+//							ConfigurationSerialization.getAlias(c.asSubclass(ConfigurationSerializable.class));
+//
+//				return null;
+//			}
+//
+//			@Override
+//			@Nullable
+//			public Class<? extends ConfigurationSerializable> getClass(@NonNull String id) {
+//				if (id.startsWith(CONFIGURATION_SERIALIZABLE_PREFIX))
+//					return ConfigurationSerialization.getClassByAlias(
+//							id.substring(CONFIGURATION_SERIALIZABLE_PREFIX.length()));
+//
+//				return null;
+//			}
+//		});
 	}
 
 	/**
 	 * The variable storages configured.
 	 */
-	static final List<VariablesStorage> STORAGES = new ArrayList<>();
+	static final List<VariablesStorage> STORAGES = new ArrayList<VariablesStorage>();
 
 	/**
 	 * Register a VariableStorage class for Skript to create if the user config value matches.
@@ -338,7 +314,7 @@ public class Variables {
 	 * A map storing all local variables,
 	 * indexed by their {@link Event}.
 	 */
-	private static final Map<Event, VariablesMap> localVariables = new ConcurrentHashMap<>();
+	private static final Map<Event, VariablesMap> localVariables = new ConcurrentHashMap<Event, VariablesMap>();
 
 	/**
 	 * Gets the {@link TreeMap} of all global variables.
@@ -423,7 +399,7 @@ public class Variables {
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
 	 * <p>
-	 * This does not take into consideration default variables. You must use get methods from {@link ch.njol.skript.lang.Variable}
+	 * This does not take into consideration default variables. You must use get methods from {@link Variable}
 	 *
 	 * @param name the variable's name.
 	 * @param event if {@code local} is {@code true}, this is the event
@@ -555,7 +531,7 @@ public class Variables {
 	/**
 	 * Changes to variables that have not yet been performed.
 	 */
-	static final Queue<VariableChange> changeQueue = new ConcurrentLinkedQueue<>();
+	static final Queue<VariableChange> changeQueue = new ConcurrentLinkedQueue<VariableChange>();
 
 	/**
 	 * A variable change name-value pair.
@@ -621,7 +597,7 @@ public class Variables {
 	 * Access must be synchronised.
 	 */
 	private static final SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> TEMP_VARIABLES =
-			new SynchronizedReference<>(new HashMap<>());
+			new SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>>(new HashMap<String, NonNullPair<Object, VariablesStorage>>());
 
 	/**
 	 * The amount of variable conflicts between variable storages where
@@ -655,7 +631,7 @@ public class Variables {
 	 * @return Whether the variable was stored somewhere. Not valid while storages are loading.
 	 */
 	static boolean variableLoaded(String name, @Nullable Object value, VariablesStorage source) {
-		assert Bukkit.isPrimaryThread(); // required by serialisation
+		assert BaseSkript.isPrimaryThread(); // required by serialisation
 
 		if (value == null)
 			return false;
@@ -693,7 +669,7 @@ public class Variables {
 				}
 
 				// Add to the loaded variables
-				tvs.put(name, new NonNullPair<>(value, source));
+				tvs.put(name, new NonNullPair<Object, VariablesStorage>(value, source));
 
 				return false;
 			}
@@ -785,10 +761,10 @@ public class Variables {
 	 * @return the serialized variable.
 	 */
 	public static SerializedVariable serialize(String name, @Nullable Object value) {
-		assert Bukkit.isPrimaryThread();
+		assert BaseSkript.isPrimaryThread();
 
 		// First, serialize the variable.
-		SerializedVariable.Value var;
+		Value var;
 		try {
 			var = serialize(value);
 		} catch (Exception e) {
@@ -806,8 +782,8 @@ public class Variables {
 	 * @param value the value to serialize.
 	 * @return the serialized value.
 	 */
-	public static SerializedVariable.@Nullable Value serialize(@Nullable Object value) {
-		assert Bukkit.isPrimaryThread();
+	public static @Nullable Value serialize(@Nullable Object value) {
+		assert BaseSkript.isPrimaryThread();
 
 		return Classes.serialize(value);
 	}
@@ -826,7 +802,7 @@ public class Variables {
 	 * The queue of serialized variables that have not yet been written
 	 * to the storage.
 	 */
-	static final BlockingQueue<SerializedVariable> saveQueue = new LinkedBlockingQueue<>();
+	static final BlockingQueue<SerializedVariable> saveQueue = new LinkedBlockingQueue<SerializedVariable>();
 
 	/**
 	 * Whether the {@link #saveThread} should be stopped.

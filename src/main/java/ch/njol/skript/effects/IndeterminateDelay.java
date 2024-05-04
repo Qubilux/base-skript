@@ -18,8 +18,8 @@
  */
 package ch.njol.skript.effects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -49,7 +49,7 @@ public class IndeterminateDelay extends Delay {
 			// Back up local variables
 			Object localVars = Variables.removeLocals(event);
 			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
+			BaseSkript.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
 				Skript.debug(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1_000_000_000. + "s");
 
 				// Re-set local variables

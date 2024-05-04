@@ -24,12 +24,7 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -91,9 +86,9 @@ public class EntryValidator {
 	 */
 	@Nullable
 	public EntryContainer validate(SectionNode sectionNode) {
-		List<EntryData<?>> entries = new ArrayList<>(entryData);
-		Map<String, Node> handledNodes = new HashMap<>();
-		List<Node> unhandledNodes = new ArrayList<>();
+		List<EntryData<?>> entries = new ArrayList<EntryData<?>>(entryData);
+		Map<String, Node> handledNodes = new HashMap<String, Node>();
+		List<Node> unhandledNodes = new ArrayList<Node>();
 
 		boolean ok = true;
 		nodeLoop: for (Node node : sectionNode) {
@@ -147,7 +142,7 @@ public class EntryValidator {
 
 		private EntryValidatorBuilder() { }
 
-		private final List<EntryData<?>> entryData = new ArrayList<>();
+		private final List<EntryData<?>> entryData = new ArrayList<EntryData<?>>();
 		private String entrySeparator = DEFAULT_ENTRY_SEPARATOR;
 
 		@Nullable

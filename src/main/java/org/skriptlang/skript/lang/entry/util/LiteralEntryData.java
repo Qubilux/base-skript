@@ -19,9 +19,9 @@
 package org.skriptlang.skript.lang.entry.util;
 
 import ch.njol.skript.lang.ParseContext;
-import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 import ch.njol.skript.registrations.Classes;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 
 /**
  * A specific {@link KeyValueEntryData} type designed to parse the

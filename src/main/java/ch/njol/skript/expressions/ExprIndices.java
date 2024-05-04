@@ -30,8 +30,9 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +73,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	private boolean descending;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
 		sort = matchedPattern > 1;
 		descending = parseResult.mark == 1;
 		if (exprs[0] instanceof Variable<?> && ((Variable<?>) exprs[0]).isList()) {
@@ -91,7 +92,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	@Nullable
 	@Override
 	@SuppressWarnings({"unchecked", "ConstantConditions"})
-	protected String[] get(Event e) {
+	protected String @NotNull [] get(@NotNull Event e) {
 		Map<String, Object> variable = (Map<String, Object>) list.getRaw(e);
 
 		if (variable == null) {
@@ -115,12 +116,12 @@ public class ExprIndices extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		String text = "indices of " + list.toString(e, debug);
 
 		if (sort)

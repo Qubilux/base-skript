@@ -25,13 +25,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.LogEntry;
@@ -43,9 +38,10 @@ import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
-import org.bukkit.ChatColor;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.ChatColor;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -85,7 +81,6 @@ public class ExprParse extends SimpleExpression<Object> {
 	@Nullable
 	static String lastError = null;
 
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<String> text;
 
 	@Nullable
@@ -100,7 +95,7 @@ public class ExprParse extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		text = (Expression<String>) exprs[0];
 		if (exprs[1] == null) {
 			String pattern = ChatColor.translateAlternateColorCodes('&', parseResult.regexes.get(0).group());
@@ -160,7 +155,7 @@ public class ExprParse extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected Object[] get(Event event) {
+	protected Object @NotNull [] get(@NotNull Event event) {
 		String text = this.text.getSingle(event);
 		if (text == null)
 			return null;
@@ -191,7 +186,7 @@ public class ExprParse extends SimpleExpression<Object> {
 					assert patternExpressions.length == exprs.length;
 
 					if (flatten) {
-						List<Object> values = new ArrayList<>();
+						List<Object> values = new ArrayList<Object>();
 						for (int i = 0; i < exprs.length; i++) {
 							if (exprs[i] != null) {
 								if (patternExpressions[i].getSecond()) {
@@ -248,14 +243,14 @@ public class ExprParse extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public Class<?> getReturnType() {
+	public @NotNull Class<?> getReturnType() {
 		if (classInfo != null)
 			return classInfo.getC();
 		return patternExpressions.length == 1 ? patternExpressions[0].getFirst().getC() : Object.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return text.toString(event, debug) + " parsed as " + (classInfo != null ? classInfo.toString(Language.F_INDEFINITE_ARTICLE) : pattern);
 	}
 

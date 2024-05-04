@@ -18,9 +18,9 @@
  */
 package ch.njol.skript.log;
 
-import java.io.Closeable;
-
 import ch.njol.util.OpenCloseable;
+
+import java.io.Closeable;
 
 /**
  * A log handler is used to handle Skripts logging.

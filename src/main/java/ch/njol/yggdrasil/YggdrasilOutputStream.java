@@ -29,14 +29,7 @@ import java.io.NotSerializableException;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
 
-import static ch.njol.yggdrasil.Tag.T_ARRAY;
-import static ch.njol.yggdrasil.Tag.T_CLASS;
-import static ch.njol.yggdrasil.Tag.T_ENUM;
-import static ch.njol.yggdrasil.Tag.T_NULL;
-import static ch.njol.yggdrasil.Tag.T_OBJECT;
-import static ch.njol.yggdrasil.Tag.T_REFERENCE;
-import static ch.njol.yggdrasil.Tag.T_STRING;
-import static ch.njol.yggdrasil.Tag.getType;
+import static ch.njol.yggdrasil.Tag.*;
 
 public abstract class YggdrasilOutputStream implements Flushable, Closeable {
 	
@@ -185,7 +178,7 @@ public abstract class YggdrasilOutputStream implements Flushable, Closeable {
 	}
 	
 	private int nextObjectID = 0;
-	private final IdentityHashMap<Object, Integer> writtenObjects = new IdentityHashMap<>();
+	private final IdentityHashMap<Object, Integer> writtenObjects = new IdentityHashMap<Object, Integer>();
 	
 	public final void writeObject(@Nullable Object object) throws IOException {
 		if (object == null) {

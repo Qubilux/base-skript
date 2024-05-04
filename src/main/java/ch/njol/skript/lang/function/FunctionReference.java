@@ -17,8 +17,6 @@
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.function;
-
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.ClassInfo;
@@ -28,11 +26,11 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -287,7 +285,7 @@ public class FunctionReference<T> {
 		// Prepare parameter values for calling
 		Object[][] params = new Object[singleListParam ? 1 : parameters.length][];
 		if (singleListParam && parameters.length > 1) { // All parameters to one list
-			List<Object> l = new ArrayList<>();
+			List<Object> l = new ArrayList<Object>();
 			for (Expression<?> parameter : parameters)
 				l.addAll(Arrays.asList(parameter.getArray(e)));
 			params[0] = l.toArray();

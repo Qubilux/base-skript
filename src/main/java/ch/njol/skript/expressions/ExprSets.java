@@ -21,7 +21,7 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Lists;
@@ -39,6 +39,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Sets")
 @Description("Returns a list of all the values of a type. Useful for looping.")
@@ -62,7 +63,7 @@ public class ExprSets extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parser) {
 		// This check makes sure that "color" is not a valid pattern, and the type the user inputted has to be plural, unless it's "every %classinfo%"
 		boolean plural = Utils.getEnglishPlural(parser.expr).getSecond();
 		if (!plural && !parser.expr.startsWith("every"))
@@ -78,14 +79,14 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
+	protected Object @NotNull [] get(@NotNull Event event) {
 		Iterator<?> iterator = supplier.get();
 		return Lists.newArrayList(iterator).toArray(new Object[0]);
 	}
 
 	@Override
 	@Nullable
-	public Iterator<?> iterator(Event event) {
+	public Iterator<?> iterator(@NotNull Event event) {
 		return supplier.get();
 	}
 
@@ -95,12 +96,12 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public Class<?> getReturnType() {
+	public @NotNull Class<?> getReturnType() {
 		return classInfo.getC();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "all of the " + classInfo.getName().getPlural();
 	}
 

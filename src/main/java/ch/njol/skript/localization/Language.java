@@ -24,19 +24,11 @@ import ch.njol.skript.config.Config;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Version;
-import org.bukkit.plugin.Plugin;
+import io.github.ultreon.skript.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -59,13 +51,13 @@ public class Language {
 	 */
 	private static String name = "english";
 
-	private static final HashMap<String, String> defaultLanguage = new HashMap<>();
+	private static final HashMap<String, String> defaultLanguage = new HashMap<String, String>();
 
 	@Nullable
 	private static HashMap<String, String> localizedLanguage = null;
-	
-	private static final HashMap<Plugin, Version> langVersion = new HashMap<>();
-	
+
+	private static final HashMap<Plugin, Version> langVersion = new HashMap<Plugin, Version>();
+
 	public static String getName() {
 		return name;
 	}
@@ -94,8 +86,8 @@ public class Language {
 	 * @return The requested message if it exists or the key otherwise
 	 */
 	public static String get(String key) {
-		String s = get_i("" + key.toLowerCase(Locale.ENGLISH));
-		return s == null ? "" + key.toLowerCase(Locale.ENGLISH) : s;
+		String s = get_i(key.toLowerCase(Locale.ENGLISH));
+		return s == null ? key.toLowerCase(Locale.ENGLISH) : s;
 	}
 	
 	/**
@@ -106,7 +98,7 @@ public class Language {
 	 */
 	@Nullable
 	public static String get_(String key) {
-		return get_i("" + key.toLowerCase(Locale.ENGLISH));
+		return get_i(key.toLowerCase(Locale.ENGLISH));
 	}
 	
 	public static void missingEntryError(String key) {
@@ -120,12 +112,12 @@ public class Language {
 	 * @return The formatted string
 	 */
 	public static String format(String key, Object... args) {
-		key = "" + key.toLowerCase(Locale.ENGLISH);
+		key = key.toLowerCase(Locale.ENGLISH);
 		String value = get_i(key);
 		if (value == null)
 			return key;
 		try {
-			return "" + String.format(value, args);
+			return String.format(value, args);
 		} catch (Exception e) {
 			Skript.error("Invalid format string at '" + key + "' in the " + getName() + " language file: " + value);
 			return key;
@@ -153,7 +145,7 @@ public class Language {
 	 * @return a non-null String array with at least one element
 	 */
 	public static String[] getList(String key) {
-		String s = get_i("" + key.toLowerCase(Locale.ENGLISH));
+		String s = get_i(key.toLowerCase(Locale.ENGLISH));
 		if (s == null)
 			return new String[] {key.toLowerCase(Locale.ENGLISH)};
 		String[] r = listSplitPattern.split(s);
@@ -210,7 +202,7 @@ public class Language {
 		defaultLanguage.putAll(def);
 
 		if (localizedLanguage == null)
-			localizedLanguage = new HashMap<>();
+			localizedLanguage = new HashMap<String, String>();
 		localizedLanguage.putAll(en);
 
 		for (LanguageChangeListener l : listeners)
@@ -218,9 +210,9 @@ public class Language {
 	}
 	
 	public static boolean load(String name) {
-		name = "" + name.toLowerCase(Locale.ENGLISH);
+		name = name.toLowerCase(Locale.ENGLISH);
 
-		localizedLanguage = new HashMap<>();
+		localizedLanguage = new HashMap<String, String>();
 		boolean exists = load(Skript.getAddonInstance(), name, true);
 		for (SkriptAddon addon : Skript.getAddons()) {
 			exists |= load(addon, name, false);
@@ -263,7 +255,7 @@ public class Language {
 			Skript.error(addon + "'s language file " + name + ".lang does not provide a version number!");
 		} else {
 			try {
-				Version v = new Version("" + l.get("version"));
+				Version v = new Version(l.get("version"));
 				Version lv = langVersion.get(addon.plugin);
 				assert lv != null; // set in loadDefault()
 				if (v.isSmallerThan(lv))
@@ -292,7 +284,7 @@ public class Language {
 	
 	private static HashMap<String, String> load(@Nullable InputStream in, String name, boolean tryUpdate) {
 		if (in == null)
-			return new HashMap<>();
+			return new HashMap<String, String>();
 
 		try {
 			Config langConfig = new Config(in, name + ".lang", false, false, ":");
@@ -304,7 +296,7 @@ public class Language {
 				InputStream newConfigIn = Skript.getInstance().getResource(langFileName);
 				if (newConfigIn == null) {
 					Skript.error("The lang file '" + name + ".lang' is outdated, but Skript couldn't find the newest version of it in its jar.");
-					return new HashMap<>();
+					return new HashMap<String, String>();
 				}
 				Config newLangConfig = new Config(newConfigIn, "Skript.jar/" + langFileName, false, false, ":");
 				newConfigIn.close();
@@ -326,7 +318,7 @@ public class Language {
 		} catch (IOException e) {
 			//noinspection ThrowableNotThrown
 			Skript.exception(e, "Could not load the language file '" + name + ".lang': " + ExceptionUtils.toString(e));
-			return new HashMap<>();
+			return new HashMap<String, String>();
 		} finally {
 			try {
 				in.close();
@@ -334,7 +326,7 @@ public class Language {
 		}
 	}
 
-	private static final List<LanguageChangeListener> listeners = new ArrayList<>();
+	private static final List<LanguageChangeListener> listeners = new ArrayList<LanguageChangeListener>();
 	
 	public enum LanguageListenerPriority {
 		EARLIEST, NORMAL, LATEST

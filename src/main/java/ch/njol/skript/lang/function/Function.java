@@ -18,14 +18,13 @@
  */
 package ch.njol.skript.lang.function;
 
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.util.coll.CollectionUtils;
+import io.github.ultreon.skript.BaseSkript;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 /**
  * Functions can be called using arguments.
@@ -86,12 +85,12 @@ public abstract class Function<T> {
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(Object[][] params) {
-		FunctionEvent<? extends T> e = new FunctionEvent<>(this);
+		FunctionEvent<? extends T> e = new FunctionEvent<T>(this);
 		
 		// Call function event only if requested by addon
 		// Functions may be called VERY often, so this might have performance impact
 		if (Functions.callFunctionEvents)
-			Bukkit.getPluginManager().callEvent(e);
+			BaseSkript.getPluginManager().callEvent(e);
 		
 		// Parameters taken by the function.
 		Parameter<?>[] parameters = sign.getParameters();

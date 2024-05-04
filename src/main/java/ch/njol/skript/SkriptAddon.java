@@ -18,44 +18,42 @@
  */
 package ch.njol.skript;
 
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.Version;
+import io.github.ultreon.skript.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.Version;
-
 /**
- * Utility class for Skript addons. Use {@link Skript#registerAddon(JavaPlugin)} to create a SkriptAddon instance for your plugin.
+ * Utility class for Skript addons. Use {@link Skript#registerAddon(Plugin)} to create a SkriptAddon instance for your plugin.
  */
 public final class SkriptAddon {
-
-	public final JavaPlugin plugin;
 	public final Version version;
 	private final String name;
+	public Plugin plugin;
 
 	/**
-	 * Package-private constructor. Use {@link Skript#registerAddon(JavaPlugin)} to get a SkriptAddon for your plugin.
+	 * Package-private constructor. Use {@link Skript#registerAddon(Plugin)} to get a SkriptAddon for your plugin.
 	 * 
-	 * @param p
+	 * @param plugin
 	 */
-	SkriptAddon(final JavaPlugin p) {
-		plugin = p;
-		name = "" + p.getName();
+	SkriptAddon(Plugin plugin) {
+		this.name = plugin.getName();
+		this.plugin = plugin;
 		Version v;
 		try {
-			v = new Version("" + p.getDescription().getVersion());
+			v = new Version(plugin.getVersion0());
 		} catch (final IllegalArgumentException e) {
-			final Matcher m = Pattern.compile("(\\d+)(?:\\.(\\d+)(?:\\.(\\d+))?)?").matcher(p.getDescription().getVersion());
+			final Matcher m = Pattern.compile("(\\d+)(?:\\.(\\d+)(?:\\.(\\d+))?)?").matcher(plugin.getVersion0());
 			if (!m.find())
-				throw new IllegalArgumentException("The version of the plugin " + p.getName() + " does not contain any numbers: " + p.getDescription().getVersion());
+				throw new IllegalArgumentException("The version of the plugin " + plugin.getName() + " does not contain any numbers: " + plugin.getVersion0());
 			v = new Version(Utils.parseInt("" + m.group(1)), m.group(2) == null ? 0 : Utils.parseInt("" + m.group(2)), m.group(3) == null ? 0 : Utils.parseInt("" + m.group(3)));
-			Skript.warning("The plugin " + p.getName() + " uses a non-standard version syntax: '" + p.getDescription().getVersion() + "'. Skript will use " + v + " instead.");
+			Skript.warning("The plugin " + plugin.getName() + " uses a non-standard version syntax: '" + plugin.getVersion0() + "'. Skript will use " + v + " instead.");
 		}
 		version = v;
 	}
@@ -79,6 +77,7 @@ public final class SkriptAddon {
 	 * @return This SkriptAddon
 	 */
 	public SkriptAddon loadClasses(String basePackage, String... subPackages) throws IOException {
+		// TODO: UT - Add support for addons
 		Utils.getClasses(plugin, basePackage, subPackages);
 		return this;
 	}
@@ -111,19 +110,5 @@ public final class SkriptAddon {
 
 	@Nullable
 	private File file;
-
-	/**
-	 * The first invocation of this method uses reflection to invoke the protected method {@link JavaPlugin#getFile()} to get the plugin's jar file.
-	 * The file is then cached and returned upon subsequent calls to this method to reduce usage of reflection.
-	 * Only nullable if there was an exception thrown.
-	 * 
-	 * @return The jar file of the plugin.
-	 */
-	@Nullable
-	public File getFile() {
-		if (file == null)
-			file = Utils.getFile(plugin);
-		return file;
-	}
 
 }

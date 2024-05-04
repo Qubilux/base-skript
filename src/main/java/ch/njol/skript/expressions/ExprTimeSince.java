@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -30,6 +30,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Time Since")
 @Description("The time that has passed since a date. If the given date is in the future, a value will not be returned.")
@@ -59,17 +60,17 @@ public class ExprTimeSince extends SimplePropertyExpression<Date, Timespan> {
 	}
 
 	@Override
-	public Class<? extends Timespan> getReturnType() {
+	public @NotNull Class<? extends Timespan> getReturnType() {
 		return Timespan.class;
 	}
 
 	@Override
-	protected String getPropertyName() {
+	protected @NotNull String getPropertyName() {
 		return "time since";
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "the time since " + getExpr().toString(e, debug);
 	}
 

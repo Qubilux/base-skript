@@ -24,20 +24,17 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.LoopSection;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Return")
 @Description("Makes a function return a value")
@@ -55,15 +52,13 @@ public class EffReturn extends Effect {
 		Skript.registerEffect(EffReturn.class, "return %objects%");
 	}
 	
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private ScriptFunction<?> function;
 	
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> value;
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		ScriptFunction<?> f = Functions.currentFunction;
 		if (f == null) {
 			Skript.error("The return statement can only be used in a function");
@@ -107,7 +102,7 @@ public class EffReturn extends Effect {
 	@Override
 	@Nullable
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(@NotNull Event event) {
 		debug(event, false);
 		if (event instanceof FunctionEvent) {
 			((ScriptFunction) function).setReturnValue(value.getArray(event));
@@ -127,12 +122,12 @@ public class EffReturn extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
+	protected void execute(@NotNull Event event) {
 		assert false;
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "return " + value.toString(event, debug);
 	}
 	

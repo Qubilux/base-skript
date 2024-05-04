@@ -113,7 +113,7 @@ public enum Relation {
 	}
 
 	/**
-	 * @return The inverse of this Relation, i.e if this Relation fulfils <code>X rel Y</code>,
+	 * @return The inverse of this Relation, i.e. if this Relation fulfils <code>X rel Y</code>,
 	 * then the returned Relation fulfils <code>!(X rel Y)</code>.
 	 */
 	public Relation getInverse() {

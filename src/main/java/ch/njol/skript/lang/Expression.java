@@ -27,19 +27,13 @@ import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Checker;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -285,7 +279,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return A Map contains ChangeMode as the key and accepted types of that mode as the value
 	 */
 	default Map<ChangeMode, Class<?>[]> getAcceptedChangeModes() {
-		Map<ChangeMode, Class<?>[]> map = new HashMap<>();
+		Map<ChangeMode, Class<?>[]> map = new HashMap<ChangeMode, Class<?>[]>();
 		for (ChangeMode mode : ChangeMode.values()) {
 			Class<?>[] validClasses = acceptChange(mode);
 			if (validClasses != null)
@@ -329,16 +323,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 			newDelta = new Object[delta.length];
 			for (int i = 0; i < delta.length; i++) {
 				Object value = delta[i];
-				if (value instanceof Slot) {
-					ItemStack item = ((Slot) value).getItem();
-					if (item != null) {
-						item = item.clone(); // ItemStack in inventory is mutable
-					}
-
-					newDelta[i] = item;
-				} else {
-					newDelta[i] = Classes.clone(delta[i]);
-				}
+				newDelta[i] = Classes.clone(delta[i]);
 			}
 		}
 		// Everything else (inventories, actions, etc.) does not need special handling

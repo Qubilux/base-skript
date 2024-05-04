@@ -18,13 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import ch.njol.util.Math2;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,6 +28,13 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import ch.njol.util.Math2;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Name("Random Number")
 @Description({
@@ -58,7 +58,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
 		from = (Expression<Number>) exprs[0];
 		to = (Expression<Number>) exprs[1];
 		isInteger = parser.hasTag("integer");
@@ -67,7 +67,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 
 	@Override
 	@Nullable
-	protected Number[] get(Event event) {
+	protected Number @NotNull [] get(@NotNull Event event) {
 		Number from = this.from.getSingle(event);
 		Number to = this.to.getSingle(event);
 
@@ -95,12 +95,12 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public Class<? extends Number> getReturnType() {
+	public @NotNull Class<? extends Number> getReturnType() {
 		return isInteger ? Long.class : Double.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "a random " + (isInteger ? "integer" : "number") + " between " + from.toString(event, debug) + " and " + to.toString(event, debug);
 	}
 

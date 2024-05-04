@@ -18,17 +18,14 @@
  */
 package org.skriptlang.skript.lang.script;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.config.Config;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 import org.skriptlang.skript.lang.structure.Structure;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -47,7 +44,7 @@ public final class Script {
 
 	/**
 	 * Creates a new Script to be used across the API.
-	 * Only one Script should be created per Config. A loaded Script may be obtained through {@link ch.njol.skript.ScriptLoader}.
+	 * Only one Script should be created per Config. A loaded Script may be obtained through {@link ScriptLoader}.
 	 * @param config The Config containing the contents of this Script.
 	 * @param structures The list of Structures contained in this Script.
 	 */
@@ -74,7 +71,7 @@ public final class Script {
 
 	// Warning Suppressions
 
-	private final Set<ScriptWarning> suppressedWarnings = new HashSet<>(ScriptWarning.values().length);
+	private final Set<ScriptWarning> suppressedWarnings = new HashSet<ScriptWarning>(ScriptWarning.values().length);
 
 	/**
 	 * @param warning Suppresses the provided warning for this Script.
@@ -100,7 +97,7 @@ public final class Script {
 
 	// Script Data
 
-	private final Map<Class<? extends ScriptData>, ScriptData> scriptData = new ConcurrentHashMap<>(5);
+	private final Map<Class<? extends ScriptData>, ScriptData> scriptData = new ConcurrentHashMap<Class<? extends ScriptData>, ScriptData>(5);
 
 	/**
 	 * <b>This API is experimental and subject to change.</b>
@@ -160,7 +157,7 @@ public final class Script {
 
 	// Script Events
 
-	private final Set<ScriptEvent> eventHandlers = new HashSet<>(5);
+	private final Set<ScriptEvent> eventHandlers = new HashSet<ScriptEvent>(5);
 
 	/**
 	 * <b>This API is experimental and subject to change.</b>

@@ -18,18 +18,17 @@
  */
 package ch.njol.skript.expressions.base;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
-import org.skriptlang.skript.lang.converter.Converter;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.Arrays;
 
@@ -79,7 +78,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 		this.expr = expr;
 	}
 
-	public final Expression<? extends F> getExpr() {
+	public final @org.jetbrains.annotations.Nullable Expression<? extends F> getExpr() {
 		return expr;
 	}
 

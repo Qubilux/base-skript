@@ -24,24 +24,20 @@ import ch.njol.util.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class Arithmetics {
 
-	private static final Map<Operator, List<OperationInfo<?, ?, ?>>> operations = Collections.synchronizedMap(new HashMap<>());
-	private static final Map<Operator, Map<Pair<Class<?>, Class<?>>, OperationInfo<?, ?, ?>>> cachedOperations = Collections.synchronizedMap(new HashMap<>());
+	private static final Map<Operator, List<OperationInfo<?, ?, ?>>> operations = Collections.synchronizedMap(new HashMap<Operator, List<OperationInfo<?, ?, ?>>>());
+	private static final Map<Operator, Map<Pair<Class<?>, Class<?>>, OperationInfo<?, ?, ?>>> cachedOperations = Collections.synchronizedMap(new HashMap<Operator, Map<Pair<Class<?>, Class<?>>, OperationInfo<?, ?, ?>>>());
 
-	private static final Map<Class<?>, DifferenceInfo<?, ?>> differences = Collections.synchronizedMap(new HashMap<>());
-	private static final Map<Class<?>, DifferenceInfo<?, ?>> cachedDifferences = Collections.synchronizedMap(new HashMap<>());
+	private static final Map<Class<?>, DifferenceInfo<?, ?>> differences = Collections.synchronizedMap(new HashMap<Class<?>, DifferenceInfo<?, ?>>());
+	private static final Map<Class<?>, DifferenceInfo<?, ?>> cachedDifferences = Collections.synchronizedMap(new HashMap<Class<?>, DifferenceInfo<?, ?>>());
 
-	private static final Map<Class<?>, Supplier<?>> defaultValues = Collections.synchronizedMap(new HashMap<>());
-	private static final Map<Class<?>, Supplier<?>> cachedDefaultValues = Collections.synchronizedMap(new HashMap<>());
+	private static final Map<Class<?>, Supplier<?>> defaultValues = Collections.synchronizedMap(new HashMap<Class<?>, Supplier<?>>());
+	private static final Map<Class<?>, Supplier<?>> cachedDefaultValues = Collections.synchronizedMap(new HashMap<Class<?>, Supplier<?>>());
 
 	public static <T> void registerOperation(Operator operator, Class<T> type, Operation<T, T, T> operation) {
 		registerOperation(operator, type, type, type, operation);
@@ -66,7 +62,7 @@ public final class Arithmetics {
 		if (exactOperationExists(operator, leftClass, rightClass))
 			throw new SkriptAPIException("There's already a " + operator.getName() + " operation registered for types '"
 				+ leftClass + "' and '" + rightClass + "'");
-		getOperations_i(operator).add(new OperationInfo<>(leftClass, rightClass, returnType, operation));
+		getOperations_i(operator).add(new OperationInfo<L, R, T>(leftClass, rightClass, returnType, operation));
 	}
 
 	private static boolean exactOperationExists(Operator operator, Class<?> leftClass, Class<?> rightClass) {
@@ -82,7 +78,7 @@ public final class Arithmetics {
 	}
 
 	private static List<OperationInfo<?, ?, ?>> getOperations_i(Operator operator) {
-		return operations.computeIfAbsent(operator, o -> Collections.synchronizedList(new ArrayList<>()));
+		return operations.computeIfAbsent(operator, o -> Collections.synchronizedList(new ArrayList<OperationInfo<?, ?, ?>>()));
 	}
 
 	@UnmodifiableView
@@ -108,14 +104,14 @@ public final class Arithmetics {
 	}
 
 	private static Map<Pair<Class<?>, Class<?>>, OperationInfo<?, ?, ?>> getCachedOperations(Operator operator) {
-		return cachedOperations.computeIfAbsent(operator, o -> Collections.synchronizedMap(new HashMap<>()));
+		return cachedOperations.computeIfAbsent(operator, o -> Collections.synchronizedMap(new HashMap<Pair<Class<?>, Class<?>>, OperationInfo<?, ?, ?>>()));
 	}
 
 	@Nullable
 	@SuppressWarnings("unchecked")
 	public static <L, R> OperationInfo<L, R, ?> getOperationInfo(Operator operator, Class<L> leftClass, Class<R> rightClass) {
 		assertIsOperationsDoneLoading();
-		return (OperationInfo<L, R, ?>) getCachedOperations(operator).computeIfAbsent(new Pair<>(leftClass, rightClass), pair ->
+		return (OperationInfo<L, R, ?>) getCachedOperations(operator).computeIfAbsent(new Pair<Class<?>, Class<?>>(leftClass, rightClass), pair ->
 			getOperations(operator).stream()
 				.filter(info -> info.getLeft().isAssignableFrom(leftClass) && info.getRight().isAssignableFrom(rightClass))
 				.reduce((info, info2) -> {
@@ -150,7 +146,7 @@ public final class Arithmetics {
 		OperationInfo<L, R, ?> operationInfo = getOperationInfo(operator, leftClass, rightClass);
 		if (operationInfo != null)
 			return operationInfo;
-		return (OperationInfo<L, R, ?>) getCachedOperations(operator).computeIfAbsent(new Pair<>(leftClass, rightClass), pair -> {
+		return (OperationInfo<L, R, ?>) getCachedOperations(operator).computeIfAbsent(new Pair<Class<?>, Class<?>>(leftClass, rightClass), pair -> {
 			for (OperationInfo<?, ?, ?> info : getOperations(operator)) {
 				if (!info.getLeft().isAssignableFrom(leftClass) && !info.getRight().isAssignableFrom(rightClass))
 					continue;
@@ -182,7 +178,7 @@ public final class Arithmetics {
 		Skript.checkAcceptRegistrations();
 		if (exactDifferenceExists(type))
 			throw new IllegalArgumentException("There's already a difference registered for type '" + type + "'");
-		differences.put(type, new DifferenceInfo<>(type, returnType, operation));
+		differences.put(type, new DifferenceInfo<T, R>(type, returnType, operation));
 	}
 
 	private static boolean exactDifferenceExists(Class<?> type) {

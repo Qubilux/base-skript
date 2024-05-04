@@ -28,11 +28,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Loop Iteration")
 @Description("Returns the loop's current iteration count (for both normal and while loops).")
@@ -61,7 +61,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		loopNumber = -1;
 		if (exprs[0] != null)
 			loopNumber = ((Literal<Number>) exprs[0]).getSingle().intValue();
@@ -93,7 +93,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 	}
 
 	@Override
-	protected Long[] get(Event event) {
+	protected Long @NotNull [] get(@NotNull Event event) {
 		return new Long[]{loop.getLoopCounter(event)};
 	}
 
@@ -103,12 +103,12 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public Class<? extends Long> getReturnType() {
+	public @NotNull Class<? extends Long> getReturnType() {
 		return Long.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "loop-iteration" + (loopNumber != -1 ? ("-" + loopNumber) : "");
 	}
 

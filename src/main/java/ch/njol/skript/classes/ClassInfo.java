@@ -26,9 +26,11 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Noun;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.arithmetic.Arithmetics;
+import org.skriptlang.skript.lang.arithmetic.Operator;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,8 +39,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import org.skriptlang.skript.lang.arithmetic.Operator;
-import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 
 /**
  * @author Peter Güttinger
@@ -170,8 +170,6 @@ public class ClassInfo<T> implements Debuggable {
 		this.defaultExpression = defaultExpression;
 		return this;
 	}
-
-
 	/**
 	 * Used for dynamically getting all the possible values of a class
 	 *
@@ -194,7 +192,7 @@ public class ClassInfo<T> implements Debuggable {
 	 * @see ClassInfo#supplier(Supplier)
 	 */
 	public ClassInfo<T> supplier(T[] values) {
-		return supplier(() -> new ArrayIterator<>(values));
+		return supplier(() -> new ArrayIterator<T>(values));
 	}
 
 	public ClassInfo<T> serializer(final Serializer<? super T> serializer) {
@@ -382,7 +380,7 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public Supplier<Iterator<T>> getSupplier() {
 		if (supplier == null && c.isEnum())
-			supplier = () -> new ArrayIterator<>(c.getEnumConstants());
+			supplier = () -> new ArrayIterator<T>(c.getEnumConstants());
 		return supplier;
 	}
 
@@ -463,7 +461,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	@Nullable
 	private Set<String> before;
-	private final Set<String> after = new HashSet<>();
+	private final Set<String> after = new HashSet<String>();
 	
 	/**
 	 * Sets one or more classes that this class should occur before in the class info list. This only affects the order in which classes are parsed if it's unknown of which type
@@ -478,7 +476,7 @@ public class ClassInfo<T> implements Debuggable {
 	 */
 	public ClassInfo<T> before(final String... before) {
 		assert this.before == null;
-		this.before = new HashSet<>(Arrays.asList(before));
+		this.before = new HashSet<String>(Arrays.asList(before));
 		return this;
 	}
 	

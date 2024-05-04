@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.log;
 
-import java.util.logging.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * Counts logged messages of a certain type
@@ -32,12 +32,12 @@ public class CountingLogHandler extends LogHandler {
 	private int count;
 	
 	public CountingLogHandler(Level minimum) {
-		this.minimum = minimum.intValue();
+		this.minimum = minimum.intLevel();
 	}
 	
 	@Override
 	public LogResult log(LogEntry entry) {
-		if (entry.level.intValue() >= minimum)
+		if (entry.level.intLevel() >= minimum)
 			count++;
 		return LogResult.LOG;
 	}

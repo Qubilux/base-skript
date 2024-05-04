@@ -18,12 +18,10 @@
  */
 package ch.njol.skript.classes;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.StringMode;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A parser used to parse data from a string or turn data into a string.
@@ -86,9 +84,9 @@ public abstract class Parser<T> {
 				return toVariableNameString(o);
 			case COMMAND:
 				return toCommandString(o);
+			default:
+				throw new IllegalArgumentException();
 		}
-		assert false;
-		return "";
 	}
 	
 	// not used anymore

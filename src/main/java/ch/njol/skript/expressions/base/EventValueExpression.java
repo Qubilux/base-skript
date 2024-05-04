@@ -18,11 +18,6 @@
  */
 package ch.njol.skript.expressions.base;
 
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Changer;
@@ -42,8 +37,13 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A useful class for creating default expressions. It simply returns the event value of the given type.
@@ -78,7 +78,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		Skript.registerExpression(expression, type, ExpressionType.EVENT, "[the] " + pattern);
 	}
 
-	private final Map<Class<? extends Event>, Getter<? extends T, ?>> getters = new HashMap<>();
+	private final Map<Class<? extends Event>, Getter<? extends T, ?>> getters = new HashMap<Class<? extends Event>, Getter<? extends T, ?>>();
 
 	private final Class<?> componentType;
 	private final Class<? extends T> type;

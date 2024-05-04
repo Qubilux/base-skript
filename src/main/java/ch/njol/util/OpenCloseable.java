@@ -18,6 +18,8 @@
  */
 package ch.njol.util;
 
+import ch.njol.skript.log.LogHandler;
+
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -26,7 +28,7 @@ import java.util.Iterator;
 /**
  * A object that can both be opened and closed.
  *
- * @see ch.njol.skript.log.LogHandler
+ * @see LogHandler
  */
 public interface OpenCloseable extends AutoCloseable {
 	
@@ -48,7 +50,7 @@ public interface OpenCloseable extends AutoCloseable {
 	 * in reverse order.
 	 */
 	static OpenCloseable combine(OpenCloseable... openCloseableArray) {
-		Deque<OpenCloseable> openCloseables = new ArrayDeque<>(Arrays.asList(openCloseableArray));
+		Deque<OpenCloseable> openCloseables = new ArrayDeque<OpenCloseable>(Arrays.asList(openCloseableArray));
 		
 		return new OpenCloseable() {
 			@Override

@@ -89,7 +89,7 @@ public class Signature<T> {
 		this.single = single;
 		this.originClassPath = originClassPath;
 
-		calls = Collections.newSetFromMap(new WeakHashMap<>());
+		calls = Collections.newSetFromMap(new WeakHashMap<FunctionReference<?>, Boolean>());
 	}
 
 	public Signature(String script, String name, Parameter<?>[] parameters, boolean local, @Nullable ClassInfo<T> returnType, boolean single) {
@@ -122,7 +122,7 @@ public class Signature<T> {
 		return single;
 	}
 
-	public String getOriginClassPath() {
+	public @org.jetbrains.annotations.Nullable String getOriginClassPath() {
 		return originClassPath;
 	}
 

@@ -18,8 +18,8 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.lang.util.SimpleLiteral;
+import ch.njol.skript.registrations.Classes;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -64,7 +64,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 				return null;
 			returnTypes[i] = exprs[i].getReturnType();
 		}
-		return new LiteralList<>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), and, this);
+		return new LiteralList<R>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), and, this);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 			T[] values = (T[]) Array.newInstance(getReturnType(), expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<>(values, getReturnType(), and);
+			return new SimpleLiteral<T>(values, getReturnType(), and);
 		}
 		return this;
 	}

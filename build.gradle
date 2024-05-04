@@ -5,9 +5,9 @@ import java.time.LocalTime
 
 plugins {
 	id 'com.github.johnrengelman.shadow' version '8.1.1'
-	id 'com.github.hierynomus.license' version '0.16.1'
 	id 'maven-publish'
 	id 'java'
+	id 'java-library'
 }
 
 configurations {
@@ -17,26 +17,39 @@ configurations {
 allprojects {
 	repositories {
 		mavenCentral()
-		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		maven { url 'https://repo.papermc.io/repository/maven-public/' }
 		maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' } // needed for paper adventure snapshot
 		maven { url 'https://ci.emc.gs/nexus/content/groups/aikar/' }
 	}
 }
 
-dependencies {
-	shadow group: 'io.papermc', name: 'paperlib', version: '1.0.8'
-	shadow group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2'
-	shadow group: 'net.kyori', name: 'adventure-text-serializer-bungeecord', version: '4.3.2'
+configurations {
+	testImplementation.extendsFrom(implementation)
 
-	implementation group: 'io.papermc.paper', name: 'paper-api', version: '1.20.6-R0.1-SNAPSHOT'
-	implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700'
-	implementation group: 'com.google.code.findbugs', name: 'findbugs', version: '3.0.1'
-	implementation group: 'com.sk89q.worldguard', name: 'worldguard-legacy', version: '7.0.0-SNAPSHOT'
-	implementation group: 'net.milkbowl.vault', name: 'Vault', version: '1.7.3', {
-		exclude group: 'org.bstats', module: 'bstats-bukkit'
+	implementation {
+		canBeResolved = true
 	}
+}
+
+dependencies {
+	implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700'
+	implementation group: 'com.google.code.findbugs', name: 'findbugs', version: '3.+'
+	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+	shadow group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+	implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
+	shadow group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.+'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.+'
+	implementation group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
+
+	testImplementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.2.700'
+	testImplementation group: 'com.google.code.findbugs', name: 'findbugs', version: '3.+'
+	testImplementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+	testImplementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+	testImplementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
+	testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.+'
+	testImplementation group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
 
 	implementation fileTree(dir: 'lib', include: '*.jar')
 
@@ -55,7 +68,7 @@ task checkAliases {
 }
 
 task testJar(type: ShadowJar) {
-	dependsOn(compileTestJava, licenseTest)
+	dependsOn(compileTestJava)
 	archiveFileName = 'Skript-JUnit.jar'
 	from sourceSets.test.output, sourceSets.main.output, project.configurations.testShadow
 }
@@ -64,11 +77,23 @@ task jar(overwrite: true, type: ShadowJar) {
 	dependsOn checkAliases
 	archiveFileName = jarName ? 'Skript-' + project.version + '.jar' : jarName
 	from sourceSets.main.output
+	from configurations.implementation
+
+	exclude "META-INF/*.DSA"
+	exclude "META-INF/*.RSA"
+	exclude "META-INF/*.SF"
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 task build(overwrite: true, type: ShadowJar) {
 	archiveFileName = jarName ? 'Skript-' + project.version + '.jar' : jarName
 	from sourceSets.main.output
+	from configurations.implementation
+
+	exclude "META-INF/*.DSA"
+	exclude "META-INF/*.RSA"
+	exclude "META-INF/*.SF"
 }
 
 // Excludes the tests for the build task. Should be using junit, junitJava17, junitJava8, skriptTest, quickTest.
@@ -86,14 +111,6 @@ tasks.withType(ShadowJar) {
 	configurations = [
 		project.configurations.shadow
 	]
-	dependencies {
-		include(dependency('io.papermc:paperlib'))
-		include(dependency('org.bstats:bstats-bukkit'))
-		include(dependency('org.bstats:bstats-base'))
-		include(dependency('net.kyori:adventure-text-serializer-bungeecord'))
-	}
-	relocate 'io.papermc.lib', 'ch.njol.skript.paperlib'
-	relocate 'org.bstats', 'ch.njol.skript.bstats'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
@@ -139,15 +156,6 @@ publishing {
 			}
 		}
 	}
-}
-
-license {
-	header file('licenseheader.txt')
-	exclude('**/Metrics.java') // Not under GPLv3
-	exclude('**/BurgerHelper.java') // Not exclusively GPLv3
-	exclude('**/*.sk') // Sample scripts and maybe aliases
-	exclude('**/*.lang') // Language files do not have headers (still under GPLv3)
-	exclude('**/*.json') // JSON files do not have headers
 }
 
 task releaseJavadoc(type: Javadoc) {
@@ -204,7 +212,6 @@ void createTestTask(String name, String desc, String environments, int javaVersi
 	}
 	tasks.register(name, JavaExec) {
 		description = desc
-		dependsOn licenseTest
 		if (junit) {
 			dependsOn testJar
 		} else if (releaseDocs) {
@@ -221,7 +228,6 @@ void createTestTask(String name, String desc, String environments, int javaVersi
 		group = 'execution'
 		classpath = files([
 			artifact,
-			project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
 			sourceSets.main.runtimeClasspath
 		])
 		main = 'ch.njol.skript.test.platform.PlatformMain'
@@ -244,7 +250,7 @@ void createTestTask(String name, String desc, String environments, int javaVersi
 			if (!gradle.taskGraph.hasTask(":tasks") && !gradle.startParameter.dryRun && modifiers.contains(Modifiers.PROFILE)) {
 				if (!project.hasProperty('profiler'))
 					throw new MissingPropertyException('Add parameter -Pprofiler=<path to profiler>', 'profiler', String.class)
-	
+
 				args += '-agentpath:' + project.property('profiler') + '=port=8849,nowait'
 			}
 		}
@@ -255,11 +261,11 @@ def java21 = 21
 def java17 = 17
 def java8 = 8
 
-def latestEnv = 'java21/paper-1.20.6.json'
+def latestEnv = 'java21.json'
 def latestJava = java21
 def oldestJava = java8
 
-def latestJUnitEnv = 'java17/paper-1.20.4.json'
+def latestJUnitEnv = 'java17.json'
 def latestJUnitJava = java17
 
 java {
@@ -274,7 +280,7 @@ compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
 // Register different Skript testing tasks
-String environments = 'src/test/skript/environments/';
+String environments = 'src/test/skript/environments/'
 String env = project.property('testEnv') == null ? latestEnv : project.property('testEnv') + '.json'
 int envJava = project.property('testEnvJavaVersion') == null ? latestJava : Integer.parseInt(project.property('testEnvJavaVersion') as String)
 createTestTask('quickTest', 'Runs tests on one environment being the latest supported Java and Minecraft.', environments + latestEnv, latestJava, 0)
@@ -388,7 +394,7 @@ task nightlyResources(type: ProcessResources) {
 
 task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
-	dependsOn nightlyResources, licenseMain
+	dependsOn nightlyResources
 	archiveFileName = 'Skript-nightly.jar'
 	manifest {
 		attributes(

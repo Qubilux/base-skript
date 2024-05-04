@@ -18,42 +18,30 @@
  */
 package ch.njol.skript.conditions;
 
-import ch.njol.skript.log.ParseLogHandler;
-import ch.njol.skript.util.Time;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
-
-import org.skriptlang.skript.lang.comparator.Comparator;
-import org.skriptlang.skript.lang.comparator.ComparatorInfo;
-import org.skriptlang.skript.lang.comparator.Relation;
-import org.skriptlang.skript.lang.converter.ConverterInfo;
-import org.skriptlang.skript.lang.converter.Converters;
-
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.log.RetainingLogHandler;
+import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-
-import org.skriptlang.skript.lang.comparator.Comparators;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.lang.comparator.Comparator;
+import org.skriptlang.skript.lang.comparator.ComparatorInfo;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.util.Cyclical;
 
 @Name("Comparison")
@@ -68,7 +56,7 @@ import org.skriptlang.skript.lang.util.Cyclical;
 @Since("1.0")
 public class CondCompare extends Condition {
 	
-	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][]{
+	private final static Patterns<Relation> patterns = new Patterns<Relation>(new Object[][]{
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above)|\\>) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\>=) %objects%", Relation.GREATER_OR_EQUAL},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((less|smaller|lower) than|below)|\\<) %objects%", Relation.SMALLER},
@@ -114,7 +102,7 @@ public class CondCompare extends Condition {
 	private Comparator comparator;
 	
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(final Expression<?> @NotNull [] vars, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parser) {
 		first = vars[0];
 		second = vars[1];
 		if (vars.length == 3)
@@ -265,7 +253,7 @@ public class CondCompare extends Condition {
 			String unparsed = ((UnparsedLiteral) source).getData();
 			T data = Classes.parse(unparsed, type, ParseContext.DEFAULT);
 			if (data != null) { // Success, let's make a literal of it
-				return new SimpleLiteral<>(data, false, new UnparsedLiteral(unparsed));
+				return new SimpleLiteral<T>(data, false, new UnparsedLiteral(unparsed));
 			}
 		}
 		return null; // Context-sensitive parsing failed; can't really help it
@@ -343,7 +331,7 @@ public class CondCompare extends Condition {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean check(final Event e) {
+	public boolean check(final @NotNull Event e) {
 		final Expression<?> third = this.third;
 		return first.check(e, (Checker<Object>) o1 ->
 			second.check(e, (Checker<Object>) o2 -> {
@@ -383,7 +371,7 @@ public class CondCompare extends Condition {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		String s;
 		final Expression<?> third = this.third;
 		if (third == null)

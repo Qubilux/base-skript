@@ -18,15 +18,14 @@
  */
 package ch.njol.skript.lang.function;
 
-import org.skriptlang.skript.lang.script.Script;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.effects.EffReturn;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.variables.Variables;
+import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.script.Script;
 
 /**
  * @author Peter Güttinger

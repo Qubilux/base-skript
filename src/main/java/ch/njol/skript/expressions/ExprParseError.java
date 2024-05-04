@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -31,6 +31,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Peter Güttinger
@@ -50,12 +51,12 @@ public class ExprParseError extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?> @NotNull [] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parseResult) {
 		return true;
 	}
 	
 	@Override
-	protected String[] get(final Event e) {
+	protected String @NotNull [] get(final @NotNull Event e) {
 		return ExprParse.lastError == null ? new String[0] : new String[] {ExprParse.lastError};
 	}
 	
@@ -65,12 +66,12 @@ public class ExprParseError extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "the last parse error";
 	}
 	

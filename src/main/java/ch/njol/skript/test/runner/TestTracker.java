@@ -18,16 +18,15 @@
  */
 package ch.njol.skript.test.runner;
 
+import ch.njol.skript.test.utils.TestResults;
+import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.script.Script;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.jdt.annotation.Nullable;
-import org.skriptlang.skript.lang.script.Script;
-
-import ch.njol.skript.test.utils.TestResults;
 
 /**
  * Tracks failed and succeeded tests.

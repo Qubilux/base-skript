@@ -109,7 +109,7 @@ public final class Parameter<T> {
 				log.stop();
 			}
 		}
-		return new Parameter<>(name, type, single, d);
+		return new Parameter<T>(name, type, single, d);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public final class Parameter<T> {
 	 */
 	@Nullable
 	public static List<Parameter<?>> parse(String args) {
-		List<Parameter<?>> params = new ArrayList<>();
+		List<Parameter<?>> params = new ArrayList<Parameter<?>>();
 		boolean caseInsensitive = SkriptConfig.caseInsensitiveVariables.value();
 		int j = 0;
 		for (int i = 0; i <= args.length(); i = SkriptParser.next(args, i, ParseContext.DEFAULT)) {

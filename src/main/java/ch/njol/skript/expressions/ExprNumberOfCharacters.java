@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,6 +28,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Number of Characters")
 @Description("The number of uppercase, lowercase, or digit characters in a string.")
@@ -56,7 +56,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		pattern = matchedPattern;
 		expr = (Expression<String>) exprs[0];
 		return true;
@@ -65,7 +65,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	@Override
 	@SuppressWarnings("null")
 	@Nullable
-	protected Long[] get(Event e) {
+	protected Long @NotNull [] get(@NotNull Event e) {
 		String str = expr.getSingle(e);
 		if (str == null)
 			return null;
@@ -92,12 +92,12 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public Class<? extends Long> getReturnType() {
+	public @NotNull Class<? extends Long> getReturnType() {
 		return Long.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		if (pattern == 0) {
 			return "number of uppercase characters";
 		} else if (pattern == 1) {

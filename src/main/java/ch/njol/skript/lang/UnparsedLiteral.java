@@ -30,10 +30,9 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
+import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.logging.Level;
 
 /**
  * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression matches.
@@ -61,7 +60,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	 */
 	public UnparsedLiteral(String data, @Nullable LogEntry error) {
 		assert data.length() > 0;
-		assert error == null || error.getLevel() == Level.SEVERE;
+		assert error == null || error.getLevel() == Level.FATAL;
 		this.data = data;
 		this.error = error;
 	}
@@ -92,7 +91,7 @@ public class UnparsedLiteral implements Literal<Object> {
 				R parsedObject = Classes.parse(data, type, context);
 				if (parsedObject != null) {
 					log.printLog();
-					return new SimpleLiteral<>(parsedObject, false, this);
+					return new SimpleLiteral<R>(parsedObject, false, this);
 				}
 				log.clear();
 			}

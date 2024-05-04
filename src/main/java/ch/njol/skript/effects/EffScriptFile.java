@@ -20,20 +20,21 @@ package ch.njol.skript.effects;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptCommand;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.OpenCloseable;
-import org.bukkit.event.Event;
+import ch.njol.util.StringUtils;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.lang.script.Script;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,18 +65,18 @@ public class EffScriptFile extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		mark = parseResult.mark;
 		fileName = (Expression<String>) exprs[0];
 		return true;
 	}
 	
 	@Override
-	protected void execute(Event e) {
+	protected void execute(@NotNull Event e) {
 		String name = fileName.getSingle(e);
 		if (name == null)
 			return;
-		File scriptFile = SkriptCommand.getScriptFromName(name);
+		File scriptFile = getScriptFromName(name);
 		if (scriptFile == null)
 			return;
 
@@ -132,7 +133,35 @@ public class EffScriptFile extends Effect {
 				assert false;
 		}
 	}
-	
+
+	@Nullable
+	public static File getScriptFromName(String script) {
+		if (script.endsWith("/") || script.endsWith("\\")) { // Always allow '/' and '\' regardless of OS
+			script = script.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+		} else if (!StringUtils.endsWithIgnoreCase(script, ".sk")) {
+			int dot = script.lastIndexOf('.');
+			if (dot > 0 && !script.substring(dot + 1).equals(""))
+				return null;
+			script = script + ".sk";
+		}
+
+		if (script.startsWith(ScriptLoader.DISABLED_SCRIPT_PREFIX))
+			script = script.substring(ScriptLoader.DISABLED_SCRIPT_PREFIX_LENGTH);
+
+		File scriptFile = new File(Skript.getInstance().getScriptsFolder(), script);
+		if (!scriptFile.exists()) {
+			scriptFile = new File(scriptFile.getParentFile(), ScriptLoader.DISABLED_SCRIPT_PREFIX + scriptFile.getName());
+			if (!scriptFile.exists()) {
+				return null;
+			}
+		}
+		try {
+			return scriptFile.getCanonicalFile();
+		} catch (IOException e) {
+			throw Skript.exception(e, "An exception occurred while trying to get the script file from the string '" + script + "'");
+		}
+	}
+
 	private void unloadScripts(File file) {
 		if (file.isDirectory()) {
 			Set<Script> scripts = ScriptLoader.getScripts(file);
@@ -147,7 +176,7 @@ public class EffScriptFile extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		return (mark == ENABLE ? "enable" : mark == RELOAD ? "disable" : mark == DISABLE ? "unload" : "")
 			+ " script file " + fileName.toString(e, debug);
 	}

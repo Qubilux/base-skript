@@ -33,7 +33,7 @@ public class SingleItemIterable<T> implements Iterable<T> {
 	
 	@Override
 	public Iterator<T> iterator() {
-		return new SingleItemIterator<>(item);
+		return new SingleItemIterator<T>(item);
 	}
 	
 }

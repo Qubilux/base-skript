@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -35,6 +35,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 
 @Name("Hash")
@@ -82,7 +83,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final ParseResult parseResult) {
 		setExpr((Expression<? extends String>) exprs[0]);
 		algorithm = parseResult.mark;
 		return true;
@@ -90,7 +91,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected String[] get(final Event e, final String[] source) {
+	protected String @NotNull [] get(final @NotNull Event e, final String @NotNull [] source) {
 		// These can't be null
 		assert md5 != null;
 		assert sha256 != null;
@@ -123,12 +124,12 @@ public class ExprHash extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return "hash of " + getExpr();
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	

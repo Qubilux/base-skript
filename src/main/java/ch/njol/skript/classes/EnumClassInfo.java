@@ -38,7 +38,7 @@ public class EnumClassInfo<T extends Enum<T>> extends ClassInfo<T> {
 	 * @param languageNode The language node of the type
 	 */
 	public EnumClassInfo(Class<T> c, String codeName, String languageNode) {
-		this(c, codeName, languageNode, new EventValueExpression<>(c));
+		this(c, codeName, languageNode, new EventValueExpression<T>(c));
 	}
 
 	/**
@@ -49,9 +49,9 @@ public class EnumClassInfo<T extends Enum<T>> extends ClassInfo<T> {
 	 */
 	public EnumClassInfo(Class<T> c, String codeName, String languageNode, DefaultExpression<T> defaultExpression) {
 		super(c, codeName);
-		EnumUtils<T> enumUtils = new EnumUtils<>(c, languageNode);
+		EnumUtils<T> enumUtils = new EnumUtils<T>(c, languageNode);
 		usage(enumUtils.getAllNames())
-			.serializer(new EnumSerializer<>(c))
+			.serializer(new EnumSerializer<T>(c))
 			.defaultExpression(defaultExpression)
 			.parser(new Parser<T>() {
 				@Override

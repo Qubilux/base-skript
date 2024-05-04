@@ -18,10 +18,10 @@
  */
 package ch.njol.skript.lang;
 
-import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.variables.Variables;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.script.Script;
 
 import java.util.List;
 

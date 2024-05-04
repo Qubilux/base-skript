@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -31,6 +31,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Peter Güttinger
@@ -54,7 +55,7 @@ public class CondIsSet extends Condition {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?> @NotNull [] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final @NotNull ParseResult parseResult) {
 		expr = exprs[0];
 		setNegated(matchedPattern == 1);
 		return true;
@@ -76,12 +77,12 @@ public class CondIsSet extends Condition {
 	}
 	
 	@Override
-	public boolean check(final Event e) {
+	public boolean check(final @NotNull Event e) {
 		return check(expr, e);
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		return expr.toString(e, debug) + (isNegated() ? " isn't" : " is") + " set";
 	}
 	

@@ -23,6 +23,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Peter Güttinger
@@ -43,12 +44,12 @@ public class ExprLength extends SimplePropertyExpression<String, Long> {
 	}
 	
 	@Override
-	public Class<? extends Long> getReturnType() {
+	public @NotNull Class<? extends Long> getReturnType() {
 		return Long.class;
 	}
 	
 	@Override
-	protected String getPropertyName() {
+	protected @NotNull String getPropertyName() {
 		return "length";
 	}
 	

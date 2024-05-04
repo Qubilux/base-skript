@@ -27,12 +27,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.parser.ParserInstance;
-import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Script Name")
 @Description("Holds the current script's name (the file name without '.sk').")
@@ -57,7 +57,7 @@ public class ExprScript extends SimpleExpression<String> {
 	private String name;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		ParserInstance parser = getParser();
 		if (!parser.isActive()) {
 			Skript.error("You can't use the script expression outside of scripts!");
@@ -71,7 +71,7 @@ public class ExprScript extends SimpleExpression<String> {
 	}
 	
 	@Override
-	protected String[] get(Event event) {
+	protected String @NotNull [] get(@NotNull Event event) {
 		return new String[]{name};
 	}
 	
@@ -81,12 +81,12 @@ public class ExprScript extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return "the script's name";
 	}
 	

@@ -18,33 +18,6 @@
  */
 package ch.njol.skript.registrations;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.SequenceInputStream;
-import java.lang.reflect.Array;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import ch.njol.skript.command.Commands;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.util.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -57,19 +30,22 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.StringMode;
-import ch.njol.skript.variables.SQLStorage;
+import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.SerializedVariable;
-import ch.njol.skript.variables.Variables;
-import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import ch.njol.yggdrasil.Tag;
-import ch.njol.yggdrasil.Yggdrasil;
-import ch.njol.yggdrasil.YggdrasilInputStream;
-import ch.njol.yggdrasil.YggdrasilOutputStream;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import com.google.gson.Gson;
+import io.github.ultreon.skript.BaseSkript;
+import io.github.ultreon.skript.ChatColor;
+import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -80,10 +56,10 @@ public abstract class Classes {
 	
 	@Nullable
 	private static ClassInfo<?>[] classInfos = null;
-	private final static List<ClassInfo<?>> tempClassInfos = new ArrayList<>();
-	private final static HashMap<Class<?>, ClassInfo<?>> exactClassInfos = new HashMap<>();
-	private final static HashMap<Class<?>, ClassInfo<?>> superClassInfos = new HashMap<>();
-	private final static HashMap<String, ClassInfo<?>> classInfosByCodeName = new HashMap<>();
+	private final static List<ClassInfo<?>> tempClassInfos = new ArrayList<ClassInfo<?>>();
+	private final static HashMap<Class<?>, ClassInfo<?>> exactClassInfos = new HashMap<Class<?>, ClassInfo<?>>();
+	private final static HashMap<Class<?>, ClassInfo<?>> superClassInfos = new HashMap<Class<?>, ClassInfo<?>>();
+	private final static HashMap<String, ClassInfo<?>> classInfosByCodeName = new HashMap<String, ClassInfo<?>>();
 	
 	/**
 	 * @param info info about the class to register
@@ -95,8 +71,6 @@ public abstract class Classes {
 				throw new IllegalArgumentException("Can't register " + info.getC().getName() + " with the code name " + info.getCodeName() + " because that name is already used by " + classInfosByCodeName.get(info.getCodeName()));
 			if (exactClassInfos.containsKey(info.getC()))
 				throw new IllegalArgumentException("Can't register the class info " + info.getCodeName() + " because the class " + info.getC().getName() + " is already registered");
-			if (info.getCodeName().length() > SQLStorage.MAX_CLASS_CODENAME_LENGTH)
-				throw new IllegalArgumentException("The codename '" + info.getCodeName() + "' is too long to be saved in a database, the maximum length allowed is " + SQLStorage.MAX_CLASS_CODENAME_LENGTH);
 			exactClassInfos.put(info.getC(), info);
 			classInfosByCodeName.put(info.getCodeName(), info);
 			tempClassInfos.add(info);
@@ -128,16 +102,13 @@ public abstract class Classes {
 		for (final ClassInfo<?> ci : getClassInfos()) {
 			final Serializer<?> s = ci.getSerializer();
 			if (s != null)
-				Variables.yggdrasil.registerClassResolver(s);
+				/*Variables.yggdrasil.registerClassResolver(s)*/;
 		}
-
-		EntityData.onRegistrationStop();
 	}
 	
 	/**
 	 * Sorts the class infos according to sub/superclasses and relations set with {@link ClassInfo#before(String...)} and {@link ClassInfo#after(String...)}.
 	 */
-	@SuppressFBWarnings("LI_LAZY_INIT_STATIC")
 	private static void sortClassInfos() {
 		assert classInfos == null;
 		
@@ -169,7 +140,7 @@ public abstract class Classes {
 		
 		// remove unresolvable dependencies (and print a warning if testing)
 		for (final ClassInfo<?> ci : tempClassInfos) {
-			final Set<String> s = new HashSet<>();
+			final Set<String> s = new HashSet<String>();
 			final Set<String> before = ci.before();
 			if (before != null) {
 				for (final String b : before) {
@@ -189,7 +160,7 @@ public abstract class Classes {
 				Skript.warning(s.size() + " dependency/ies could not be resolved for " + ci + ": " + StringUtils.join(s, ", "));
 		}
 		
-		final List<ClassInfo<?>> classInfos = new ArrayList<>(tempClassInfos.size());
+		final List<ClassInfo<?>> classInfos = new ArrayList<ClassInfo<?>>(tempClassInfos.size());
 		
 		boolean changed = true;
 		while (changed) {
@@ -342,7 +313,7 @@ public abstract class Classes {
 	public static <T> List<ClassInfo<? super T>> getAllSuperClassInfos(Class<T> c) {
 		assert c != null;
 		checkAllowClassInfoInteraction();
-		List<ClassInfo<? super T>> list = new ArrayList<>();
+		List<ClassInfo<? super T>> list = new ArrayList<ClassInfo<? super T>>();
 		for (ClassInfo<?> ci : getClassInfos()) {
 			if (ci.getC().isAssignableFrom(c)) {
 				list.add((ClassInfo<? super T>) ci);
@@ -513,8 +484,9 @@ public abstract class Classes {
 				return t;
 			}
 			for (final ConverterInfo<?, ?> conv : Converters.getConverterInfos()) {
-				if ((context == ParseContext.COMMAND || context == ParseContext.PARSE) && (conv.getFlags() & Commands.CONVERTER_NO_COMMAND_ARGUMENTS) != 0)
-					continue;
+				// TODO: UT - Add command support
+//				if ((context == ParseContext.COMMAND || context == ParseContext.PARSE) && (conv.getFlags() & Commands.CONVERTER_NO_COMMAND_ARGUMENTS) != 0)
+//					continue;
 				if (c.isAssignableFrom(conv.getTo())) {
 					log.clear();
 					Object object = parseSimple(s, conv.getFrom(), context);
@@ -665,11 +637,11 @@ public abstract class Classes {
 	public static String toString(final Object[] os, final int flags, final boolean and) {
 		return toString(os, and, null, StringMode.MESSAGE, flags);
 	}
-	
+
 	public static String toString(final Object[] os, final int flags, final @Nullable ChatColor c) {
 		return toString(os, true, c, StringMode.MESSAGE, flags);
 	}
-	
+
 	public static String toString(final Object[] os, final boolean and) {
 		return toString(os, and, null, StringMode.MESSAGE, 0);
 	}
@@ -697,34 +669,10 @@ public abstract class Classes {
 		}
 		return "" + b.toString();
 	}
-	
-	/**
-	 * consists of {@link Yggdrasil#MAGIC_NUMBER} and {@link Variables#YGGDRASIL_VERSION}
-	 */
-	private final static byte[] YGGDRASIL_START = {(byte) 'Y', (byte) 'g', (byte) 'g', 0, (Variables.YGGDRASIL_VERSION >>> 8) & 0xFF, Variables.YGGDRASIL_VERSION & 0xFF};
-	
+
 	@SuppressWarnings("null")
 	private final static Charset UTF_8 = Charset.forName("UTF-8");
-	
-	private static byte[] getYggdrasilStart(final ClassInfo<?> c) throws NotSerializableException {
-		assert Enum.class.isAssignableFrom(Kleenean.class) && Tag.getType(Kleenean.class) == Tag.T_ENUM : Tag.getType(Kleenean.class); // TODO why is this check here?
-		final Tag t = Tag.getType(c.getC());
-		assert t.isWrapper() || t == Tag.T_STRING || t == Tag.T_OBJECT || t == Tag.T_ENUM;
-		final byte[] cn = t == Tag.T_OBJECT || t == Tag.T_ENUM ? Variables.yggdrasil.getID(c.getC()).getBytes(UTF_8) : null;
-		final byte[] r = new byte[YGGDRASIL_START.length + 1 + (cn == null ? 0 : 1 + cn.length)];
-		int i = 0;
-		for (; i < YGGDRASIL_START.length; i++)
-			r[i] = YGGDRASIL_START[i];
-		r[i++] = t.tag;
-		if (cn != null) {
-			r[i++] = (byte) cn.length;
-			for (int j = 0; j < cn.length; j++)
-				r[i++] = cn[j];
-		}
-		assert i == r.length;
-		return r;
-	}
-	
+
 	/**
 	 * Must be called on the appropriate thread for the given value (i.e. the main thread currently)
 	 */
@@ -733,7 +681,7 @@ public abstract class Classes {
 			return null;
 		
 		// temporary
-		assert Bukkit.isPrimaryThread();
+		assert BaseSkript.isPrimaryThread();
 		
 		ClassInfo<?> ci = getSuperClassInfo(o.getClass());
 		if (ci.getSerializeAs() != null) {
@@ -753,38 +701,19 @@ public abstract class Classes {
 		if (s == null) // value cannot be saved
 			return null;
 		
-		assert s.mustSyncDeserialization() ? Bukkit.isPrimaryThread() : true;
-		
-		try {
-			final ByteArrayOutputStream bout = new ByteArrayOutputStream();
-			final YggdrasilOutputStream yout = Variables.yggdrasil.newOutputStream(bout);
-			yout.writeObject(o);
-			yout.flush();
-			yout.close();
-			final byte[] r = bout.toByteArray();
-			final byte[] start = getYggdrasilStart(ci);
-			for (int i = 0; i < start.length; i++)
-				assert r[i] == start[i] : o + " (" + ci.getC().getName() + "); " + Arrays.toString(start) + ", " + Arrays.toString(r);
-			final byte[] r2 = new byte[r.length - start.length];
-			System.arraycopy(r, start.length, r2, 0, r2.length);
-			
-			Object d;
-			assert equals(o, d = deserialize(ci, new ByteArrayInputStream(r2))) : o + " (" + o.getClass() + ") != " + d + " (" + (d == null ? null : d.getClass()) + "): " + Arrays.toString(r);
-			
-			return new SerializedVariable.Value(ci.getCodeName(), r2);
-		} catch (final IOException e) { // shouldn't happen
-			Skript.exception(e);
-			return null;
-		}
-	}
+		assert s.mustSyncDeserialization() ? BaseSkript.isPrimaryThread() : true;
+
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        final OutputStreamWriter osw = new OutputStreamWriter(bout, UTF_8);
+
+        Gson gson = new Gson();
+        gson.toJson(o, osw);
+
+        return new SerializedVariable.Value(ci.getCodeName(), bout.toByteArray());
+    }
 	
 	private static boolean equals(final @Nullable Object o, final @Nullable Object d) {
-		if (o instanceof Chunk) { // CraftChunk does neither override equals nor is it a "coordinate-specific singleton" like Block
-			if (!(d instanceof Chunk))
-				return false;
-			final Chunk c1 = (Chunk) o, c2 = (Chunk) d;
-			return c1.getWorld().equals(c2.getWorld()) && c1.getX() == c2.getX() && c1.getZ() == c2.getZ();
-		}
+		// Todo: UT - Equality API
 		return o == null ? d == null : o.equals(d);
 	}
 	
@@ -804,16 +733,11 @@ public abstract class Classes {
 	@Nullable
 	public static Object deserialize(final ClassInfo<?> type, InputStream value) {
 		Serializer<?> s;
-		assert (s = type.getSerializer()) != null && (s.mustSyncDeserialization() ? Bukkit.isPrimaryThread() : true) : type + "; " + s + "; " + Bukkit.isPrimaryThread();
-		YggdrasilInputStream in = null;
+		assert (s = type.getSerializer()) != null && (s.mustSyncDeserialization() ? BaseSkript.isPrimaryThread() : true) : type + "; " + s + "; " + BaseSkript.isPrimaryThread();
+		InputStreamReader in = null;
 		try {
-			value = new SequenceInputStream(new ByteArrayInputStream(getYggdrasilStart(type)), value);
-			in = Variables.yggdrasil.newInputStream(value);
-			return in.readObject();
-		} catch (final IOException e) { // i.e. invalid save
-			if (Skript.testing())
-				e.printStackTrace();
-			return null;
+            in = new InputStreamReader(value);
+			return new Gson().fromJson(in, type.getC());
 		} finally {
 			if (in != null) {
 				try {
@@ -838,7 +762,7 @@ public abstract class Classes {
 	@Deprecated
 	@Nullable
 	public static Object deserialize(final String type, final String value) {
-		assert Bukkit.isPrimaryThread();
+		assert BaseSkript.isPrimaryThread();
 		final ClassInfo<?> ci = getClassInfoNoError(type);
 		if (ci == null)
 			return null;

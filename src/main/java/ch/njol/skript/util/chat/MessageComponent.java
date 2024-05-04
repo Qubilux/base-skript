@@ -18,17 +18,15 @@
  */
 package ch.njol.skript.util.chat;
 
-import java.lang.reflect.Type;
-import java.util.Locale;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import io.github.ultreon.skript.ChatColor;
+import org.eclipse.jdt.annotation.Nullable;
 
-import net.md_5.bungee.api.ChatColor;
+import java.lang.reflect.Type;
+import java.util.Locale;
 
 /**
  * Component for chat messages. This can be serialized with GSON and then
@@ -97,7 +95,7 @@ public class MessageComponent {
 	public String keybind;
 
 	public static class ClickEvent {
-		public ClickEvent(ClickEvent.Action action, String value) {
+		public ClickEvent(Action action, String value) {
 			this.action = action;
 			this.value = value;
 		}
@@ -121,13 +119,13 @@ public class MessageComponent {
 			}
 		}
 		
-		public ClickEvent.Action action;
+		public Action action;
 		
 		public String value;
 	}
 	
 	public static class HoverEvent {
-		public HoverEvent(HoverEvent.Action action, String value) {
+		public HoverEvent(Action action, String value) {
 			this.action = action;
 			this.value = value;
 		}
@@ -150,7 +148,7 @@ public class MessageComponent {
 			}
 		}
 		
-		public HoverEvent.Action action;
+		public Action action;
 		
 		public String value;
 	}
@@ -184,4 +182,17 @@ public class MessageComponent {
 		return messageComponent;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (reset) sb.append(ChatColor.RESET.toString());
+		if (color != null && color.isColor()) sb.append(color.toString());
+		if (bold) sb.append(ChatColor.BOLD.toString());
+		if (italic) sb.append(ChatColor.ITALIC.toString());
+		if (underlined) sb.append(ChatColor.UNDERLINE.toString());
+		if (strikethrough) sb.append(ChatColor.STRIKETHROUGH.toString());
+		if (obfuscated) sb.append(ChatColor.MAGIC.toString());
+		if (insertion != null) sb.append(insertion);
+		return sb.append(text).toString();
+	}
 }

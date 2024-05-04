@@ -257,9 +257,9 @@ databases:
 		table: variables21 # The name of the table to create. 'variables21' is the default name, if this was to be omitted.
 							# (If the table exists but is defined differently that how Skript expects it to be you'll get errors and no variables will be saved and/or loaded)
 		# == SQLite/CSV configuration ==
-		file: ./plugins/Skript/variables.db
+		file: ./.skript/variables.db
 		# Where to save the variables to. For a CSV file, the file extension '.csv' is recommended, but not required, but SQLite database files must end in '.db' (SQLibrary forces this).
-		# The file path can either be absolute (e.g. 'C:\whatever\...' [Windows] or '/usr/whatever/...' [Unix]), or relative to the server directory (e.g. './plugins/Skript/...').
+		# The file path can either be absolute (e.g. 'C:\whatever\...' [Windows] or '/usr/whatever/...' [Unix]), or relative to the server directory (e.g. './.skript/...').
 
 		#table: variables21
 		# The name of the table to create. 'variables21' is the default name, if this was to be omitted.
@@ -298,7 +298,7 @@ databases:
 
 		pattern: db_.* # this pattern will save all variables that start with 'db_' in this SQLite database.
 
-		file: ./plugins/Skript/variables.db
+		file: ./.skript/variables.db
 		# SQLite databases must end in '.db'
 		#table: variables21
 		# Usually not required, if omitted defaults to variables21 (see above for more details)
@@ -316,7 +316,7 @@ databases:
 
 		pattern: .*
 
-		file: ./plugins/Skript/variables.csv
+		file: ./.skript/variables.csv
 
 		backup interval: 2 hours
 

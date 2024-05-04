@@ -19,7 +19,7 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.config.Config;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 
 import java.util.Objects;
 

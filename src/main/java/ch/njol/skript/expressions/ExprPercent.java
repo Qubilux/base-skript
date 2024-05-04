@@ -28,8 +28,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Percent of")
 @Description("Returns a percentage of one or more numbers.")
@@ -51,14 +52,14 @@ public class ExprPercent extends SimpleExpression<Number> {
 	private Expression<Number> numbers;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		percent = (Expression<Number>) exprs[0];
 		numbers = (Expression<Number>) exprs[1];
 		return true;
 	}
 
 	@Override
-	protected @Nullable Number[] get(Event event) {
+	protected @Nullable Number @NotNull [] get(@NotNull Event event) {
 		Number percent = this.percent.getSingle(event);
 		Number[] numbers = this.numbers.getArray(event);
 		if (percent == null || numbers.length == 0)
@@ -78,12 +79,12 @@ public class ExprPercent extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public Class<? extends Number> getReturnType() {
+	public @NotNull Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Event event, boolean debug) {
 		return percent.toString(event, debug) + " percent of " + numbers.toString(event, debug);
 	}
 

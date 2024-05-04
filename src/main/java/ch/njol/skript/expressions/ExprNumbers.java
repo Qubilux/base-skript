@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
@@ -38,6 +29,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 /**
  * @author Peter Güttinger
@@ -63,7 +59,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final @NotNull Kleenean isDelayed, final ParseResult parseResult) {
 		start = (Expression<Number>) exprs[0];
 		end = (Expression<Number>) exprs[1];
 		mode = parseResult.mark;
@@ -72,7 +68,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number[] get(final Event event) {
+	protected Number @NotNull [] get(final @NotNull Event event) {
 		Number s = start.getSingle(event), f = end.getSingle(event);
 		if (s == null || f == null)
 			return null;
@@ -83,7 +79,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			f = temp;
 		}
 		
-		final List<Number> list = new ArrayList<>();
+		final List<Number> list = new ArrayList<Number>();
 		if (mode == 0) {
 			final double amount = Math.floor(f.doubleValue() - s.doubleValue() + 1);
 			
@@ -114,7 +110,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	public Iterator<Number> iterator(final Event event) {
+	public Iterator<Number> iterator(final @NotNull Event event) {
 		Number s = start.getSingle(event), f = end.getSingle(event);
 		if (s == null || f == null)
 			return null;
@@ -177,7 +173,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	}
 	
 	@Override
-	public boolean isLoopOf(final String s) {
+	public boolean isLoopOf(final @NotNull String s) {
 		return mode == 1 && (s.equalsIgnoreCase("integer") || s.equalsIgnoreCase("int"));
 	}
 	
@@ -187,12 +183,12 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	}
 	
 	@Override
-	public Class<? extends Number> getReturnType() {
+	public @NotNull Class<? extends Number> getReturnType() {
 		return mode == 1 ? Long.class : Double.class;
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
 		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals");
 		return modeString + " from " + start.toString(e, debug) + " to " + end.toString(e, debug);
 	}

@@ -42,7 +42,7 @@ public class JavaClasses {
 	public static final Pattern NUMBER_PATTERN = Pattern.compile("-?[0-9]+(?>\\.[0-9]+)?%?");
 
 	static {
-		Classes.registerClass(new ClassInfo<>(Object.class, "object")
+		Classes.registerClass(new ClassInfo<Object>(Object.class, "object")
 				.user("objects?")
 				.name("Object")
 				.description("The supertype of all types, meaning that if %object% is used in e.g. a condition it will accept all kinds of expressions.")
@@ -50,7 +50,7 @@ public class JavaClasses {
 				.examples("")
 				.since("1.0"));
 		
-		Classes.registerClass(new ClassInfo<>(Number.class, "number")
+		Classes.registerClass(new ClassInfo<Number>(Number.class, "number")
 				.user("num(ber)?s?")
 				.name("Number")
 				.description("A number, e.g. 2.5, 3, or -9812454.",
@@ -60,7 +60,7 @@ public class JavaClasses {
 						"set {_temp} to 2*{_temp} - 2.5")
 				.since("1.0")
 				// is registered after all other number classes
-				.defaultExpression(new SimpleLiteral<>(1, true))
+				.defaultExpression(new SimpleLiteral<Number>(1, true))
 				.parser(new Parser<Number>() {
 					@Override
 					@Nullable
@@ -70,7 +70,8 @@ public class JavaClasses {
 						if (INTEGER_PATTERN.matcher(s).matches()) {
 							try {
 								return Long.valueOf(s);
-							} catch (NumberFormatException ignored) { }
+							} catch (NumberFormatException ignored) {
+							}
 						}
 						try {
 							Double d = s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
@@ -81,56 +82,57 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Number n, int flags) {
 						return StringUtils.toString(n.doubleValue(), SkriptConfig.numberAccuracy.value());
 					}
-					
+
 					@Override
 					public String toVariableNameString(Number n) {
 						return StringUtils.toString(n.doubleValue(), VARIABLENAME_NUMBERACCURACY);
 					}
-                }).serializer(new Serializer<Number>() {
-					@Override
-					public Fields serialize(Number n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Number o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Number>() {
+				@Override
+				public Fields serialize(Number n) {
+					throw new IllegalStateException(); // serialized natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Number deserialize(String s) {
-						try {
-							return Integer.valueOf(s);
-						} catch (NumberFormatException ignored) {}
-						try {
-							return Double.valueOf(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Number o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Number deserialize(String s) {
+					try {
+						return Integer.valueOf(s);
+					} catch (NumberFormatException ignored) {
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
+					try {
+						return Double.valueOf(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Long.class, "long")
+		Classes.registerClass(new ClassInfo<Long>(Long.class, "long")
 				.user("int(eger)?s?")
 				.name(ClassInfo.NO_DOC)
 				.before("integer", "short", "byte")
-				.defaultExpression(new SimpleLiteral<>((long) 1, true))
+				.defaultExpression(new SimpleLiteral<Long>((long) 1, true))
 				.parser(new Parser<Long>() {
 					@Override
 					@Nullable
@@ -143,51 +145,51 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Long l, int flags) {
 						return "" + l;
 					}
-					
+
 					@Override
 					public String toVariableNameString(Long l) {
 						return "" + l;
 					}
-                }).serializer(new Serializer<Long>() {
-					@Override
-					public Fields serialize(Long n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Long o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Long>() {
+				@Override
+				public Fields serialize(Long n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Long deserialize(String s) {
-						try {
-							return Long.parseLong(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Long o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Long deserialize(String s) {
+					try {
+						return Long.parseLong(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Integer.class, "integer")
+		Classes.registerClass(new ClassInfo<Integer>(Integer.class, "integer")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new SimpleLiteral<>(1, true))
+				.defaultExpression(new SimpleLiteral<Integer>(1, true))
 				.parser(new Parser<Integer>() {
 					@Override
 					@Nullable
@@ -200,51 +202,51 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Integer i, int flags) {
 						return "" + i;
 					}
-					
+
 					@Override
 					public String toVariableNameString(Integer i) {
 						return "" + i;
 					}
-                }).serializer(new Serializer<Integer>() {
-					@Override
-					public Fields serialize(Integer n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Integer o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Integer>() {
+				@Override
+				public Fields serialize(Integer n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Integer deserialize(String s) {
-						try {
-							return Integer.parseInt(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Integer o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Integer deserialize(String s) {
+					try {
+						return Integer.parseInt(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Double.class, "double")
+		Classes.registerClass(new ClassInfo<Double>(Double.class, "double")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new SimpleLiteral<>(1., true))
+				.defaultExpression(new SimpleLiteral<Double>(1., true))
 				.after("long")
 				.before("float", "integer", "short", "byte")
 				.parser(new Parser<Double>() {
@@ -262,51 +264,51 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Double d, int flags) {
 						return StringUtils.toString(d, SkriptConfig.numberAccuracy.value());
 					}
-					
+
 					@Override
 					public String toVariableNameString(Double d) {
 						return StringUtils.toString(d, VARIABLENAME_NUMBERACCURACY);
 					}
-                }).serializer(new Serializer<Double>() {
-					@Override
-					public Fields serialize(Double n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Double o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Double>() {
+				@Override
+				public Fields serialize(Double n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Double deserialize(String s) {
-						try {
-							return Double.parseDouble(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Double o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Double deserialize(String s) {
+					try {
+						return Double.parseDouble(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Float.class, "float")
+		Classes.registerClass(new ClassInfo<Float>(Float.class, "float")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new SimpleLiteral<>(1f, true))
+				.defaultExpression(new SimpleLiteral<Float>(1f, true))
 				.parser(new Parser<Float>() {
 					@Override
 					@Nullable
@@ -323,49 +325,49 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Float f, int flags) {
 						return StringUtils.toString(f, SkriptConfig.numberAccuracy.value());
 					}
-					
+
 					@Override
 					public String toVariableNameString(Float f) {
 						return StringUtils.toString(f.doubleValue(), VARIABLENAME_NUMBERACCURACY);
 					}
-                }).serializer(new Serializer<Float>() {
-					@Override
-					public Fields serialize(Float n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Float o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Float>() {
+				@Override
+				public Fields serialize(Float n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Float deserialize(String s) {
-						try {
-							return Float.parseFloat(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Float o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Float deserialize(String s) {
+					try {
+						return Float.parseFloat(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Boolean.class, "boolean")
+		Classes.registerClass(new ClassInfo<Boolean>(Boolean.class, "boolean")
 				.user("booleans?")
 				.name("Boolean")
 				.description("A boolean is a value that is either true or false. Other accepted names are 'on' and 'yes' for true, and 'off' and 'no' for false.")
@@ -375,7 +377,7 @@ public class JavaClasses {
 				.parser(new Parser<Boolean>() {
 					private final RegexMessage truePattern = new RegexMessage("boolean.true.pattern");
 					private final RegexMessage falsePattern = new RegexMessage("boolean.false.pattern");
-					
+
 					@Override
 					@Nullable
 					public Boolean parse(String s, ParseContext context) {
@@ -385,54 +387,54 @@ public class JavaClasses {
 							return Boolean.FALSE;
 						return null;
 					}
-					
+
 					private final Message trueName = new Message("boolean.true.name");
 					private final Message falseName = new Message("boolean.false.name");
-					
+
 					@Override
 					public String toString(Boolean b, int flags) {
 						return b ? trueName.toString() : falseName.toString();
 					}
-					
+
 					@Override
 					public String toVariableNameString(Boolean b) {
 						return "" + b;
 					}
-                }).serializer(new Serializer<Boolean>() {
-					@Override
-					public Fields serialize(Boolean n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Boolean o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Boolean>() {
+				@Override
+				public Fields serialize(Boolean n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Boolean deserialize(String s) {
-						if (s.equals("true"))
-							return Boolean.TRUE;
-						if (s.equals("false"))
-							return Boolean.FALSE;
-						return null;
-					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Boolean o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Boolean deserialize(String s) {
+					if (s.equals("true"))
+						return Boolean.TRUE;
+					if (s.equals("false"))
+						return Boolean.FALSE;
+					return null;
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Short.class, "short")
+		Classes.registerClass(new ClassInfo<Short>(Short.class, "short")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new SimpleLiteral<>((short) 1, true))
+				.defaultExpression(new SimpleLiteral<Short>((short) 1, true))
 				.parser(new Parser<Short>() {
 					@Override
 					@Nullable
@@ -445,51 +447,51 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Short s, int flags) {
 						return "" + s;
 					}
-					
+
 					@Override
 					public String toVariableNameString(Short s) {
 						return "" + s;
 					}
-                }).serializer(new Serializer<Short>() {
-					@Override
-					public Fields serialize(Short n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Short o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Short>() {
+				@Override
+				public Fields serialize(Short n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Short deserialize(String s) {
-						try {
-							return Short.parseShort(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Short o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Short deserialize(String s) {
+					try {
+						return Short.parseShort(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(Byte.class, "byte")
+		Classes.registerClass(new ClassInfo<Byte>(Byte.class, "byte")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new SimpleLiteral<>((byte) 1, true))
+				.defaultExpression(new SimpleLiteral<Byte>((byte) 1, true))
 				.parser(new Parser<Byte>() {
 					@Override
 					@Nullable
@@ -502,49 +504,49 @@ public class JavaClasses {
 							return null;
 						}
 					}
-					
+
 					@Override
 					public String toString(Byte b, int flags) {
 						return "" + b;
 					}
-					
+
 					@Override
 					public String toVariableNameString(Byte b) {
 						return "" + b;
 					}
-                }).serializer(new Serializer<Byte>() {
-					@Override
-					public Fields serialize(Byte n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(Byte o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<Byte>() {
+				@Override
+				public Fields serialize(Byte n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					@Nullable
-					public Byte deserialize(String s) {
-						try {
-							return Byte.parseByte(s);
-						} catch (NumberFormatException e) {
-							return null;
-						}
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(Byte o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				@Nullable
+				public Byte deserialize(String s) {
+					try {
+						return Byte.parseByte(s);
+					} catch (NumberFormatException e) {
+						return null;
 					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 		
-		Classes.registerClass(new ClassInfo<>(String.class, "string")
+		Classes.registerClass(new ClassInfo<String>(String.class, "string")
 				.user("(text|string)s?")
 				.name("Text")
 				.description("Text is simply text, i.e. a sequence of characters, which can optionally contain expressions which will be replaced with a meaningful representation " +
@@ -564,7 +566,7 @@ public class JavaClasses {
 					@Nullable
 					public String parse(String s, ParseContext context) {
 						switch (context) {
-							case DEFAULT: // in DUMMY, parsing is handled by VariableString
+							case DEFAULT: // in placeholder, parsing is handled by VariableString
 								assert false;
 								return null;
 							case CONFIG: // duh
@@ -572,7 +574,7 @@ public class JavaClasses {
 							case SCRIPT:
 							case EVENT:
 								if (VariableString.isQuotedCorrectly(s, true))
-									return Utils.replaceChatStyles("" + s.substring(1, s.length() - 1).replace("\"\"", "\""));
+									return Utils.replaceChatStyles(s.substring(1, s.length() - 1).replace("\"\"", "\""));
 								return null;
 							case COMMAND:
 							case PARSE:
@@ -581,51 +583,51 @@ public class JavaClasses {
 						assert false;
 						return null;
 					}
-					
+
 					@Override
 					public boolean canParse(ParseContext context) {
 						return context != ParseContext.DEFAULT;
 					}
-					
+
 					@Override
 					public String toString(String s, int flags) {
 						return s;
 					}
-					
+
 					@Override
 					public String getDebugMessage(String s) {
 						return '"' + s + '"';
 					}
-					
+
 					@Override
 					public String toVariableNameString(String s) {
 						return s;
 					}
-                }).serializer(new Serializer<String>() {
-					@Override
-					public Fields serialize(String n) {
-						throw new IllegalStateException(); // serialised natively by Yggdrasil
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return true;
-					}
-					
-					@Override
-					public void deserialize(String o, Fields f) {
-						assert false;
-					}
+				}).serializer(new Serializer<String>() {
+				@Override
+				public Fields serialize(String n) {
+					throw new IllegalStateException(); // serialised natively by Yggdrasil
+				}
 
-					@Override
-					public String deserialize(String s) {
-						return s;
-					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return false;
-					}
-				}));
+				@Override
+				public boolean canBeInstantiated() {
+					return true;
+				}
+
+				@Override
+				public void deserialize(String o, Fields f) {
+					assert false;
+				}
+
+				@Override
+				public String deserialize(String s) {
+					return s;
+				}
+
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+			}));
 	}
 }

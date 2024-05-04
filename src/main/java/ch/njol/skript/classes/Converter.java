@@ -20,7 +20,7 @@ package ch.njol.skript.classes;
 
 import ch.njol.skript.lang.Debuggable;
 import ch.njol.skript.registrations.Classes;
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 

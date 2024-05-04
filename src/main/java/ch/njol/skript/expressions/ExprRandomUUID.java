@@ -18,11 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.UUID;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,6 +28,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import io.github.ultreon.skript.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 @Name("Random UUID")
 @Description("Returns a random UUID.")
@@ -45,13 +45,13 @@ public class ExprRandomUUID extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
 		return true;
 	}
 	
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String @NotNull [] get(@NotNull Event e) {
 		return new String[] {UUID.randomUUID().toString()};
 	}
 	
@@ -61,12 +61,12 @@ public class ExprRandomUUID extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
+	public @NotNull Class<? extends String> getReturnType() {
 		return String.class;
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Event e, boolean debug) {
 		return "random uuid";
 	}
 	

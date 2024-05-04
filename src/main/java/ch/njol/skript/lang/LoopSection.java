@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.lang;
 
-import org.bukkit.event.Event;
+import io.github.ultreon.skript.event.Event;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -31,7 +31,7 @@ import java.util.WeakHashMap;
  */
 public abstract class LoopSection extends Section implements SyntaxElement, Debuggable {
 
-	protected final transient Map<Event, Long> currentLoopCounter = new WeakHashMap<>();
+	protected final transient Map<Event, Long> currentLoopCounter = new WeakHashMap<Event, Long>();
 
 	/**
 	 * @param event The event where the loop is used to return its loop iterations
