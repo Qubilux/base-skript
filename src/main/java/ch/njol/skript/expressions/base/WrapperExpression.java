@@ -25,8 +25,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -106,7 +107,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	}
 	
 	@Override
-	public Class<? extends T> getReturnType() {
+	public @NotNull Class<? extends T> getReturnType() {
 		return expr.getReturnType();
 	}
 	

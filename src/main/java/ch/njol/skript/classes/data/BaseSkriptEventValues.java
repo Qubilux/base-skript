@@ -23,8 +23,8 @@ import ch.njol.skript.events.util.SkriptStartEvent;
 import ch.njol.skript.events.util.SkriptStopEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.*;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.CommandSender;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.CommandSender;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**

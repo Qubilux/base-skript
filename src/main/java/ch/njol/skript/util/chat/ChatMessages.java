@@ -21,11 +21,10 @@ package ch.njol.skript.util.chat;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.ultreon.skript.ChatColor;
+import ultreon.baseskript.ChatColor;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.*;

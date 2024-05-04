@@ -21,7 +21,7 @@ package ch.njol.skript.lang;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**

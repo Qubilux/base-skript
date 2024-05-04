@@ -41,10 +41,11 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.EmptyIterator;
 import ch.njol.util.coll.iterator.SingleItemIterator;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.ConverterEvent;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.ConverterEvent;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 import org.skriptlang.skript.lang.arithmetic.OperationInfo;
 import org.skriptlang.skript.lang.arithmetic.Operator;
@@ -247,7 +248,7 @@ public class Variable<T> implements Expression<T> {
 	}
 
 	@Override
-	public Class<? extends T> getReturnType() {
+	public @NotNull Class<? extends T> getReturnType() {
 		return superType;
 	}
 

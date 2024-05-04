@@ -25,7 +25,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.apache.commons.lang.StringUtils;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;

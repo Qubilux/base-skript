@@ -22,7 +22,7 @@ import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.variables.Variables;
 import ch.njol.yggdrasil.Fields;
-import io.github.ultreon.skript.ChatColor;
+import ultreon.baseskript.ChatColor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;

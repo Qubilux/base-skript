@@ -28,9 +28,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.*;
@@ -167,7 +168,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * 
 	 * @return A supertype of any objects returned by {@link #getSingle(Event)} and the component type of any arrays returned by {@link #getArray(Event)}
 	 */
-	Class<? extends T> getReturnType();
+	@NotNull Class<? extends T> getReturnType();
 
 	/**
 	 * Returns true if this expression returns all possible values, false if it only returns some of them.

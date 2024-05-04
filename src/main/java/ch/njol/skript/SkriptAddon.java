@@ -21,7 +21,7 @@ package ch.njol.skript;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.Version;
-import io.github.ultreon.skript.Plugin;
+import ultreon.baseskript.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;

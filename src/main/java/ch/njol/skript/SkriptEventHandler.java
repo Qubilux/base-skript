@@ -25,9 +25,9 @@ import ch.njol.skript.util.Task;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.eventbus.EventBus;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.event.*;
+import ultreon.baseskript.BaseSkript;
 import org.eclipse.jdt.annotation.Nullable;
+import ultreon.baseskript.event.*;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;

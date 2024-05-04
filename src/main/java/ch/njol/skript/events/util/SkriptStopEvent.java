@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.events.util;
 
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 
 /**
  * Called when Skript stops (before anything is unloaded)

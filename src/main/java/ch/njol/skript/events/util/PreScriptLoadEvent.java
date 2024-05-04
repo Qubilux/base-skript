@@ -22,8 +22,7 @@ import java.util.List;
 
 import ch.njol.skript.config.Config;
 import ch.njol.util.Validate;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 
 /**
  * This event has no guarantee of being on the main thread.

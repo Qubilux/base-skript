@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.lang;
 
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 
 import java.util.Map;
 import java.util.WeakHashMap;

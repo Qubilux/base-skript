@@ -19,8 +19,8 @@
 package ch.njol.skript.lang.util;
 
 import ch.njol.skript.lang.parser.ParserInstance;
-import io.github.ultreon.skript.event.Event;
-import io.github.ultreon.skript.event.HandlerList;
+import ultreon.baseskript.event.Event;
+import ultreon.baseskript.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**

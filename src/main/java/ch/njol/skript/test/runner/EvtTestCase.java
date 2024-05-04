@@ -21,9 +21,7 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 @NoDoc

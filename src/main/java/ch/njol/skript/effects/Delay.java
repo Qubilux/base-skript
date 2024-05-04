@@ -29,8 +29,8 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 

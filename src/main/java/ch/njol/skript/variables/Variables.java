@@ -34,8 +34,8 @@ import ch.njol.util.SynchronizedReference;
 import ch.njol.yggdrasil.Yggdrasil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -265,20 +265,24 @@ public class Variables {
 				return false;
 			}
 		} finally {
-			SkriptLogger.setNode(null);
+			try {
+				SkriptLogger.setNode(null);
 
-			// make sure to put the loaded variables into the variables map
-			int notStoredVariablesCount = onStoragesLoaded();
-			if (notStoredVariablesCount != 0) {
-				Skript.warning(notStoredVariablesCount + " variables were possibly discarded due to not belonging to any database " +
+				// make sure to put the loaded variables into the variables map
+				int notStoredVariablesCount = onStoragesLoaded();
+				if (notStoredVariablesCount != 0) {
+					Skript.warning(notStoredVariablesCount + " variables were possibly discarded due to not belonging to any database " +
 						"(SQL databases keep such variables and will continue to generate this warning, " +
 						"while CSV discards them).");
+				}
+
+				// Interrupt the loading logger thread to make it exit earlier
+				loadingLoggerThread.interrupt();
+
+				saveThread.start();
+			} catch (Exception e) {
+				throw Skript.exception(e, "Failed to load variables");
 			}
-
-			// Interrupt the loading logger thread to make it exit earlier
-			loadingLoggerThread.interrupt();
-
-			saveThread.start();
 		}
 		return true;
 	}

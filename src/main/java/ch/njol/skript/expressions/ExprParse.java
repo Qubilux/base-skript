@@ -38,8 +38,8 @@ import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
-import io.github.ultreon.skript.ChatColor;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.ChatColor;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 

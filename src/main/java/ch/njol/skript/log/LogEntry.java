@@ -25,7 +25,7 @@ import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
-import io.github.ultreon.skript.ChatColor;
+import ultreon.baseskript.ChatColor;
 import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
 

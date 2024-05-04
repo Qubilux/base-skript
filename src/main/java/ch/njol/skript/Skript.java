@@ -46,12 +46,13 @@ import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.EnumerationIterable;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
-import io.github.ultreon.skript.*;
-import io.github.ultreon.skript.event.Event;
-import io.github.ultreon.skript.event.Listener;
-import io.github.ultreon.skript.events.PluginDisableEvent;
-import io.github.ultreon.skript.plugins.PluginDescriptionFile;
-import io.github.ultreon.skript.plugins.PluginDescriptionFileImpl;
+import ultreon.baseskript.*;
+import ultreon.baseskript.classes.data.AWTClasses;
+import ultreon.baseskript.event.Event;
+import ultreon.baseskript.event.Listener;
+import ultreon.baseskript.events.PluginDisableEvent;
+import ultreon.baseskript.plugins.PluginDescriptionFile;
+import ultreon.baseskript.plugins.PluginDescriptionFileImpl;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -477,6 +478,8 @@ public final class Skript extends Listener implements Plugin {
 		try {
 			getAddonInstance().loadClasses("ch.njol.skript",
 				"conditions", "effects", "events", "expressions", "entity", "sections", "structures");
+			getAddonInstance().loadClasses("ultreon",
+				"conditions", "effects", "events", "expressions", "entity", "sections", "structures");
 		} catch (final Exception e) {
 			exception(e, "Could not load required .class files: " + e.getLocalizedMessage());
 			setEnabled(false);
@@ -557,9 +560,11 @@ public final class Skript extends Listener implements Plugin {
 				});
 
 				try (CountingLogHandler c = new CountingLogHandler(SkriptLogger.FATAL).start()) {
-					if (!Variables.load())
-						if (c.getCount() == 0)
-							error("(no information available)");
+//					if (!Variables.load())
+//						if (c.getCount() == 0)
+//							error("(no information available)");
+				} catch (Exception e) {
+					Skript.exception(e);
 				} finally {
 					h.stop();
 				}

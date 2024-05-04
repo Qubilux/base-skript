@@ -24,8 +24,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.converter.Converters;
 
 public class ExprFunctionCall<T> extends SimpleExpression<T> {
@@ -81,7 +82,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public Class<? extends T> getReturnType() {
+	public @NotNull Class<? extends T> getReturnType() {
 		return returnType;
 	}
 

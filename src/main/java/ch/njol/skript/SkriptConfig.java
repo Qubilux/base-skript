@@ -32,7 +32,7 @@ import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Version;
 import ch.njol.skript.variables.Variables;
-import io.github.ultreon.skript.event.EventPriority;
+import ultreon.baseskript.event.EventPriority;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;
@@ -53,7 +53,6 @@ import java.util.regex.PatternSyntaxException;
  */
 @SuppressWarnings("unused")
 public class SkriptConfig {
-
     @Nullable
     static Config mainConfig;
     static Collection<Config> configs = new ArrayList<Config>();
@@ -187,6 +186,9 @@ public class SkriptConfig {
             .optional(true);
 
     public static final Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
+            .optional(true);
+
+    public static final Option<Boolean> logToConsoleUsingLogger = new Option<Boolean>("´log to console' writes using logger", false)
             .optional(true);
 
     public static final Option<Boolean> keepLastUsageDates = new Option<Boolean>("keep command last usage dates", false)

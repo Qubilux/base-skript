@@ -26,7 +26,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.util.coll.CollectionUtils;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,8 +37,8 @@ import java.util.List;
 public class EvtSkript extends SkriptEvent {
 
 	static {
-		Skript.registerEvent("Server Start/Stop", EvtSkript.class, CollectionUtils.array(SkriptStartEvent.class, SkriptStopEvent.class),
-				"(:server|skript) (start|load|enable)", "(:server|skript) (stop|unload|disable)"
+		Skript.registerEvent("Skript start/stop", EvtSkript.class, CollectionUtils.array(SkriptStartEvent.class, SkriptStopEvent.class),
+				"[skript] (start|load|enable|main)", "[skript] (stop|unload|disable|shutdown)"
 			)
 			.description("Called when the server starts or stops (actually, when Skript starts or stops, so a /reload will trigger these events as well).")
 			.examples("on skript start:", "on server stop:")
@@ -71,11 +71,6 @@ public class EvtSkript extends SkriptEvent {
 	@Override
 	public boolean init(Literal<?> @NotNull [] args, int matchedPattern, @NotNull ParseResult parseResult) {
 		isStart = matchedPattern == 0;
-		if (parseResult.hasTag("server"))
-			Skript.warning(
-				"Server start/stop events are actually called when Skript is started or stopped." +
-				"It is thus recommended to use 'on Skript start/stop' instead."
-			);
 		return true;
 	}
 

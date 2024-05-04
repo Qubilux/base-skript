@@ -21,7 +21,7 @@ package ch.njol.skript.lang.function;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.util.coll.CollectionUtils;
-import io.github.ultreon.skript.BaseSkript;
+import ultreon.baseskript.BaseSkript;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;

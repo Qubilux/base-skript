@@ -28,34 +28,28 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.util.Kleenean;
-import io.github.ultreon.skript.event.Event;
-import org.apache.logging.log4j.Level;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * @author Peter Güttinger
  */
 @Name("LogToConsole")
-@Description({"Writes text to the console. Skript will write these files to /.skript/logs."})
-@Examples({"on place of TNT:",
+@Description({"Writes text to the console."})
+@Examples({"on main:",
 		"	log \"%player% placed TNT in %world% at %location of block%\" to the console"})
-@Since("2.0")
+@Since("3.0")
 public class EffLogToConsole extends Effect {
 	static {
-		Skript.registerEffect(EffLogToConsole.class, "log %strings% [to the (console|terminal|output|log)]");
+		Skript.registerEffect(EffLogToConsole.class, "(log|write) %strings% to the (console|terminal|output|log)");
 	}
-	
-	private final static File logsFolder = new File(Skript.getInstance().getDataFolder(), "logs");
-	
+
 	final static HashMap<String, PrintWriter> writers = new HashMap<>();
 	static {
 		Skript.closeOnDisable(() -> {
@@ -84,7 +78,12 @@ public class EffLogToConsole extends Effect {
 				if (script != null)
 					scriptName = script.getConfig().getFileName();
 			}
-			Skript.info("[" + scriptName + "] " + message);
+
+			if (SkriptConfig.logToConsoleUsingLogger.value()) {
+				Skript.info("[" + scriptName + "] " + message);
+			} else {
+				System.out.println(message);
+			}
 		}
 	}
 	

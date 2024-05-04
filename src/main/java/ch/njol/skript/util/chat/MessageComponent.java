@@ -22,7 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import io.github.ultreon.skript.ChatColor;
+import ultreon.baseskript.ChatColor;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Type;

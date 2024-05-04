@@ -37,8 +37,9 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -261,7 +262,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Class<? extends T> getReturnType() {
+	public @NotNull Class<? extends T> getReturnType() {
 		return (Class<? extends T>) componentType;
 	}
 

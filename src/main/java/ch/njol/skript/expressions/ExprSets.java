@@ -21,7 +21,7 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Lists;

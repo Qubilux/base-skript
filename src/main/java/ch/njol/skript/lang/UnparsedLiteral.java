@@ -30,9 +30,10 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.apache.logging.log4j.Level;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression matches.
@@ -70,7 +71,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Class<?> getReturnType() {
+	public @NotNull Class<?> getReturnType() {
 		return Object.class;
 	}
 

@@ -3,6 +3,198 @@
 
   "classes" : [
     {
+  "id" : "jbutton",
+  "name" : "AWT Button",
+  "patterns" : [
+    "set {button} to a new button in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A button widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jcheckbox",
+  "name" : "AWT Check Box",
+  "patterns" : [
+    "set {check-box} to a new check box in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A check box widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jcombobox",
+  "name" : "AWT Combo Box",
+  "patterns" : [
+    "set {combo-box} to a new combo box in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A combo box widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jcomponent",
+  "name" : "AWT Component",
+  "patterns" : [
+    "Missing patterns.",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "Any widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jlabel",
+  "name" : "AWT Label",
+  "patterns" : [
+    "set {label} to a new label in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A label widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jlist",
+  "name" : "AWT List",
+  "patterns" : [
+    "set {list} to a new list in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A list widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jpanel",
+  "name" : "AWT Panel",
+  "patterns" : [
+    "Missing patterns.",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A panel widget component.",
+  "examples" : "set {panel} to a new panel in {window}"
+},
+{
+  "id" : "jprogressbar",
+  "name" : "AWT Progress Bar",
+  "patterns" : [
+    "set {progress-bar} to a new progress bar in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A progress bar widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jradiobutton",
+  "name" : "AWT Radio Button",
+  "patterns" : [
+    "set {radio-button} to a new radio button in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A radio button widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jscrollpane",
+  "name" : "AWT Scroll Pane",
+  "patterns" : [
+    "set {scroll-pane} to a new scroll pane in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A scroll pane widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jslider",
+  "name" : "AWT Slider",
+  "patterns" : [
+    "set {slider} to a new slider in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A slider widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jspinner",
+  "name" : "AWT Spinner",
+  "patterns" : [
+    "set {spinner} to a new spinner in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A spinner widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jtabbedpane",
+  "name" : "AWT Tabbed Pane",
+  "patterns" : [
+    "set {tabbed-pane} to a new tabbed pane in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A tabbed pane widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jtable",
+  "name" : "AWT Table",
+  "patterns" : [
+    "set {table} to a new table in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A table widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jtextarea",
+  "name" : "AWT Text Area",
+  "patterns" : [
+    "set {text-area} to a new text area in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A text area widget component.",
+  "examples" : "Missing examples."
+},
+{
+  "id" : "jtextfield",
+  "name" : "AWT Text Field",
+  "patterns" : [
+    "set {text-field} to a new text field in {panel}",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "A text field widget component.",
+  "examples" : "Missing examples."
+},
+{
   "id" : "boolean",
   "name" : "Boolean",
   "patterns" : [
@@ -201,6 +393,52 @@ Note: This is the only element where not all patterns are shown. It has actually
 
   "effects" : [
     {
+  "id" : "EffCancelEvent",
+  "name" : "Cancel Event",
+  "patterns" : [
+    "cancel [the] event",
+"uncancel [the] event",
+
+    "pattern_end"
+  ],
+  "since" : "1.0",
+  "description" : "Cancels the event (e.g. prevent blocks from being placed, or damage being taken).",
+  "examples" : "on damage:\\n    victim is a player\\n    victim has the permission \"skript.god\"\\n    cancel the event"
+},
+{
+  "id" : "EffChange",
+  "name" : "Change: Set/Add/Remove/Delete/Reset",
+  "patterns" : [
+    "(add|give) %<a href='./classes.html#object'>objects</a>% to %~<a href='./classes.html#object'>objects</a>%",
+"increase %~<a href='./classes.html#object'>objects</a>% by %<a href='./classes.html#object'>objects</a>%",
+"give %~<a href='./classes.html#object'>objects</a>% %<a href='./classes.html#object'>objects</a>%",
+"set %~<a href='./classes.html#object'>objects</a>% to %<a href='./classes.html#object'>objects</a>%",
+"remove (all|every) %<a href='./classes.html#object'>objects</a>% from %~<a href='./classes.html#object'>objects</a>%",
+"(remove|subtract) %<a href='./classes.html#object'>objects</a>% from %~<a href='./classes.html#object'>objects</a>%",
+"(reduce|decrease) %~<a href='./classes.html#object'>objects</a>% by %<a href='./classes.html#object'>objects</a>%",
+"(delete|clear) %~<a href='./classes.html#object'>objects</a>%",
+"reset %~<a href='./classes.html#object'>objects</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "1.0 (set, add, remove, delete), 2.0 (remove all)",
+  "description" : "A very general effect that can change many <a href='./expressions'>expressions</a>. Many expressions can only be set and/or deleted, while some can have things added to or removed from them.",
+  "examples" : "# set:\\nSet the player's display name to \"&amp;lt;red&amp;gt;%name of player%\"\\nset the block above the victim to lava\\n# add:\\nadd 2 to the player's health # preferably use '&lt;a href='#EffHealth'&gt;heal&lt;/a&gt;' for this\\nadd argument to {blacklist::*}\\ngive a diamond pickaxe of efficiency 5 to the player\\nincrease the data value of the clicked block by 1\\n# remove:\\nremove 2 pickaxes from the victim\\nsubtract 2.5 from {points::%uuid of player%}\\n# remove all:\\nremove every iron tool from the player\\nremove all minecarts from {entitylist::*}\\n# delete:\\ndelete the block below the player\\nclear drops\\ndelete {variable}\\n# reset:\\nreset walk speed of player\\nreset chunk at the targeted block"
+},
+{
+  "id" : "EffContinue",
+  "name" : "Continue",
+  "patterns" : [
+    "continue [this loop|[the] [current] loop]",
+"continue [the] %*integer%(st|nd|rd|th) loop",
+
+    "pattern_end"
+  ],
+  "since" : "2.2-dev37, 2.7 (while loops), 2.8.0 (outer loops)",
+  "description" : "Moves the loop to the next iteration. You may also continue an outer loop from an inner one. The loops are labelled from 1 until the current loop, starting with the outermost one.",
+  "examples" : "# Broadcast online moderators\\nloop all players:\\n    if loop-value does not have permission \"moderator\":\\n        continue # filter out non moderators\\n    broadcast \"%loop-player% is a moderator!\" # Only moderators get broadcast\\n \\n# Game starting counter\\nset {_counter} to 11\\nwhile {_counter} &gt; 0:\\n    remove 1 from {_counter}\\n    wait a second\\n    if {_counter} != 1, 2, 3, 5 or 10:\\n        continue # only print when counter is 1, 2, 3, 5 or 10\\n    broadcast \"Game starting in %{_counter}% second(s)\""
+},
+{
   "id" : "EffCopy",
   "name" : "Copy Into Variable",
   "patterns" : [
@@ -226,6 +464,18 @@ Note: This is the only element where not all patterns are shown. It has actually
   "examples" : "wait 2 minutes\\nhalt for 5 minecraft hours\\nwait a tick"
 },
 {
+  "id" : "EffDoIf",
+  "name" : "Do If",
+  "patterns" : [
+    "&lt;.+&gt; if &lt;.+&gt;",
+
+    "pattern_end"
+  ],
+  "since" : "2.3",
+  "description" : "Execute an effect if a condition is true.",
+  "examples" : "on join:\\n    give a diamond to the player if the player has permission \"rank.vip\""
+},
+{
   "id" : "EffScriptFile",
   "name" : "Enable/Disable/Reload Script File",
   "patterns" : [
@@ -236,6 +486,34 @@ Note: This is the only element where not all patterns are shown. It has actually
   "since" : "2.4",
   "description" : "Enables, disables, or reloads a script file.",
   "examples" : "reload script \"test\"\\nenable script file \"testing\"\\nunload script file \"script.sk\""
+},
+{
+  "id" : "EffExit",
+  "name" : "Exit",
+  "patterns" : [
+    "(exit|stop) [trigger]",
+"(exit|stop) [(1|a|the|this)] (section|loop|conditional)",
+"(exit|stop) &lt;\\d+&gt; (section|loop|conditional)s",
+"(exit|stop) all (section|loop|conditional)s",
+
+    "pattern_end"
+  ],
+  "since" : "<i>unknown</i> (before 2.1)",
+  "description" : "Exits a given amount of loops and conditionals, or the entire trigger.",
+  "examples" : "if player has any ore:\\n    stop\\nmessage \"%player% has no ores!\"\\nloop blocks above the player:\\n    loop-block is not air:\\n        exit 2 sections\\n    set loop-block to water"
+},
+{
+  "id" : "EffExitProgram",
+  "name" : "Exit Program",
+  "patterns" : [
+    "exit (program|app|application)",
+"exit (program|app|application) with code %<a href='./classes.html#number'>number</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "Exit the program with or without a custom exit code.",
+  "examples" : "on main:\\n    log \"Hello World\" to the console\\n   exit program"
 },
 {
   "id" : "EffSuppressWarnings",
@@ -266,13 +544,13 @@ NB: Using 'server.log' as the log file will write to the default server log. Omi
   "id" : "EffLogToConsole",
   "name" : "LogToConsole",
   "patterns" : [
-    "log %<a href='./classes.html#string'>texts</a>% [to the (console|terminal|output|log)]",
+    "(log|write) %<a href='./classes.html#string'>texts</a>% to the (console|terminal|output|log)",
 
     "pattern_end"
   ],
-  "since" : "2.0",
-  "description" : "Writes text to the console. Skript will write these files to /.skript/logs.",
-  "examples" : "on place of TNT:\\n    log \"%player% placed TNT in %world% at %location of block%\" to the console"
+  "since" : "3.0",
+  "description" : "Writes text to the console.",
+  "examples" : "on main:\\n    log \"%player% placed TNT in %world% at %location of block%\" to the console"
 },
 {
   "id" : "EffReturn",
@@ -292,11 +570,11 @@ NB: Using 'server.log' as the log file will write to the default server log. Omi
 
   "events" : [
     {
-  "id" : "server_startstop",
-  "name" : "On Server Start/Stop",
+  "id" : "skript_startstop",
+  "name" : "On Skript start/stop",
   "patterns" : [
-    "[on] (server|skript) (start|load|enable)",
-"[on] (server|skript) (stop|unload|disable)",
+    "[on] [skript] (start|load|enable|main)",
+"[on] [skript] (stop|unload|disable|shutdown)",
 
     "pattern_end"
   ],
@@ -568,6 +846,19 @@ Some notes about parsing with a pattern:
   "since" : "2.8.0",
   "description" : "Returns a percentage of one or more numbers.",
   "examples" : "set damage to 10% of victim's health\\nset damage to 125 percent of damage\\nset {_result} to {_percent} percent of 999\\nset {_result::*} to 10% of {_numbers::*}\\nset experience to 50% of player's total experience"
+},
+{
+  "id" : "ExprAnswerOf",
+  "name" : "Question",
+  "patterns" : [
+    "[the] answer of %<a href='./classes.html#string'>texts</a>%",
+"%<a href='./classes.html#string'>texts</a>%'[s] answer",
+
+    "pattern_end"
+  ],
+  "since" : "3.0",
+  "description" : "Asks a question and returns the answer.",
+  "examples" : "set {answer} to answer of \"What is your name?\""
 },
 {
   "id" : "ExprRandom",

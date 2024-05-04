@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import io.github.ultreon.skript.event.Event;
+import ultreon.baseskript.event.Event;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jdt.annotation.Nullable;
 

@@ -18,8 +18,7 @@
  */
 package ch.njol.skript.test.runner;
 
-import io.github.ultreon.skript.event.Event;
-import io.github.ultreon.skript.event.HandlerList;
+import ultreon.baseskript.event.Event;
 
 /**
  * Raised by Skript when tests are run.

@@ -20,8 +20,8 @@ package ch.njol.skript.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.util.Closeable;
-import io.github.ultreon.skript.BaseSkript;
-import io.github.ultreon.skript.Plugin;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.concurrent.Callable;

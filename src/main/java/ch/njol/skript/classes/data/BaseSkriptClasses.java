@@ -23,7 +23,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import io.github.ultreon.skript.CommandSender;
+import ultreon.baseskript.CommandSender;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.regex.Pattern;
