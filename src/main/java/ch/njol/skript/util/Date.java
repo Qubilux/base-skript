@@ -132,8 +132,9 @@ public class Date implements Comparable<Date>, YggdrasilSerializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Date other))
+		if (!(obj instanceof Date))
 			return false;
+		Date other = (Date) obj;
 		return timestamp == other.timestamp;
 	}
 	

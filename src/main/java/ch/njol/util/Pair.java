@@ -85,8 +85,9 @@ public class Pair<T1, T2> implements Entry<T1, T2>, Cloneable, Serializable {
 	public final boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof Entry<?, ?> other))
+		if (!(obj instanceof Entry<?, ?>))
 			return false;
+		Entry<?, ?> other = (Entry<?, ?>) obj;
 		final T1 first = this.first;
 		final T2 second = this.second;
 		return (first == null ? other.getKey() == null : first.equals(other.getKey())) &&

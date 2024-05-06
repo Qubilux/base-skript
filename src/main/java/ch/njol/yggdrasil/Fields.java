@@ -151,8 +151,9 @@ public final class Fields implements Iterable<FieldContext> {
 				return true;
 			if (object == null)
 				return false;
-			if (!(object instanceof FieldContext other))
+			if (!(object instanceof FieldContext))
 				return false;
+			FieldContext other = (FieldContext) object;
 			return id.equals(other.id);
 		}
 		

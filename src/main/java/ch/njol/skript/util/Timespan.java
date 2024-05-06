@@ -236,8 +236,9 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Timespan other))
+		if (!(obj instanceof Timespan))
 			return false;
+		Timespan other = (Timespan) obj;
 		return millis == other.millis;
 	}
 	

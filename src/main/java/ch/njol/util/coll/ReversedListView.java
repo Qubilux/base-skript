@@ -194,8 +194,9 @@ public class ReversedListView<T> implements List<T> {
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof List<?> other))
+		if (!(obj instanceof List<?>))
 			return false;
+		List<?> other = (List<?>) obj;
 		if (other.size() != this.size())
 			return false;
 		final Iterator<?> os = other.iterator();

@@ -66,8 +66,9 @@ public class Timeperiod implements YggdrasilSerializable {
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof Timeperiod other))
+		if (!(obj instanceof Timeperiod))
 			return false;
+		Timeperiod other = (Timeperiod) obj;
 		return (end == other.end && start == other.start);
 	}
 	

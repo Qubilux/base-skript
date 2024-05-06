@@ -149,8 +149,9 @@ public class Time implements YggdrasilSerializable, Cyclical<Integer> {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Time other))
+		if (!(obj instanceof Time))
 			return false;
+		Time other = (Time) obj;
 		return time == other.time;
 	}
 	

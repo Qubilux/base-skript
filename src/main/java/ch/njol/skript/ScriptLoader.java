@@ -617,10 +617,11 @@ public class ScriptLoader {
 			
 			try (CountingLogHandler ignored = new CountingLogHandler(SkriptLogger.FATAL).start()) {
 				for (Node cnode : config.getMainNode()) {
-					if (!(cnode instanceof SectionNode node)) {
+					if (!(cnode instanceof SectionNode)) {
 						Skript.error("invalid line - all code has to be put into triggers");
 						continue;
 					}
+					SectionNode node = (SectionNode) cnode;
 
 					String line = node.getKey();
 					if (line == null)

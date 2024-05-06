@@ -131,8 +131,9 @@ public class Namespace {
 		public boolean equals(Object o) {
 			if (this == o)
 				return true;
-			if (!(o instanceof Info info))
+			if (!(o instanceof Info))
 				return false;
+			Info info = (Info) o;
 
 			if (isLocal() != info.isLocal())
 				return false;

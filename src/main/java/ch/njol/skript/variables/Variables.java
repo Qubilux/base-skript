@@ -182,7 +182,8 @@ public class Variables {
 			boolean successful = true;
 
 			for (Node node : (SectionNode) databases) {
-				if (node instanceof SectionNode sectionNode) {
+				if (node instanceof SectionNode) {
+					SectionNode sectionNode = (SectionNode) node;
 
 					String type = sectionNode.getValue("type");
 					if (type == null) {
