@@ -330,7 +330,6 @@ tasks.register('JUnit') {
 task githubResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
-		project_version = project.property('version')
 		def channel = 'stable'
 		if (version.contains('pre'))
 			channel = 'prerelease'
@@ -364,7 +363,6 @@ task githubRelease(type: ShadowJar) {
 task spigotResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
-		project_version = project.property('version')
 		def channel = 'stable'
 		if (version.contains('pre'))
 			channel = 'prerelease'
@@ -399,7 +397,7 @@ task nightlyResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
 		def hash = 'git rev-parse --short HEAD'.execute().text.trim()
-		project_version = project.property('version') + '-nightly-' + hash
+		project_version += '-nightly-' + hash
 		filter ReplaceTokens, tokens: [
 			'version'         : project_version,
 			'today'           : '' + LocalTime.now(),
