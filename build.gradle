@@ -15,6 +15,7 @@ configurations {
 }
 
 def project_version = "3.0-base"
+def lib_version = "3.0-base"
 
 allprojects {
 	repositories {
@@ -334,12 +335,10 @@ task githubResources(type: ProcessResources) {
 		if (version.contains('pre'))
 			channel = 'prerelease'
 		filter ReplaceTokens, tokens: [
-			'version'         : version,
+			'version'         : "$lib_version",
 			'today'           : '' + LocalTime.now(),
 			'release-flavor'  : 'skriptlang-github', // SkriptLang build, distributed on Github
 			'release-channel' : channel, // Release channel, see above
-			'release-updater' : 'ch.njol.skript.update.GithubChecker', // Github API client
-			'release-source'  : 'https://api.github.com/repos/SkriptLang/Skript/releases', // Github API URL
 			'release-download': 'null' // Update checker will figure it out
 		]
 	}
@@ -367,12 +366,10 @@ task spigotResources(type: ProcessResources) {
 		if (version.contains('pre'))
 			channel = 'prerelease'
 		filter ReplaceTokens, tokens: [
-			'version'         : version,
+			'version'         : "$lib_version",
 			'today'           : '' + LocalTime.now(),
 			'release-flavor'  : 'skriptlang-spigot', // SkriptLang build, distributed on Spigot resources
 			'release-channel' : channel, // Release channel, see above
-			'release-updater' : 'ch.njol.skript.update.GithubChecker', // Github API client
-			'release-source'  : 'https://api.github.com/repos/SkriptLang/Skript/releases', // Github API URL
 			'release-download': '\'http://example.com\'' // TODO insert Spigot URL
 		]
 	}
@@ -399,7 +396,7 @@ task nightlyResources(type: ProcessResources) {
 		def hash = 'git rev-parse --short HEAD'.execute().text.trim()
 		project_version += '-nightly-' + hash
 		filter ReplaceTokens, tokens: [
-			'version'         : project_version,
+			'version'         : "$lib_version-nightly-$hash",
 			'today'           : '' + LocalTime.now(),
 			'release-flavor'  : 'skriptlang-nightly', // SkriptLang build, automatically done by CI
 			'release-channel' : 'prerelease', // No update checking, but these are VERY unstable
