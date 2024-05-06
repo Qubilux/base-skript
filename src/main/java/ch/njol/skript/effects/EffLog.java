@@ -31,15 +31,14 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
-import org.apache.logging.log4j.Level;
 
 /**
  * @author Peter Güttinger
@@ -79,7 +78,7 @@ public class EffLog extends Effect {
 	}
 	
 	@Override
-	protected void execute(final @NotNull Event e) {
+	protected void execute(final @NotNull Object e) {
 		for (final String message : messages.getArray(e)) {
 			if (files != null) {
 				for (String s : files.getArray(e)) {
@@ -119,7 +118,7 @@ public class EffLog extends Effect {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "log " + messages.toString(e, debug) + (files != null ? " to " + files.toString(e, debug) : "");
 	}
 }

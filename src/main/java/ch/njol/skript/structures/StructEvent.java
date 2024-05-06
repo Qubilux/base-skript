@@ -24,9 +24,8 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ultreon.baseskript.event.Event;
-import ultreon.baseskript.event.EventPriority;
-import org.eclipse.jdt.annotation.Nullable;
+import com.ultreon.libs.events.v0.EventPriority;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.structure.Structure;
 
@@ -99,7 +98,7 @@ public class StructEvent extends Structure {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return this.event.toString(event, debug);
 	}
 

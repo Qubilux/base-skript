@@ -18,8 +18,6 @@
  */
 package ch.njol.skript.lang;
 
-import ultreon.baseskript.event.Event;
-
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -31,13 +29,13 @@ import java.util.WeakHashMap;
  */
 public abstract class LoopSection extends Section implements SyntaxElement, Debuggable {
 
-	protected final transient Map<Event, Long> currentLoopCounter = new WeakHashMap<Event, Long>();
+	protected final transient Map<Object, Long> currentLoopCounter = new WeakHashMap<Object, Long>();
 
 	/**
 	 * @param event The event where the loop is used to return its loop iterations
 	 * @return The loop iteration number
 	 */
-	public long getLoopCounter(Event event) {
+	public long getLoopCounter(Object event) {
 		return currentLoopCounter.getOrDefault(event, 1L);
 	}
 
@@ -50,7 +48,7 @@ public abstract class LoopSection extends Section implements SyntaxElement, Debu
 	 * Exit the loop, used to reset the loop properties such as iterations counter
 	 * @param event The event where the loop is used to reset its relevant properties
 	 */
-	public void exit(Event event) {
+	public void exit(Object event) {
 		currentLoopCounter.remove(event);
 	}
 

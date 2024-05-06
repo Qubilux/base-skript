@@ -41,11 +41,8 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.EmptyIterator;
 import ch.njol.util.coll.iterator.SingleItemIterator;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.ConverterEvent;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 import org.skriptlang.skript.lang.arithmetic.OperationInfo;
 import org.skriptlang.skript.lang.arithmetic.Operator;
@@ -54,6 +51,8 @@ import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptWarning;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.ConverterEvent;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -212,7 +211,7 @@ public class Variable<T> implements Expression<T> {
 					}
 
 					// Special cases
-					BaseSkript.getEventBus().post(new ConverterEvent<>(hint, type));
+					BaseSkript.getEventBus().publish(new ConverterEvent<>(hint, type));
 				}
 
 				// Hint exists and does NOT match any types requested
@@ -253,7 +252,7 @@ public class Variable<T> implements Expression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		StringBuilder stringBuilder = new StringBuilder()
 			.append("{");
 		if (local)
@@ -290,7 +289,7 @@ public class Variable<T> implements Expression<T> {
 	 * This method also checks against default variables.
 	 */
 	@Nullable
-	public Object getRaw(Event event) {
+	public Object getRaw(Object event) {
 		DefaultVariables data = script == null ? null : script.getData(DefaultVariables.class);
 		if (data != null)
 			data.enterScope();
@@ -322,7 +321,7 @@ public class Variable<T> implements Expression<T> {
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	private Object get(Event event) {
+	private Object get(Object event) {
 		Object rawValue = getRaw(event);
 		if (!list)
 			return rawValue;
@@ -350,7 +349,7 @@ public class Variable<T> implements Expression<T> {
 	 * as a new player object has been created by the server.
 	 */
 	@Nullable
-	Object convertIfOldPlayer(String key, Event event, @Nullable Object object) {
+	Object convertIfOldPlayer(String key, Object event, @Nullable Object object) {
 //		if (SkriptConfig.enablePlayerVariableFix.value() && object instanceof Player) {
 //			Player oldPlayer = (Player) object;
 //			if (!oldPlayer.isValid() && oldPlayer.isOnline()) {
@@ -362,7 +361,7 @@ public class Variable<T> implements Expression<T> {
 		return object;
 	}
 
-	public Iterator<Pair<String, Object>> variablesIterator(Event event) {
+	public Iterator<Pair<String, Object>> variablesIterator(Object event) {
 		if (!list)
 			throw new SkriptAPIException("Looping a non-list variable");
 		String name = StringUtils.substring(this.name.toString(event), 0, -1);
@@ -414,7 +413,7 @@ public class Variable<T> implements Expression<T> {
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public Iterator<T> iterator(Event event) {
+	public Iterator<T> iterator(Object event) {
 		if (!list) {
 			T value = getSingle(event);
 			return value != null ? new SingleItemIterator<T>(value) : null;
@@ -468,21 +467,21 @@ public class Variable<T> implements Expression<T> {
 	}
 
 	@Nullable
-	private T getConverted(Event event) {
+	private T getConverted(Object event) {
 		assert !list;
 		return Converters.convert(get(event), types);
 	}
 
-	private T[] getConvertedArray(Event event) {
+	private T[] getConvertedArray(Object event) {
 		assert list;
 		return Converters.convert((Object[]) get(event), types, superType);
 	}
 
-	private void set(Event event, @Nullable Object value) {
+	private void set(Object event, @Nullable Object value) {
 		Variables.setVariable(name.toString(event), value, event, local);
 	}
 
-	private void setIndex(Event event, String index, @Nullable Object value) {
+	private void setIndex(Object event, String index, @Nullable Object value) {
 		assert list;
 		String name = this.name.toString(event);
 		assert name.endsWith(SEPARATOR + "*") : name + "; " + this.name;
@@ -498,7 +497,7 @@ public class Variable<T> implements Expression<T> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		switch (mode) {
 			case DELETE:
 				if (list) {
@@ -656,20 +655,20 @@ public class Variable<T> implements Expression<T> {
 
 	@Override
 	@Nullable
-	public T getSingle(Event event) {
+	public T getSingle(Object event) {
 		if (list)
 			throw new SkriptAPIException("Invalid call to getSingle");
 		return getConverted(event);
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] getArray(Object event) {
 		return getAll(event);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T[] getAll(Event event) {
+	public T[] getAll(Object event) {
 		if (list)
 			return getConvertedArray(event);
 		T value = getConverted(event);
@@ -691,12 +690,12 @@ public class Variable<T> implements Expression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super T> checker, boolean negated) {
 		return SimpleExpression.check(getAll(event), checker, negated, getAnd());
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker) {
+	public boolean check(Object event, Checker<? super T> checker) {
 		return SimpleExpression.check(getAll(event), checker, false, getAnd());
 	}
 

@@ -29,8 +29,7 @@ import ch.njol.util.Kleenean;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +63,7 @@ public class EffObjectives extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void execute(Object event) {
 		String junit = this.junit.getSingle(event);
 		assert junit != null;
 		String[] objectives = this.objectives.getArray(event);
@@ -77,7 +76,7 @@ public class EffObjectives extends Effect  {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (setup)
 			return "ensure junit test " + junit.toString(event, debug) + " completes objectives " + objectives.toString(event, debug);
 		return "complete objectives " + objectives.toString(event, debug) + " on junit test " + junit.toString(event, debug);

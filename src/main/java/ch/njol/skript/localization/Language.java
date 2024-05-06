@@ -24,8 +24,8 @@ import ch.njol.skript.config.Config;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Version;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;

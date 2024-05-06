@@ -25,13 +25,15 @@ import ch.njol.skript.util.Task;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.eventbus.EventBus;
+import com.ultreon.libs.events.v0.EventPriority;
+import com.ultreon.libs.events.v0.SubscribeEvent;
 import ultreon.baseskript.BaseSkript;
-import org.eclipse.jdt.annotation.Nullable;
-import ultreon.baseskript.event.*;
+import ultreon.baseskript.event.Cancellable;
+import ultreon.baseskript.event.EventExecutor;
+import ultreon.baseskript.event.Listener;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -48,43 +50,16 @@ public final class SkriptEventHandler {
 
 		public final EventPriority priority;
 
+		public final EventExecutor executor = (listener, event) -> check(event, ((PriorityListener) listener).priority);
+
 		public PriorityListener(EventPriority priority) {
 			this.priority = priority;
 		}
 
-	}
-
-	/**
-	 * Stores one {@link PriorityListener} per {@link EventPriority}.
-	 */
-	private static final PriorityListener[] listeners;
-
-	static {
-		EventPriority[] priorities = EventPriority.values();
-		listeners = new PriorityListener[priorities.length];
-		for (int i = 0; i < priorities.length; i++) {
-			listeners[i] = new PriorityListener(priorities[i]);
+		@SubscribeEvent
+		public void onEvent(Object event) {
+			check(event, priority);
 		}
-	}
-
-	/**
-	 * A Multimap tracking what Triggers are paired with what Events.
-	 * Each Event effectively maps to an ArrayList of Triggers.
-	 */
-	private static final Multimap<Class<? extends Event>, Trigger> triggers = ArrayListMultimap.create();
-
-	/**
-	 * A utility method to get all Triggers registered under the provided Event class.
-	 * @param event The event to find pairs from.
-	 * @return A List containing all Triggers registered under the provided Event class.
-	 */
-	private static List<Trigger> getTriggers(Class<? extends Event> event) {
-		HandlerList eventHandlerList = getHandlerList(event);
-		assert eventHandlerList != null; // It had one at some point so this should remain true
-		return triggers.asMap().entrySet().stream()
-				.filter(entry -> entry.getKey().isAssignableFrom(event) && getHandlerList(entry.getKey()) == eventHandlerList)
-				.flatMap(entry -> entry.getValue().stream())
-				.collect(Collectors.toList()); // forces evaluation now and prevents us from having to call getTriggers again if very high logging is enabled
 	}
 
 	/**
@@ -94,7 +69,7 @@ public final class SkriptEventHandler {
 	 * @param event The Event to check.
 	 * @param priority The priority of the Event.
 	 */
-	private static void check(Event event, EventPriority priority) {
+	private static void check(Object event, EventPriority priority) {
 		List<Trigger> triggers = getTriggers(event.getClass());
 		if (triggers.isEmpty())
 			return;
@@ -105,7 +80,7 @@ public final class SkriptEventHandler {
 				SkriptEvent triggerEvent = trigger.getEvent();
 				if (
 					triggerEvent.getEventPriority() == priority
-					&& triggerEvent.canExecuteAsynchronously() ? triggerEvent.check(event) : Boolean.TRUE.equals(Task.callSync(() -> triggerEvent.check(event)))
+						&& triggerEvent.canExecuteAsynchronously() ? triggerEvent.check(event) : Boolean.TRUE.equals(Task.callSync(() -> triggerEvent.check(event)))
 				) {
 					hasTrigger = true;
 					break;
@@ -113,14 +88,11 @@ public final class SkriptEventHandler {
 			}
 			if (!hasTrigger)
 				return;
-
-			logEventStart(event);
 		}
 
-		boolean isCancelled = event instanceof Cancellable && ((Cancellable) event).isCancelled() && !listenCancelled.contains(event.getClass());
-		boolean isResultDeny = false;
+		boolean isCancelled = event instanceof Cancellable && ((Cancellable) event).isCancelled();
 
-		if (isCancelled && isResultDeny) {
+		if (isCancelled) {
 			if (Skript.logVeryHigh())
 				Skript.info(" -x- was cancelled");
 			return;
@@ -133,11 +105,9 @@ public final class SkriptEventHandler {
 
 			// these methods need to be run on whatever thread the trigger is
 			Runnable execute = () -> {
-				logTriggerStart(trigger);
 				Object timing = SkriptTimings.start(trigger.getDebugLabel());
 				trigger.execute(event);
 				SkriptTimings.stop(timing);
-				logTriggerEnd(trigger);
 			};
 
 			if (trigger.getEvent().canExecuteAsynchronously()) {
@@ -151,67 +121,41 @@ public final class SkriptEventHandler {
 				});
 			}
 		}
-
-		logEventEnd();
-	}
-
-	private static long startEvent;
-
-	/**
-	 * Logs that the provided Event has started.
-	 * Requires {@link Skript#logVeryHigh()} to be true to log anything.
-	 * @param event The Event that started.
-	 */
-	public static void logEventStart(Event event) {
-		startEvent = System.nanoTime();
-		if (!Skript.logVeryHigh())
-			return;
-		Skript.info("");
-		Skript.info("== " + event.getClass().getName() + " ==");
 	}
 
 	/**
-	 * Logs that the last logged Event start has ended.
-	 * Includes the number of milliseconds execution took.
-	 * Requires {@link Skript#logVeryHigh()} to be true to log anything.
+	 * A utility method to get all Triggers registered under the provided Event class.
+	 * @param event The event to find pairs from.
+	 * @return A List containing all Triggers registered under the provided Event class.
 	 */
-	public static void logEventEnd() {
-		if (!Skript.logVeryHigh())
-			return;
-		Skript.info("== took " + 1. * (System.nanoTime() - startEvent) / 1000000. + " milliseconds ==");
-	}
-
-	private static long startTrigger;
-
-	/**
-	 * Logs that the provided Trigger has begun execution.
-	 * Requires {@link Skript#logVeryHigh()} to be true.
-	 * @param trigger The Trigger that execution has begun for.
-	 */
-	public static void logTriggerStart(Trigger trigger) {
-		startTrigger = System.nanoTime();
-		if (!Skript.logVeryHigh())
-			return;
-		Skript.info("# " + trigger.getName());
+	private static List<Trigger> getTriggers(Class<? extends Object> event) {
+		return triggers.asMap().entrySet().stream()
+			.filter(entry -> entry.getKey().isAssignableFrom(event))
+			.flatMap(entry -> entry.getValue().stream())
+			.collect(Collectors.toList()); // forces evaluation now and prevents us from having to call getTriggers again if very high logging is enabled
 	}
 
 	/**
-	 * Logs that the last logged Trigger execution has ended.
-	 * Includes the number of milliseconds execution took.
-	 * Requires {@link Skript#logVeryHigh()} to be true to log anything.
+	 * Stores one {@link PriorityListener} per {@link EventPriority}.
 	 */
-	public static void logTriggerEnd(Trigger t) {
-		if (!Skript.logVeryHigh())
-			return;
-		Skript.info("# " + t.getName() + " took " + 1. * (System.nanoTime() - startTrigger) / 1000000. + " milliseconds");
+	private static final PriorityListener[] listeners;
+
+	static {
+		EventPriority[] priorities = EventPriority.values();
+		listeners = new PriorityListener[priorities.length];
+		for (int i = 0; i < priorities.length; i++) {
+			listeners[i] = new PriorityListener(priorities[i]);
+		}
+
+		for (PriorityListener listener : listeners)
+			BaseSkript.getEventBus().subscribe(listener);
 	}
 
 	/**
-	 * @deprecated This method no longer does anything as self registered Triggers
-	 * 	are unloaded when the {@link SkriptEvent} is unloaded (no need to keep tracking them here).
+	 * A Multimap tracking what Triggers are paired with what Events.
+	 * Each Event effectively maps to an ArrayList of Triggers.
 	 */
-	@Deprecated
-	public static void addSelfRegisteringTrigger(Trigger t) { }
+	private static final Multimap<Class<? extends Object>, Trigger> triggers = ArrayListMultimap.create();
 
 	/**
 	 * A utility method that calls {@link #registerBukkitEvent(Trigger, Class)} for each Event class provided.
@@ -221,8 +165,8 @@ public final class SkriptEventHandler {
 	 * @see #registerBukkitEvent(Trigger, Class)
 	 * @see #unregisterBukkitEvents(Trigger)
 	 */
-	public static void registerBukkitEvents(Trigger trigger, Class<? extends Event>[] events) {
-		for (Class<? extends Event> event : events)
+	public static void registerBukkitEvents(Trigger trigger, Class<? extends Object>[] events) {
+		for (Class<? extends Object> event : events)
 			registerBukkitEvent(trigger, event);
 	}
 
@@ -234,29 +178,20 @@ public final class SkriptEventHandler {
 	 * @see #registerBukkitEvents(Trigger, Class[])
 	 * @see #unregisterBukkitEvents(Trigger)
 	 */
-	public static void registerBukkitEvent(Trigger trigger, Class<? extends Event> event) {
-		HandlerList handlerList = getHandlerList(event);
-		if (handlerList == null)
-			return;
-
-		triggers.put(event, trigger);
+	public static void registerBukkitEvent(Trigger trigger, Class<? extends Object> event) {
 
 		EventPriority priority = trigger.getEvent().getEventPriority();
 
-		if (!isEventRegistered(handlerList, priority)) { // Check if event is registered
-			PriorityListener listener = listeners[priority.ordinal()];
-			BaseSkript.getPluginManager().registerEvent(event, listener, priority, listener.executor, Skript.getInstance());
+		if (!isEventRegistered(event, trigger)) { // Check if event is registered
+			triggers.put(event, trigger);
+			BaseSkript.getEventBus().subscribe(priority, false, event, o -> check(o, priority));
 		}
 	}
 
-	private static boolean isEventRegistered(HandlerList handlerList, EventPriority priority) {
-		for (Listener listener : handlerList.getRegisteredListeners()) {
-			if (listener instanceof PriorityListener) {
-				PriorityListener pl = (PriorityListener) listener;
-				if (pl.priority == priority)
-					return true;
-			}
-		}
+	private static boolean isEventRegistered(Class<? extends Object> event, Trigger trigger) {
+		for (Trigger eventTrigger : triggers.get(event))
+			if (eventTrigger == trigger)
+				return true;
 		return false;
 	}
 
@@ -265,12 +200,12 @@ public final class SkriptEventHandler {
 	 * @param trigger The Trigger to unregister events for.
 	 */
 	public static void unregisterBukkitEvents(Trigger trigger) {
-		Iterator<Entry<Class<? extends Event>, Trigger>> entryIterator = triggers.entries().iterator();
+		Iterator<Entry<Class<? extends Object>, Trigger>> entryIterator = triggers.entries().iterator();
 		entryLoop: while (entryIterator.hasNext()) {
-			Entry<Class<? extends Event>, Trigger> entry = entryIterator.next();
+			Entry<Class<? extends Object>, Trigger> entry = entryIterator.next();
 			if (entry.getValue() != trigger)
 				continue;
-			Class<? extends Event> event = entry.getKey();
+			Class<? extends Object> event = entry.getKey();
 
 			// Remove the trigger from the map
 			entryIterator.remove();
@@ -283,107 +218,12 @@ public final class SkriptEventHandler {
 			}
 
 			// We can attempt to unregister this listener
-			HandlerList handlerList = getHandlerList(event);
-			if (handlerList == null)
-				continue;
 			Skript skript = Skript.getInstance();
-			for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-				Listener listener = registeredListener.getListener();
-				if (
-					registeredListener.getPlugin() == skript
-					&& listener instanceof PriorityListener
-					&& ((PriorityListener) listener).priority == priority
-				) {
-					handlerList.unregister(listener);
-				}
+			for (PriorityListener listener : listeners) {
+				if (listener.priority != priority)
+					continue;
+				BaseSkript.getEventBus().unsubscribe(listener);
 			}
 		}
 	}
-
-	/**
-	 * Events which are listened even if they are cancelled.
-	 */
-	public static final Set<Class<? extends Event>> listenCancelled = new HashSet<Class<? extends Event>>();
-
-	/**
-	 * A cache for the getHandlerList methods of Event classes.
-	 */
-	private static final Map<Class<? extends Event>, Method> handlerListMethods = new HashMap<Class<? extends Event>, Method>();
-
-	/**
-	 * A cache for obtained HandlerLists.
-	 */
-	private static final Map<Method, WeakReference<HandlerList>> handlerListCache = new HashMap<Method, WeakReference<HandlerList>>();
-
-	@Nullable
-	private static HandlerList getHandlerList(Class<? extends Event> eventClass) {
-		try {
-			Method method = getHandlerListMethod(eventClass);
-
-			WeakReference<HandlerList> handlerListReference = handlerListCache.get(method);
-			HandlerList handlerList = handlerListReference != null ? handlerListReference.get() : null;
-			if (handlerList == null) {
-				method.setAccessible(true);
-				handlerList = (HandlerList) method.invoke(null);
-				handlerListCache.put(method, new WeakReference<HandlerList>(handlerList));
-			}
-
-			return null;
-		} catch (Exception ex) {
-			//noinspection ThrowableNotThrown
-			Skript.exception(ex, "Failed to get HandlerList for event " + eventClass.getName());
-			return null;
-		}
-	}
-
-	private static Method getHandlerListMethod(Class<? extends Event> eventClass) {
-		Method method;
-
-		synchronized (handlerListMethods) {
-			method = handlerListMethods.get(eventClass);
-			if (method == null) {
-				method = getHandlerListMethod_i(eventClass);
-				if (method != null)
-					method.setAccessible(true);
-				handlerListMethods.put(eventClass, method);
-			}
-		}
-
-		if (method == null)
-			throw new RuntimeException("No getHandlerList method found");
-
-		return method;
-	}
-
-	@Nullable
-	private static Method getHandlerListMethod_i(Class<? extends Event> eventClass) {
-		try {
-			return eventClass.getDeclaredMethod("getHandlerList");
-		} catch (NoSuchMethodException e) {
-			if (
-				eventClass.getSuperclass() != null
-				&& !eventClass.getSuperclass().equals(Event.class)
-				&& Event.class.isAssignableFrom(eventClass.getSuperclass())
-			) {
-				return getHandlerListMethod(eventClass.getSuperclass().asSubclass(Event.class));
-			} else {
-				return null;
-			}
-		}
-	}
-
-//	private static boolean isEventRegistered(HandlerList handlerList, EventPriority priority) {
-//		for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-//			Listener listener = registeredListener.getListener();
-//			if (
-//				registeredListener.getPlugin() == Skript.getInstance()
-//				&& listener instanceof PriorityListener
-//				&& ((PriorityListener) listener).priority == priority
-//			) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
 }

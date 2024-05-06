@@ -30,9 +30,8 @@ import ch.njol.skript.log.HandlerList;
 import ch.njol.skript.structures.StructOptions.OptionsData;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptEvent;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -175,7 +174,7 @@ public final class ParserInstance {
 	@Nullable
 	private String currentEventName;
 
-	private Class<? extends Event> @Nullable [] currentEvents = null;
+	private Class<? extends Object> @Nullable [] currentEvents = null;
 
 	public void setCurrentEventName(@Nullable String currentEventName) {
 		this.currentEventName = currentEventName;
@@ -190,13 +189,13 @@ public final class ParserInstance {
 	 * @param currentEvents The events that may be present during execution.
 	 *                      An instance of the events present in the provided array MUST be used to execute any loaded items.
 	 */
-	public void setCurrentEvents(Class<? extends Event> @Nullable [] currentEvents) {
+	public void setCurrentEvents(Class<? extends Object> @Nullable [] currentEvents) {
 		this.currentEvents = currentEvents;
 		getDataInstances().forEach(data -> data.onCurrentEventsChange(currentEvents));
 	}
 
 	@SafeVarargs
-	public final void setCurrentEvent(String name, @Nullable Class<? extends Event>... events) {
+	public final void setCurrentEvent(String name, @Nullable Class<? extends Object>... events) {
 		currentEventName = name;
 		setCurrentEvents(events);
 		setHasDelayBefore(Kleenean.FALSE);
@@ -208,7 +207,7 @@ public final class ParserInstance {
 		setHasDelayBefore(Kleenean.FALSE);
 	}
 
-	public Class<? extends Event> @Nullable [] getCurrentEvents() {
+	public Class<? extends Object> @Nullable [] getCurrentEvents() {
 		return currentEvents;
 	}
 
@@ -225,8 +224,8 @@ public final class ParserInstance {
 	 * <br><br>
 	 * See also {@link #isCurrentEvent(Class[])} for checking with multiple argument classes
 	 */
-	public boolean isCurrentEvent(Class<? extends Event> event) {
-		for (Class<? extends Event> currentEvent : currentEvents) {
+	public boolean isCurrentEvent(Class<? extends Object> event) {
+		for (Class<? extends Object> currentEvent : currentEvents) {
 			// check that current event is same or child of event we want
 			if (event.isAssignableFrom(currentEvent))
 				return true;
@@ -247,8 +246,8 @@ public final class ParserInstance {
 	 * @see #isCurrentEvent(Class)
 	 */
 	@SafeVarargs
-	public final boolean isCurrentEvent(Class<? extends Event>... events) {
-		for (Class<? extends Event> event : events) {
+	public final boolean isCurrentEvent(Class<? extends Object>... events) {
+		for (Class<? extends Object> event : events) {
 			if (isCurrentEvent(event))
 				return true;
 		}
@@ -426,7 +425,7 @@ public final class ParserInstance {
 		@Deprecated
 		public void onCurrentScriptChange(@Nullable Config currentScript) { }
 
-		public void onCurrentEventsChange(Class<? extends Event> @Nullable [] currentEvents) { }
+		public void onCurrentEventsChange(Class<? extends Object> @Nullable [] currentEvents) { }
 		
 	}
 	

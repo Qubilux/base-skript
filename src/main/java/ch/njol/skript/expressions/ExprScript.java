@@ -19,20 +19,15 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Script Name")
 @Description("Holds the current script's name (the file name without '.sk').")
@@ -71,7 +66,7 @@ public class ExprScript extends SimpleExpression<String> {
 	}
 	
 	@Override
-	protected String @NotNull [] get(@NotNull Event event) {
+	protected String @NotNull [] get(@NotNull Object event) {
 		return new String[]{name};
 	}
 	
@@ -86,7 +81,7 @@ public class ExprScript extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "the script's name";
 	}
 	

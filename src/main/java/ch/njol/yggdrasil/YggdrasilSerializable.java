@@ -19,7 +19,7 @@
 package ch.njol.yggdrasil;
 
 import ch.njol.yggdrasil.Fields.FieldContext;
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -47,7 +47,7 @@ public interface YggdrasilSerializable {
 		 *         <tt>yggdrasil.{@link Yggdrasil#incompatibleField(Object, Field, FieldContext) incompatibleField}(this, field, value)</tt>
 		 *         will be called.
 		 */
-		boolean incompatibleField(@NonNull Field field, @NonNull FieldContext value) throws StreamCorruptedException;
+		boolean incompatibleField(@NotNull Field field, @NotNull FieldContext value) throws StreamCorruptedException;
 		
 		/**
 		 * Called if a field was read from stream which does not exist in this class.
@@ -57,7 +57,7 @@ public interface YggdrasilSerializable {
 		 *         <tt>yggdrasil.{@link Yggdrasil#excessiveField(Object, FieldContext) excessiveField}(this, field)</tt>
 		 *         will be called.
 		 */
-		boolean excessiveField(@NonNull FieldContext field) throws StreamCorruptedException;
+		boolean excessiveField(@NotNull FieldContext field) throws StreamCorruptedException;
 		
 		/**
 		 * Called if a field was not found in the stream.
@@ -66,7 +66,7 @@ public interface YggdrasilSerializable {
 		 * @return Whether the field was handled (e.g. true if the default value is fine). If false,
 		 *         <tt>yggdrasil.{@link Yggdrasil#missingField(Object, Field) missingField}(this, field)</tt> will be called.
 		 */
-		boolean missingField(@NonNull Field field) throws StreamCorruptedException;
+		boolean missingField(@NotNull Field field) throws StreamCorruptedException;
 		
 	}
 	
@@ -121,7 +121,7 @@ public interface YggdrasilSerializable {
 		 * @throws StreamCorruptedException If the Fields object is invalid, i.e. was not written
 		 *                                  by {@link #serialize()} or Yggdrasil's default serialisation.
 		 */
-		void deserialize(@NonNull Fields fields) throws StreamCorruptedException, NotSerializableException;
+		void deserialize(@NotNull Fields fields) throws StreamCorruptedException, NotSerializableException;
 		
 	}
 	

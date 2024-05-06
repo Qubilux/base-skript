@@ -19,7 +19,7 @@
 package ch.njol.util;
 
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,11 +48,11 @@ public final class LoggerFilter implements Filter, Closeable {
 		return true;
 	}
 	
-	public final void addFilter(final Filter f) {
+	public void addFilter(final Filter f) {
 		filters.add(f);
 	}
 	
-	public final boolean removeFilter(final Filter f) {
+	public boolean removeFilter(final Filter f) {
 		return filters.remove(f);
 	}
 	

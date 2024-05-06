@@ -30,8 +30,7 @@ import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -90,7 +89,7 @@ public class SecWhile extends LoopSection {
 
 	@Nullable
 	@Override
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(Object event) {
 		if ((doWhile && !ranDoWhile) || condition.check(event)) {
 			ranDoWhile = true;
 			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
@@ -114,12 +113,12 @@ public class SecWhile extends LoopSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return (doWhile ? "do " : "") + "while " + condition.toString(event, debug);
 	}
 
 	@Override
-	public void exit(Event event) {
+	public void exit(Object event) {
 		ranDoWhile = false;
 		super.exit(event);
 	}

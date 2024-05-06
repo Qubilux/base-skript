@@ -18,9 +18,7 @@
  */
 package ch.njol.skript.lang.function;
 
-import ultreon.baseskript.event.Event;
-
-public final class FunctionEvent<T> extends Event {
+public final class FunctionEvent<T> {
 	
 	private final Function<? extends T> function;
 	

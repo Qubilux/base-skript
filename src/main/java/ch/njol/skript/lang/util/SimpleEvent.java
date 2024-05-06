@@ -22,8 +22,7 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A very basic SkriptEvent which returns true for all events (i.e. all registered events).
@@ -35,7 +34,7 @@ public class SimpleEvent extends SkriptEvent {
 	public SimpleEvent() {}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(Object event) {
 		return true;
 	}
 
@@ -47,7 +46,7 @@ public class SimpleEvent extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "simple event";
 	}
 

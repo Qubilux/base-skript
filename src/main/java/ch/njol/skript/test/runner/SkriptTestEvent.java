@@ -18,11 +18,9 @@
  */
 package ch.njol.skript.test.runner;
 
-import ultreon.baseskript.event.Event;
-
 /**
  * Raised by Skript when tests are run.
  */
-public class SkriptTestEvent extends Event {
+public class SkriptTestEvent {
 
 }

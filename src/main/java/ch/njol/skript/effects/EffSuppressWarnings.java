@@ -27,9 +27,8 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 
 @Name("Locally Suppress Warning")
@@ -67,10 +66,10 @@ public class EffSuppressWarnings extends Effect {
 	}
 
 	@Override
-	protected void execute(@NotNull Event event) { }
+	protected void execute(@NotNull Object event) { }
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		String word;
 		switch (mark) {
 			case CONFLICT:

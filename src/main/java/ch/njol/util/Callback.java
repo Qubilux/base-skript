@@ -18,11 +18,11 @@
  */
 package ch.njol.util;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface Callback<R, A> {
 	
 	@Nullable
-	public R run(A arg);
+	R run(A arg);
 	
 }

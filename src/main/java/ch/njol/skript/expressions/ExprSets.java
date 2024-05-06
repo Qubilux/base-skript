@@ -18,14 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Iterator;
-import java.util.function.Supplier;
-
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.Lists;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.Description;
@@ -39,7 +31,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Iterator;
+import java.util.function.Supplier;
 
 @Name("Sets")
 @Description("Returns a list of all the values of a type. Useful for looping.")
@@ -79,14 +76,14 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object @NotNull [] get(@NotNull Event event) {
+	protected Object @NotNull [] get(@NotNull Object event) {
 		Iterator<?> iterator = supplier.get();
 		return Lists.newArrayList(iterator).toArray(new Object[0]);
 	}
 
 	@Override
 	@Nullable
-	public Iterator<?> iterator(@NotNull Event event) {
+	public Iterator<?> iterator(@NotNull Object event) {
 		return supplier.get();
 	}
 
@@ -101,7 +98,7 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "all of the " + classInfo.getName().getPlural();
 	}
 

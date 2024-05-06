@@ -5,6 +5,7 @@ import ultreon.baseskript.plugins.PluginDescriptionFile;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 public interface Plugin {
 
@@ -16,11 +17,21 @@ public interface Plugin {
 
     String getVersion0();
 
-    InputStream getResource(String name);
+	default InputStream getResource(String name) {
+		PluginInfoProvider pluginInfoProvider = PluginInfoProvider.get(this);
+		if (pluginInfoProvider == null)
+			return getClass().getResourceAsStream("/" + name);
+		return pluginInfoProvider.getResource(name);
+	}
 
-    File getDataFolder();
+	default File getDataFolder() {
+		PluginInfoProvider pluginInfoProvider = PluginInfoProvider.get(this);
+		if (pluginInfoProvider == null)
+			return new File("plugins/" + getName());
+		return pluginInfoProvider.getDataFolder();
+	}
 
-    void onLoad();
+	void onLoad();
 
     void onEnable();
 
@@ -31,7 +42,7 @@ public interface Plugin {
     }
 
     default void registerEvents(Plugin plugin) {
-        BaseSkript.getEventBus().register(plugin);
+        BaseSkript.getEventBus().subscribe(plugin);
     }
 
     PluginDescriptionFile getDescription();
@@ -40,11 +51,24 @@ public interface Plugin {
         return getClass().getClassLoader();
     }
 
+	@Deprecated
 	default File getFile() {
-		try {
-			return new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
+		PluginInfoProvider pluginInfoProvider = PluginInfoProvider.get(this);
+		if (pluginInfoProvider == null) {
+			try {
+				return new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+			} catch (URISyntaxException e) {
+				return null;
+			}
 		}
+
+		return pluginInfoProvider.getFile();
+	}
+
+	default URL getPluginLocation() {
+		PluginInfoProvider pluginInfoProvider = PluginInfoProvider.get(this);
+		if (pluginInfoProvider == null)
+			return getClass().getProtectionDomain().getCodeSource().getLocation();
+		return pluginInfoProvider.getPluginLocation();
 	}
 }

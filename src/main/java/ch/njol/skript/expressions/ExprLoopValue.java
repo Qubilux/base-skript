@@ -33,9 +33,8 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -87,12 +86,12 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	@Override
 	public boolean init(Expression<?> @NotNull [] vars, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parser) {
 		name = parser.expr;
-		String s = "" + parser.regexes.get(0).group();
+		String s = parser.regexes.get(0).group();
 		int i = -1;
 		Matcher m = LOOP_PATTERN.matcher(s);
 		if (m.matches()) {
-			s = "" + m.group(1);
-			i = Utils.parseInt("" + m.group(2));
+			s = m.group(1);
+			i = Utils.parseInt(m.group(2));
 		}
 
 		if ("counter".equalsIgnoreCase(s) || "iteration".equalsIgnoreCase(s)) // ExprLoopIteration - in case of classinfo conflicts
@@ -163,7 +162,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	
 	@Override
 	@Nullable
-	protected Object @NotNull [] get(@NotNull Event e) {
+	protected Object @NotNull [] get(@NotNull Object e) {
 		if (isVariableLoop) {
 			@SuppressWarnings("unchecked") Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
 			if (current == null)
@@ -181,7 +180,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		if (e == null)
 			return name;
 		if (isVariableLoop) {

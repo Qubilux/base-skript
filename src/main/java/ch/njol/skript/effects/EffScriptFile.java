@@ -31,9 +31,8 @@ import ch.njol.skript.util.FileUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.OpenCloseable;
 import ch.njol.util.StringUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.io.File;
@@ -72,7 +71,7 @@ public class EffScriptFile extends Effect {
 	}
 	
 	@Override
-	protected void execute(@NotNull Event e) {
+	protected void execute(@NotNull Object e) {
 		String name = fileName.getSingle(e);
 		if (name == null)
 			return;
@@ -176,7 +175,7 @@ public class EffScriptFile extends Effect {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return (mark == ENABLE ? "enable" : mark == RELOAD ? "disable" : mark == DISABLE ? "unload" : "")
 			+ " script file " + fileName.toString(e, debug);
 	}

@@ -29,12 +29,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
-import java.io.*;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
@@ -69,7 +68,7 @@ public class EffLogToConsole extends Effect {
 	}
 	
 	@Override
-	protected void execute(final @NotNull Event e) {
+	protected void execute(final @NotNull Object e) {
 		for (final String message : messages.getArray(e)) {
 			Trigger t = getTrigger();
 			String scriptName = "---";
@@ -88,7 +87,7 @@ public class EffLogToConsole extends Effect {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "log " + messages.toString(e, debug) + " to the console";
 	}
 }

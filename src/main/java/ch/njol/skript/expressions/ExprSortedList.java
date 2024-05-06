@@ -30,9 +30,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
@@ -68,7 +67,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object @NotNull [] get(@NotNull Event event) {
+	protected Object @NotNull [] get(@NotNull Object event) {
 		try {
 			return list.stream(event)
 					.sorted(ExprSortedList::compare)
@@ -115,7 +114,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return "sorted " + list.toString(e, debug);
 	}
 

@@ -20,7 +20,7 @@ package ch.njol.skript.util;
 
 import ch.njol.skript.SkriptConfig;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.TimeZone;
 
@@ -132,9 +132,8 @@ public class Date implements Comparable<Date>, YggdrasilSerializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Date))
+		if (!(obj instanceof Date other))
 			return false;
-		final Date other = (Date) obj;
 		return timestamp == other.timestamp;
 	}
 	

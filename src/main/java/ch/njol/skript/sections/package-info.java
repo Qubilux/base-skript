@@ -21,9 +21,15 @@
  * 
  * @author Peter Güttinger
  */
+@SkriptInitializer({
+	SecConditional.class,
+	SecLoop.class,
+	SecWhile.class,
+})
 @NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
 package ch.njol.skript.sections;
 
 import org.eclipse.jdt.annotation.DefaultLocation;
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import ultreon.baseskript.SkriptInitializer;
 

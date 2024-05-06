@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.variables;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

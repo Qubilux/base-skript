@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.lang.function;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -131,10 +131,8 @@ public class Namespace {
 		public boolean equals(Object o) {
 			if (this == o)
 				return true;
-			if (!(o instanceof Info))
+			if (!(o instanceof Info info))
 				return false;
-
-			Info info = (Info) o;
 
 			if (isLocal() != info.isLocal())
 				return false;

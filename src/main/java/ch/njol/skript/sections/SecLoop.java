@@ -35,8 +35,7 @@ import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -89,8 +88,8 @@ public class SecLoop extends LoopSection {
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> expr;
 
-	private final transient Map<Event, Object> current = new WeakHashMap<Event, Object>();
-	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<Event, Iterator<?>>();
+	private final transient Map<Object, Object> current = new WeakHashMap<Object, Object>();
+	private final transient Map<Object, Iterator<?>> currentIter = new WeakHashMap<Object, Iterator<?>>();
 
 	@Nullable
 	private TriggerItem actualNext;
@@ -129,7 +128,7 @@ public class SecLoop extends LoopSection {
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(Object event) {
 		Iterator<?> iter = currentIter.get(event);
 		if (iter == null) {
 			iter = expr instanceof Variable ? ((Variable<?>) expr).variablesIterator(event) : expr.iterator(event);
@@ -152,12 +151,12 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "loop " + expr.toString(event, debug);
 	}
 
 	@Nullable
-	public Object getCurrent(Event event) {
+	public Object getCurrent(Object event) {
 		return current.get(event);
 	}
 
@@ -178,7 +177,7 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	public void exit(Event event) {
+	public void exit(Object event) {
 		current.remove(event);
 		currentIter.remove(event);
 		super.exit(event);

@@ -28,11 +28,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
+import ultreon.baseskript.event.Event;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -60,7 +59,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @throws UnsupportedOperationException (optional) if this was called on a non-single expression
 	 */
 	@Nullable
-	T getSingle(Event event);
+	T getSingle(Object event);
 
 	/**
 	 * Get an optional of the single value of this expression.
@@ -71,7 +70,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return an {@link Optional} containing the {@link #getSingle(Event) single value} of this expression for this event.
 	 * @see #getSingle(Event)
 	 */
-	default Optional<T> getOptionalSingle(Event event) {
+	default Optional<T> getOptionalSingle(Object event) {
 		return Optional.ofNullable(getSingle(event));
 	}
 
@@ -85,7 +84,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @param event The event
 	 * @return An array of values of this expression which must neither be null nor contain nulls, and which must not be an internal array.
 	 */
-	T[] getArray(Event event);
+	T[] getArray(Object event);
 
 	/**
 	 * Gets all possible return values of this expression, i.e. it returns the same as {@link #getArray(Event)} if {@link #getAnd()} is true, otherwise all possible values for
@@ -94,7 +93,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @param event The event
 	 * @return An array of all possible values of this expression for the given event which must neither be null nor contain nulls, and which must not be an internal array.
 	 */
-	T[] getAll(Event event);
+	T[] getAll(Object event);
 
 	/**
 	 * Gets a non-null stream of this expression's values.
@@ -102,7 +101,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @param event The event
 	 * @return A non-null stream of this expression's non-null values
 	 */
-	default Stream<@NonNull ? extends  T> stream(Event event) {
+	default Stream<@NotNull ? extends  T> stream(Object event) {
 		Iterator<? extends T> iterator = iterator(event);
 		if (iterator == null) {
 			return Stream.empty();
@@ -131,7 +130,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return Whether this expression matches or doesn't match the given checker depending on the condition's negated state.
 	 * @see SimpleExpression#check(Object[], Checker, boolean, boolean)
 	 */
-	boolean check(Event event, Checker<? super T> checker, boolean negated);
+	boolean check(Object event, Checker<? super T> checker, boolean negated);
 
 	/**
 	 * Checks this expression against the given checker. This method must only be used around other checks, use {@link #check(Event, Checker, boolean)} for a simple check or the
@@ -142,7 +141,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return Whether this expression matches the given checker
 	 * @see SimpleExpression#check(Object[], Checker, boolean, boolean)
 	 */
-	boolean check(Event event, Checker<? super T> checker);
+	boolean check(Object event, Checker<? super T> checker);
 
 	/**
 	 * Tries to convert this expression to the given type. This method can print an error prior to returning null to specify the cause.
@@ -222,7 +221,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return An iterator to iterate over all values of this expression which may be empty and/or null, but must not return null elements.
 	 */
 	@Nullable
-	Iterator<? extends T> iterator(Event event);
+	Iterator<? extends T> iterator(Object event);
 
 	/**
 	 * Checks whether the given 'loop-...' expression should match this loop, e.g. loop-block matches any loops that loop through blocks and loop-argument matches an
@@ -299,7 +298,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @param mode The {@link ChangeMode} of the attempted change
 	 * @throws UnsupportedOperationException (optional) - If this method was called on an unsupported ChangeMode.
 	 */
-	void change(Event event, @Nullable Object[] delta, ChangeMode mode);
+	void change(Object event, @Nullable Object[] delta, ChangeMode mode);
 
 	/**
 	 * This method is called before this expression is set to another one.

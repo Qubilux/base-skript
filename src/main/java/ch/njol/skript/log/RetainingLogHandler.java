@@ -21,7 +21,7 @@ package ch.njol.skript.log;
 import ch.njol.skript.Skript;
 import ultreon.baseskript.CommandSender;
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

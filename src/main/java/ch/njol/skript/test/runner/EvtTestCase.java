@@ -21,8 +21,7 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @NoDoc
 public class EvtTestCase extends SkriptEvent {
@@ -53,7 +52,7 @@ public class EvtTestCase extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(Object event) {
 		String n = name.getSingle(event);
 		if (n == null)
 			return false;
@@ -64,11 +63,11 @@ public class EvtTestCase extends SkriptEvent {
 
 	@Override
 	public boolean shouldLoadEvent() {
-		return condition != null ? condition.check(new SkriptTestEvent()) : true;
+		return condition == null || condition.check(new SkriptTestEvent());
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (event != null)
 			return "test " + name.getSingle(event);
 		return "test case";

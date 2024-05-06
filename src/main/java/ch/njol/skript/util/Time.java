@@ -22,8 +22,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Message;
 import ch.njol.util.Math2;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.util.Cyclical;
 
 import java.util.regex.Matcher;
@@ -82,7 +82,7 @@ public class Time implements YggdrasilSerializable, Cyclical<Integer> {
 			hours = (hours + 1) % 24;
 			minutes -= 60;
 		}
-		return "" + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+		return hours + ":" + (minutes < 10 ? "0" : "") + minutes;
 	}
 	
 	private final static Message m_error_24_hours = new Message("time.errors.24 hours");
@@ -149,9 +149,8 @@ public class Time implements YggdrasilSerializable, Cyclical<Integer> {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Time))
+		if (!(obj instanceof Time other))
 			return false;
-		final Time other = (Time) obj;
 		return time == other.time;
 	}
 	

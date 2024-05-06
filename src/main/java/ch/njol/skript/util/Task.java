@@ -20,9 +20,9 @@ package ch.njol.skript.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.util.Closeable;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.BaseSkript;
 import ultreon.baseskript.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;

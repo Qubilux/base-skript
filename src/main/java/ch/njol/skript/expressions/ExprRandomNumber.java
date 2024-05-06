@@ -29,9 +29,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -67,7 +66,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 
 	@Override
 	@Nullable
-	protected Number @NotNull [] get(@NotNull Event event) {
+	protected Number @NotNull [] get(@NotNull Object event) {
 		Number from = this.from.getSingle(event);
 		Number to = this.to.getSingle(event);
 
@@ -100,7 +99,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "a random " + (isInteger ? "integer" : "number") + " between " + from.toString(event, debug) + " and " + to.toString(event, debug);
 	}
 

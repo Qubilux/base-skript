@@ -21,8 +21,8 @@ package ch.njol.skript.lang;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Checker;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
 
@@ -46,10 +46,10 @@ public abstract class Condition extends Statement {
 	 * @param event the event to check
 	 * @return <code>true</code> if the condition is satisfied, <code>false</code> otherwise or if the condition doesn't apply to this event.
 	 */
-	public abstract boolean check(Event event);
+	public abstract boolean check(Object event);
 
 	@Override
-	public final boolean run(Event event) {
+	public final boolean run(Object event) {
 		return check(event);
 	}
 

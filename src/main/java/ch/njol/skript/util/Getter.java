@@ -19,7 +19,7 @@
 package ch.njol.skript.util;
 
 import ch.njol.skript.classes.Converter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Used to get a specific value from instances of some type.
@@ -29,7 +29,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation") // for backwards compatibility
-public abstract class Getter<R, A> implements Converter<A, R> {
+public interface Getter<R, A> extends Converter<A, R> {
 	
 	/**
 	 * Gets a value from the given object.
@@ -38,14 +38,14 @@ public abstract class Getter<R, A> implements Converter<A, R> {
 	 * @return the value
 	 */
 	@Nullable
-	public abstract R get(A arg);
+	R get(A arg);
 	
 	/**
 	 * Convenience method to make getter implement converter
 	 */
 	@Override
 	@Nullable
-	public final R convert(final A a) {
+	default R convert(final A a) {
 		return get(a);
 	}
 	

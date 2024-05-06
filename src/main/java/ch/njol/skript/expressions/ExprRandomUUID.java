@@ -28,9 +28,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public class ExprRandomUUID extends SimpleExpression<String> {
 	
 	@Override
 	@Nullable
-	protected String @NotNull [] get(@NotNull Event e) {
+	protected String @NotNull [] get(@NotNull Object e) {
 		return new String[] {UUID.randomUUID().toString()};
 	}
 	
@@ -66,7 +65,7 @@ public class ExprRandomUUID extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return "random uuid";
 	}
 	

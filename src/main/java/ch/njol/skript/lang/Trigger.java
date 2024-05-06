@@ -19,8 +19,7 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.variables.Variables;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class Trigger extends TriggerSection {
 	 * @param event The event to execute this Trigger with.
 	 * @return false if an exception occurred.
 	 */
-	public boolean execute(Event event) {
+	public boolean execute(Object event) {
 		boolean success = TriggerItem.walk(this, event);
 
 		// Clear local variables
@@ -71,12 +70,12 @@ public class Trigger extends TriggerSection {
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(Object event) {
 		return walk(event, true);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return name + " (" + this.event.toString(event, debug) + ")";
 	}
 

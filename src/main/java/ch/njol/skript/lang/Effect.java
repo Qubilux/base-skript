@@ -22,8 +22,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.function.EffFunctionCall;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
@@ -42,10 +41,10 @@ public abstract class Effect extends Statement {
 	 * 
 	 * @param event The event with which this effect will be executed
 	 */
-	protected abstract void execute(Event event);
+	protected abstract void execute(Object event);
 
 	@Override
-	public final boolean run(Event event) {
+	public final boolean run(Object event) {
 		execute(event);
 		return true;
 	}

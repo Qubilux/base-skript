@@ -27,9 +27,8 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -88,7 +87,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (debug && event == null)
 			return "(" + source.toString(event, debug) + " >> " + converter + ": "
 				+ converterInfo + ")";
@@ -136,7 +135,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) {
 		ClassInfo<? super T> returnTypeInfo = this.returnTypeInfo;
 		if (returnTypeInfo != null) {
 			Changer<? super T> changer = returnTypeInfo.getChanger();
@@ -149,7 +148,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 
 	@Override
 	@Nullable
-	public T getSingle(Event event) {
+	public T getSingle(Object event) {
 		F value = source.getSingle(event);
 		if (value == null)
 			return null;
@@ -157,22 +156,22 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] getArray(Object event) {
 		return Converters.convert(source.getArray(event), to, converter);
 	}
 
 	@Override
-	public T[] getAll(Event event) {
+	public T[] getAll(Object event) {
 		return Converters.convert(source.getAll(event), to, converter);
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super T> checker, boolean negated) {
 		return negated ^ check(event, checker);
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker) {
+	public boolean check(Object event, Checker<? super T> checker) {
 		return source.check(event, (Checker<F>) value -> {
 			T convertedValue = converter.convert(value);
 			if (convertedValue == null) {
@@ -209,7 +208,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 
 	@Override
 	@Nullable
-	public Iterator<T> iterator(Event event) {
+	public Iterator<T> iterator(Object event) {
 		Iterator<? extends F> iterator = source.iterator(event);
 		if (iterator == null)
 			return null;

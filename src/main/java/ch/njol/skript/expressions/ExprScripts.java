@@ -26,20 +26,18 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ultreon.baseskript.event.Event;
-import org.jetbrains.annotations.NotNull;
-import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.script.Script;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("All Scripts")
 @Description("Returns all of the scripts, or just the enabled or disabled ones.")
@@ -75,7 +73,7 @@ public class ExprScripts extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String @NotNull [] get(@NotNull Event event) {
+	protected String @NotNull [] get(@NotNull Object event) {
 		List<Path> scripts = new ArrayList<Path>();
 		if (includeEnabled) {
 			for (Script script : ScriptLoader.getLoadedScripts())
@@ -111,7 +109,7 @@ public class ExprScripts extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return "scripts";
 	}
 

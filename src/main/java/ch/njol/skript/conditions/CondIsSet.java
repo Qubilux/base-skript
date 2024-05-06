@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.conditions;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,6 +29,7 @@ import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -61,7 +59,7 @@ public class CondIsSet extends Condition {
 		return true;
 	}
 	
-	private boolean check(final Expression<?> expr, final Event e) {
+	private boolean check(final Expression<?> expr, final Object e) {
 		if (expr instanceof ExpressionList) {
 			for (final Expression<?> ex : ((ExpressionList<?>) expr).getExpressions()) {
 				assert ex != null;
@@ -77,12 +75,12 @@ public class CondIsSet extends Condition {
 	}
 	
 	@Override
-	public boolean check(final @NotNull Event e) {
+	public boolean check(final @NotNull Object e) {
 		return check(expr, e);
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return expr.toString(e, debug) + (isNegated() ? " isn't" : " is") + " set";
 	}
 	

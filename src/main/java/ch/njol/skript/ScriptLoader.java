@@ -18,21 +18,17 @@
  */
 package ch.njol.skript;
 
-import ch.njol.skript.events.util.PreScriptLoadEvent;
-import ch.njol.skript.log.LogEntry;
-import ch.njol.skript.log.RetainingLogHandler;
-import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
-import ch.njol.skript.lang.Section;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Statement;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.TriggerSection;
+import ch.njol.skript.events.util.PreScriptLoadEvent;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.CountingLogHandler;
+import ch.njol.skript.log.LogEntry;
+import ch.njol.skript.log.RetainingLogHandler;
+import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.structures.StructOptions.OptionsData;
 import ch.njol.skript.util.ExceptionUtils;
@@ -44,11 +40,10 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.OpenCloseable;
 import ch.njol.util.StringUtils;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
+import ultreon.baseskript.BaseSkript;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -56,19 +51,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -633,12 +617,11 @@ public class ScriptLoader {
 			
 			try (CountingLogHandler ignored = new CountingLogHandler(SkriptLogger.FATAL).start()) {
 				for (Node cnode : config.getMainNode()) {
-					if (!(cnode instanceof SectionNode)) {
+					if (!(cnode instanceof SectionNode node)) {
 						Skript.error("invalid line - all code has to be put into triggers");
 						continue;
 					}
 
-					SectionNode node = ((SectionNode) cnode);
 					String line = node.getKey();
 					if (line == null)
 						continue;
@@ -1234,7 +1217,7 @@ public class ScriptLoader {
 	 */
 	@SafeVarargs
 	@Deprecated
-	public static void setCurrentEvent(String name, @Nullable Class<? extends Event>... events) {
+	public static void setCurrentEvent(String name, @Nullable Class<? extends Object>... events) {
 		getParser().setCurrentEvent(name, events);
 	}
 
@@ -1250,7 +1233,7 @@ public class ScriptLoader {
 	 * @deprecated Use {@link ParserInstance#isCurrentEvent(Class)}
 	 */
 	@Deprecated
-	public static boolean isCurrentEvent(@Nullable Class<? extends Event> event) {
+	public static boolean isCurrentEvent(@Nullable Class<? extends Object> event) {
 		return getParser().isCurrentEvent(event);
 	}
 
@@ -1259,7 +1242,7 @@ public class ScriptLoader {
 	 */
 	@SafeVarargs
 	@Deprecated
-	public static boolean isCurrentEvent(Class<? extends Event>... events) {
+	public static boolean isCurrentEvent(Class<? extends Object>... events) {
 		return getParser().isCurrentEvent(events);
 	}
 
@@ -1268,7 +1251,7 @@ public class ScriptLoader {
 	 */
 	@Nullable
 	@Deprecated
-	public static Class<? extends Event>[] getCurrentEvents() {
+	public static Class<? extends Object>[] getCurrentEvents() {
 		return getParser().getCurrentEvents();
 	}
 

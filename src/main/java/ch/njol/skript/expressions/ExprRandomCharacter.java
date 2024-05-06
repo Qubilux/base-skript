@@ -29,9 +29,8 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -70,7 +69,7 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String @NotNull [] get(@NotNull Event event) {
+	protected String @NotNull [] get(@NotNull Object event) {
 		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.getSingle(event);
 		if (amount == null || amount <= 0)
 			return new String[0];
@@ -131,7 +130,7 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return (amount != null ? amount.toString(event, debug) : "a") + " random character between " + from.toString(event, debug) + " and " + to.toString(event, debug);
 	}
 }

@@ -19,7 +19,10 @@
 package ch.njol.skript.classes.data;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.*;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
+import ch.njol.skript.classes.YggdrasilSerializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
@@ -27,7 +30,7 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.*;
 import ch.njol.yggdrasil.Fields;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 import java.util.Iterator;
@@ -222,8 +225,8 @@ public class SkriptClasses {
 							return null;
 						return new Timeperiod(t.getTicks());
 					}
-					final Time t1 = Time.parse("" + s.substring(0, c).trim());
-					final Time t2 = Time.parse("" + s.substring(c + 1).trim());
+					final Time t1 = Time.parse(s.substring(0, c).trim());
+					final Time t2 = Time.parse(s.substring(c + 1).trim());
 					if (t1 == null || t2 == null)
 						return null;
 					return new Timeperiod(t1.getTicks(), t2.getTicks());
@@ -279,7 +282,7 @@ public class SkriptClasses {
 
 				@Override
 				public String toVariableNameString(Color color) {
-					return "" + color.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					return color.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 				}
 			}));
 	}

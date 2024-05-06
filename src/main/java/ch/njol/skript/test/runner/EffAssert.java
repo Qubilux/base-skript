@@ -30,8 +30,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 @Name("Assert")
@@ -79,11 +78,11 @@ public class EffAssert extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event event) {}
+	protected void execute(Object event) {}
 
 	@Nullable
 	@Override
-	public TriggerItem walk(Event event) {
+	public TriggerItem walk(Object event) {
 		if (shouldFail && condition == null)
 			return getNext();
 
@@ -96,7 +95,7 @@ public class EffAssert extends Effect  {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (condition == null)
 			return "assertion";
 		return "assert " + condition.toString(event, debug);

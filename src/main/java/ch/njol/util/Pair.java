@@ -18,7 +18,7 @@
  */
 package ch.njol.util;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -75,7 +75,7 @@ public class Pair<T1, T2> implements Entry<T1, T2>, Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "" + first + "," + second;
+		return first + "," + second;
 	}
 	
 	/**
@@ -85,9 +85,8 @@ public class Pair<T1, T2> implements Entry<T1, T2>, Cloneable, Serializable {
 	public final boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof Entry))
+		if (!(obj instanceof Entry<?, ?> other))
 			return false;
-		final Entry<?, ?> other = (Entry<?, ?>) obj;
 		final T1 first = this.first;
 		final T2 second = this.second;
 		return (first == null ? other.getKey() == null : first.equals(other.getKey())) &&

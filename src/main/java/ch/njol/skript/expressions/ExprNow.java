@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,6 +30,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Now")
 @Description("The current <a href='classes.html#date'>system time</a> of the server. Use <a href='#ExprTime'>time</a> to get the <a href='classes.html#time'>Minecraft time</a> of a world.")
@@ -50,7 +48,7 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	protected Date @NotNull [] get(final @NotNull Event e) {
+	protected Date @NotNull [] get(final @NotNull Object e) {
 		return new Date[] {new Date()};
 	}
 	
@@ -65,7 +63,7 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "now";
 	}
 	

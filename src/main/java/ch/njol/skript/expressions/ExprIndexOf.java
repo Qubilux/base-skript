@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,6 +29,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -64,7 +62,7 @@ public class ExprIndexOf extends SimpleExpression<Long> {
 	
 	@Override
 	@Nullable
-	protected Long @NotNull [] get(final @NotNull Event e) {
+	protected Long @NotNull [] get(final @NotNull Object e) {
 		final String h = haystack.getSingle(e), n = needle.getSingle(e);
 		if (h == null || n == null)
 			return new Long[0];
@@ -83,7 +81,7 @@ public class ExprIndexOf extends SimpleExpression<Long> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "the " + (first ? "first" : "last") + " index of " + needle.toString(e, debug) + " in " + haystack.toString(e, debug);
 	}
 	

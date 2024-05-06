@@ -29,10 +29,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Cancellable;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.event.Cancellable;
 
 /**
  * @author Peter Güttinger
@@ -59,10 +58,10 @@ public class EffCancelEvent extends Effect {
 			return false;
 		}
 		cancel = matchedPattern == 0;
-		final Class<? extends Event>[] es = getParser().getCurrentEvents();
+		final Class<? extends Object>[] es = getParser().getCurrentEvents();
 		if (es == null)
 			return false;
-		for (final Class<? extends Event> e : es) {
+		for (final Class<? extends Object> e : es) {
 			if (Cancellable.class.isAssignableFrom(e))
 				return true; // TODO warning if some event(s) cannot be cancelled even though some can (needs a way to be suppressed)
 		}
@@ -71,13 +70,13 @@ public class EffCancelEvent extends Effect {
 	}
 	
 	@Override
-	public void execute(final @NotNull Event e) {
+	public void execute(final @NotNull Object e) {
 		if (e instanceof Cancellable)
 			((Cancellable) e).setCancelled(cancel);
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return (cancel ? "" : "un") + "cancel event";
 	}
 	

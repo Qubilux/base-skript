@@ -19,8 +19,7 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.SkriptAPIException;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.structure.StructureInfo;
 
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ import java.util.List;
 import java.util.Locale;
 
 public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<E> {
-	private static final List<Class<? extends Event>> ignoredEvents = new ArrayList<Class<? extends Event>>();
-	public Class<? extends Event>[] events;
+	private static final List<Class<? extends Object>> ignoredEvents = new ArrayList<Class<? extends Object>>();
+	public Class<? extends Object>[] events;
 	public final String name;
 
 	@Nullable
@@ -47,12 +46,12 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<
 	 * @param originClassPath The class path for the origin of this event.
 	 * @param events The Bukkit-Events this SkriptEvent listens to
 	 */
-	public SkriptEventInfo(String name, String[] patterns, Class<E> eventClass, String originClassPath, Class<? extends Event>[] events) {
+	public SkriptEventInfo(String name, String[] patterns, Class<E> eventClass, String originClassPath, Class<? extends Object>[] events) {
 		super(patterns, eventClass, originClassPath);
 		for (int i = 0; i < events.length; i++) {
 			for (int j = i + 1; j < events.length; j++) {
 				if (events[i].isAssignableFrom(events[j]) || events[j].isAssignableFrom(events[i])) {
-					for (Class<? extends Event> e : this.ignoredEvents) {
+					for (Class<? extends Object> e : ignoredEvents) {
 						if (e.isAssignableFrom(events[i]))
 							events[i] = e;
 						if (e.isAssignableFrom(events[j]))
@@ -67,16 +66,16 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends StructureInfo<
 		this.events = events;
 
 		if (name.startsWith("*")) {
-			this.name = name = "" + name.substring(1);
+			this.name = name = name.substring(1);
 		} else {
 			this.name = "On " + name;
 		}
 
 		// uses the name without 'on ' or '*'
-		this.id = "" + name.toLowerCase(Locale.ENGLISH).replaceAll("[#'\"<>/&]", "").replaceAll("\\s+", "_");
+		this.id = name.toLowerCase(Locale.ENGLISH).replaceAll("[#'\"<>/&]", "").replaceAll("\\s+", "_");
 	}
 
-	public static void registerIgnoredEvent(Class<? extends Event> event) {
+	public static void registerIgnoredEvent(Class<? extends Object> event) {
 		SkriptEventInfo.ignoredEvents.add(event);
 	}
 

@@ -19,10 +19,10 @@
 package ch.njol.skript.config.validate;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.EntryNode;
+import ch.njol.skript.config.Node;
 import ch.njol.util.Setter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -47,7 +47,7 @@ public class EnumEntryValidator<E extends Enum<E>> extends EntryValidator {
 					b.append(", ");
 				b.append(e.name());
 			}
-			allowedValues = "" + b.toString();
+			allowedValues = String.valueOf(b);
 		}
 	}
 	

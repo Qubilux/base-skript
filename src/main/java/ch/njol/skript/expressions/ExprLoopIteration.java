@@ -30,9 +30,8 @@ import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Loop Iteration")
 @Description("Returns the loop's current iteration count (for both normal and while loops).")
@@ -93,7 +92,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 	}
 
 	@Override
-	protected Long @NotNull [] get(@NotNull Event event) {
+	protected Long @NotNull [] get(@NotNull Object event) {
 		return new Long[]{loop.getLoopCounter(event)};
 	}
 
@@ -108,7 +107,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "loop-iteration" + (loopNumber != -1 ? ("-" + loopNumber) : "");
 	}
 

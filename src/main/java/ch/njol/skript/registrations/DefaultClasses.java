@@ -22,7 +22,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 // When using these fields, be aware all ClassInfo's must be registered!
 public class DefaultClasses {
@@ -38,7 +38,7 @@ public class DefaultClasses {
 	public static ClassInfo<Date> DATE = getClassInfo(Date.class);
 	public static ClassInfo<Timespan> TIMESPAN = getClassInfo(Timespan.class);
 
-	@NonNull
+	@NotNull
 	private static <T> ClassInfo<T> getClassInfo(Class<T> tClass) {
 		//noinspection ConstantConditions
 		ClassInfo<T> classInfo = Classes.getExactClassInfo(tClass);

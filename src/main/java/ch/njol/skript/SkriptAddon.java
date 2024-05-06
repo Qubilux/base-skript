@@ -21,8 +21,8 @@ package ch.njol.skript;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.Version;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,14 +52,14 @@ public final class SkriptAddon {
 			final Matcher m = Pattern.compile("(\\d+)(?:\\.(\\d+)(?:\\.(\\d+))?)?").matcher(plugin.getVersion0());
 			if (!m.find())
 				throw new IllegalArgumentException("The version of the plugin " + plugin.getName() + " does not contain any numbers: " + plugin.getVersion0());
-			v = new Version(Utils.parseInt("" + m.group(1)), m.group(2) == null ? 0 : Utils.parseInt("" + m.group(2)), m.group(3) == null ? 0 : Utils.parseInt("" + m.group(3)));
+			v = new Version(Utils.parseInt(m.group(1)), m.group(2) == null ? 0 : Utils.parseInt(m.group(2)), m.group(3) == null ? 0 : Utils.parseInt(m.group(3)));
 			Skript.warning("The plugin " + plugin.getName() + " uses a non-standard version syntax: '" + plugin.getVersion0() + "'. Skript will use " + v + " instead.");
 		}
 		version = v;
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		return name;
 	}
 
@@ -77,7 +77,6 @@ public final class SkriptAddon {
 	 * @return This SkriptAddon
 	 */
 	public SkriptAddon loadClasses(String basePackage, String... subPackages) throws IOException {
-		// TODO: UT - Add support for addons
 		Utils.getClasses(plugin, basePackage, subPackages);
 		return this;
 	}
@@ -95,9 +94,9 @@ public final class SkriptAddon {
 	public SkriptAddon setLanguageFileDirectory(String directory) {
 		if (languageFileDirectory != null)
 			throw new IllegalStateException();
-		directory = "" + directory.replace('\\', '/');
+		directory = directory.replace('\\', '/');
 		if (directory.endsWith("/"))
-			directory = "" + directory.substring(0, directory.length() - 1);
+			directory = directory.substring(0, directory.length() - 1);
 		languageFileDirectory = directory;
 		Language.loadDefault(this);
 		return this;

@@ -22,10 +22,10 @@ import ch.njol.skript.events.util.ScriptEvent;
 import ch.njol.skript.events.util.SkriptStartEvent;
 import ch.njol.skript.events.util.SkriptStopEvent;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.*;
+import ch.njol.skript.util.Getter;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.BaseSkript;
 import ultreon.baseskript.CommandSender;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger

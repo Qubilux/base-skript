@@ -38,8 +38,7 @@ import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
 
 import java.util.ArrayList;
@@ -97,7 +96,7 @@ public class SecConditional extends Section {
 	}
 
 	private ConditionalType type;
-	private List<Condition> conditions = new ArrayList<Condition>();
+	private final List<Condition> conditions = new ArrayList<Condition>();
 	private boolean ifAny;
 	private boolean parseIf;
 	private boolean parseIfPassed;
@@ -168,7 +167,7 @@ public class SecConditional extends Section {
 		// if this an "if" or "else if", let's try to parse the conditions right away
 		if (type == ConditionalType.IF || type == ConditionalType.ELSE_IF) {
 			ParserInstance parser = getParser();
-			Class<? extends Event>[] currentEvents = parser.getCurrentEvents();
+			Class<? extends Object>[] currentEvents = parser.getCurrentEvents();
 			String currentEventName = parser.getCurrentEventName();
 			Structure currentStructure = parser.getCurrentStructure();
 
@@ -280,7 +279,7 @@ public class SecConditional extends Section {
 
 	@Nullable
 	@Override
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(Object event) {
 		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
 			return getNormalNext();
 		} else if (parseIf || checkConditions(event)) {
@@ -304,7 +303,7 @@ public class SecConditional extends Section {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		String parseIf = this.parseIf ? "parse " : "";
         switch (type) {
             case IF:
@@ -339,8 +338,7 @@ public class SecConditional extends Section {
 		// loop through the triggerItems in reverse order so that we find the most recent items first
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
-			if (triggerItem instanceof SecConditional) {
-				SecConditional conditionalSection = (SecConditional) triggerItem;
+			if (triggerItem instanceof SecConditional conditionalSection) {
 
 				if (conditionalSection.type == ConditionalType.ELSE) {
 					// if the conditional is an else, return null because it belongs to a different condition and ends
@@ -361,8 +359,7 @@ public class SecConditional extends Section {
 		List<SecConditional> list = new ArrayList<SecConditional>();
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
-			if (triggerItem instanceof SecConditional) {
-				SecConditional secConditional = (SecConditional) triggerItem;
+			if (triggerItem instanceof SecConditional secConditional) {
 
 				if (secConditional.type == ConditionalType.ELSE_IF)
 					list.add(secConditional);
@@ -375,7 +372,7 @@ public class SecConditional extends Section {
 		return list;
 	}
 
-	private boolean checkConditions(Event event) {
+	private boolean checkConditions(Object event) {
 		if (conditions.isEmpty()) { // else and then
 			return true;
 		} else if (ifAny) {

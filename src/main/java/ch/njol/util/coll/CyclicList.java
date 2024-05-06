@@ -19,7 +19,7 @@
 package ch.njol.util.coll;
 
 import ch.njol.util.Math2;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.AbstractList;
@@ -51,11 +51,11 @@ public final class CyclicList<E> extends AbstractList<E> {
 		this.items = items;
 	}
 	
-	private final int toInternalIndex(final int index) {
+	private int toInternalIndex(final int index) {
 		return Math2.mod(start + index, items.length);
 	}
 	
-	private final int toExternalIndex(final int internal) {
+	private int toExternalIndex(final int internal) {
 		return Math2.mod(internal - start, items.length);
 	}
 	

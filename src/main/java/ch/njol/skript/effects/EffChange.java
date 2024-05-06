@@ -18,20 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import java.util.Arrays;
-
-import ch.njol.skript.expressions.ExprParse;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Variable;
-import ultreon.baseskript.event.Event;
-import org.apache.logging.log4j.Level;
-import org.jetbrains.annotations.UnknownNullability;
-import org.skriptlang.skript.lang.script.ScriptWarning;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer;
@@ -41,6 +27,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.ExprParse;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.CountingLogHandler;
 import ch.njol.skript.log.ErrorQuality;
@@ -50,6 +38,12 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+import org.skriptlang.skript.lang.script.ScriptWarning;
+
+import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
@@ -79,7 +73,7 @@ import ch.njol.util.Kleenean;
 		"reset chunk at the targeted block"})
 @Since("1.0 (set, add, remove, delete), 2.0 (remove all)")
 public class EffChange extends Effect {
-	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][] {
+	private static final Patterns<ChangeMode> patterns = new Patterns<>(new Object[][] {
 			{"(add|give) %objects% to %~objects%", ChangeMode.ADD},
 			{"increase %~objects% by %objects%", ChangeMode.ADD},
 			{"give %~objects% %objects%", ChangeMode.ADD},
@@ -281,7 +275,7 @@ public class EffChange extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event e) {
+	protected void execute(Object e) {
 		Object[] delta = changer == null ? null : changer.getArray(e);
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
 
@@ -294,7 +288,7 @@ public class EffChange extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable Object e, final boolean debug) {
 		final Expression<?> changer = this.changer;
 		switch (mode) {
 			case ADD:

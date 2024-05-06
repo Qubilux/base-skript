@@ -19,7 +19,7 @@
 package ch.njol.skript.config;
 
 import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.Locale;

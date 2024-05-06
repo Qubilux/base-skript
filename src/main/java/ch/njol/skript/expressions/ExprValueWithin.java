@@ -35,9 +35,8 @@ import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Value Within")
 @Description(
@@ -104,14 +103,14 @@ public class ExprValueWithin extends WrapperExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void change(@NotNull Event event, @Nullable Object @NotNull [] delta, @NotNull ChangeMode mode) {
+	public void change(@NotNull Object event, @Nullable Object @NotNull [] delta, @NotNull ChangeMode mode) {
 		if (changer == null)
 			throw new UnsupportedOperationException();
 		changer.change(getArray(event), delta, mode);
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return (classInfo == null ? "value" : classInfo.toString(event, debug)) + " within " + getExpr();
 	}
 

@@ -20,7 +20,7 @@ package ch.njol.skript.log;
 
 import ch.njol.skript.Skript;
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Does nothing but print messages before the first error encountered and/or a message at the end if no error were encountered.

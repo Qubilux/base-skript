@@ -26,7 +26,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -83,12 +83,12 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	protected final T[] get(Event event) {
+	protected final T[] get(Object event) {
 		return get(event, expr.getArray(event));
 	}
 
 	@Override
-	public final T[] getAll(Event event) {
+	public final T[] getAll(Object event) {
 		T[] result = get(event, expr.getAll(event));
 		return Arrays.copyOf(result, result.length);
 	}
@@ -103,7 +103,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	 * @return An array of the converted objects, which may contain less elements than the source array, but must not be null.
 	 * @see Converters#convert(Object[], Class, Converter)
 	 */
-	protected abstract T[] get(Event event, F[] source);
+	protected abstract T[] get(Object event, F[] source);
 
 	/**
 	 * @param source the array of the objects from the expressions.

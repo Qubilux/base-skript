@@ -22,7 +22,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
@@ -137,8 +137,8 @@ public abstract class Node {
 			handleNodeStackOverflow(e, line);
 		}
 		if (matches)
-			return new NonNullPair<String, String>("" + m.group(1).replace("##", "#"), "" + m.group(2));
-		return new NonNullPair<String, String>("" + line.replace("##", "#"), "");
+			return new NonNullPair<String, String>(m.group(1).replace("##", "#"), m.group(2));
+		return new NonNullPair<String, String>(line.replace("##", "#"), "");
 	}
 	
 	static void handleNodeStackOverflow(StackOverflowError e, String line) {

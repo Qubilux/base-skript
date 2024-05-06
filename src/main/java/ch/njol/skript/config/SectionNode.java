@@ -24,11 +24,10 @@ import ch.njol.skript.config.validate.EntryValidator;
 import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.NonNullPair;
-import ch.njol.util.NullableChecker;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -136,7 +135,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	@Override
 	public Iterator<Node> iterator() {
 		@SuppressWarnings("null")
-		@NonNull
+		@NotNull
 		final Iterator<Node> iter = nodes.iterator();
 		return new CheckedIterator<Node>(iter, n -> n != null && !n.isVoid()) {
 			@Override
@@ -289,7 +288,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 			if (!value.matches("\\s*") && !value.matches("^(" + config.getIndentation() + "){" + config.level + "}\\S.*")) {
 				if (value.matches("^(" + config.getIndentation() + "){" + config.level + "}\\s.*") || !value.matches("^(" + config.getIndentation() + ")*\\S.*")) {
 					nodes.add(new InvalidNode(value, comment, this, r.getLineNum()));
-					final String s = "" + value.replaceFirst("\\S.*$", "");
+					final String s = value.replaceFirst("\\S.*$", "");
 					Skript.error("indentation error: expected " + config.level * config.getIndentation().length() + " " + config.getIndentationName() + (config.level * config.getIndentation().length() == 1 ? "" : "s") + ", but found " + readableWhitespace(s));
 					continue;
 				} else {
@@ -344,7 +343,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 					Node.handleNodeStackOverflow(e, fullLine);
 				}
 				if (!matches) {
-					nodes.add(SectionNode.load("" + value.substring(0, value.length() - 1), comment, this, r));
+					nodes.add(SectionNode.load(value.substring(0, value.length() - 1), comment, this, r));
 					continue;
 				}
 			}
@@ -370,8 +369,8 @@ public class SectionNode extends Node implements Iterable<Node> {
 			SkriptLogger.setNode(this);
 			return in;
 		}
-		final String key = "" + keyAndValue.substring(0, x).trim();
-		final String value = "" + keyAndValue.substring(x + separator.length()).trim();
+		final String key = keyAndValue.substring(0, x).trim();
+		final String value = keyAndValue.substring(x + separator.length()).trim();
 		return new EntryNode(key, value, comment, this, lineNum);
 	}
 	

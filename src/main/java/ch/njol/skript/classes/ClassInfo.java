@@ -26,9 +26,8 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Noun;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 import org.skriptlang.skript.lang.arithmetic.Operator;
 
@@ -241,7 +240,7 @@ public class ClassInfo<T> implements Debuggable {
 	/**
 	 * Use this as {@link #name(String)} to suppress warnings about missing documentation.
 	 */
-	public final static String NO_DOC = new String();
+	public final static String NO_DOC = "";
 	
 	/**
 	 * Only used for Skript's documentation.
@@ -514,7 +513,7 @@ public class ClassInfo<T> implements Debuggable {
 	// === GENERAL ===
 	
 	@Override
-	@NonNull
+	@NotNull
 	public String toString() {
 		return getName().getSingular();
 	}
@@ -524,8 +523,8 @@ public class ClassInfo<T> implements Debuggable {
 	}
 	
 	@Override
-	@NonNull
-	public String toString(final @Nullable Event event, final boolean debug) {
+	@NotNull
+	public String toString(final @Nullable Object event, final boolean debug) {
 		if (debug)
 			return codeName + " (" + c.getCanonicalName() + ")";
 		return getName().getSingular();

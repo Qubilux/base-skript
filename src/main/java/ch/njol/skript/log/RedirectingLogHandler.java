@@ -20,7 +20,7 @@ package ch.njol.skript.log;
 
 import ultreon.baseskript.CommandSender;
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Redirects the log to a {@link CommandSender}.

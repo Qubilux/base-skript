@@ -19,7 +19,7 @@
 package ch.njol.skript.localization;
 
 import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class Message {
 	boolean revalidate = true;
 
 	public Message(final String key) {
-		this.key = "" + key.toLowerCase(Locale.ENGLISH);
+		this.key = key.toLowerCase(Locale.ENGLISH);
 		messages.add(this);
 
 		if (Skript.testing() && Language.isInitialized() && !Language.keyExists(this.key))
@@ -68,7 +68,7 @@ public class Message {
 	@Override
 	public String toString() {
 		validate();
-		return value == null ? key : "" + value;
+		return value == null ? key : value;
 	}
 	
 	/**

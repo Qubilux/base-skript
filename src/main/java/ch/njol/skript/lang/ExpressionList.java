@@ -26,9 +26,8 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -77,7 +76,7 @@ public class ExpressionList<T> implements Expression<T> {
 
 	@Override
 	@Nullable
-	public T getSingle(Event event) {
+	public T getSingle(Object event) {
 		if (!single)
 			throw new UnsupportedOperationException();
 		Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
@@ -86,7 +85,7 @@ public class ExpressionList<T> implements Expression<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T[] getArray(Event event) {
+	public T[] getArray(Object event) {
 		if (and)
 			return getAll(event);
 		Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
@@ -95,7 +94,7 @@ public class ExpressionList<T> implements Expression<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T[] getAll(Event event) {
+	public T[] getAll(Object event) {
 		List<T> values = new ArrayList<T>();
 		for (Expression<? extends T> expr : expressions)
 			values.addAll(Arrays.asList(expr.getAll(event)));
@@ -104,7 +103,7 @@ public class ExpressionList<T> implements Expression<T> {
 
 	@Override
 	@Nullable
-	public Iterator<? extends T> iterator(Event event) {
+	public Iterator<? extends T> iterator(Object event) {
 		if (!and) {
 			Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
 			return expression != null ? expression.iterator(event) : null;
@@ -147,7 +146,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super T> checker, boolean negated) {
 		for (Expression<? extends T> expr : expressions) {
 			boolean result = expr.check(event, checker) ^ negated;
 			// exit early if we find a FALSE and we're ANDing, or a TRUE and we're ORing
@@ -160,7 +159,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker) {
+	public boolean check(Object event, Checker<? super T> checker) {
 		return check(event, checker, false);
 	}
 
@@ -215,7 +214,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		for (Expression<?> expr : expressions) {
 			expr.change(event, delta, mode);
 		}
@@ -259,7 +258,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		StringBuilder result = new StringBuilder("(");
 		for (int i = 0; i < expressions.length; i++) {
 			if (i != 0) {

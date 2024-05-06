@@ -21,8 +21,7 @@ package ch.njol.skript.lang;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -92,16 +91,16 @@ public abstract class TriggerSection extends TriggerItem {
 	}
 
 	@Override
-	protected final boolean run(Event event) {
+	protected final boolean run(Object event) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	@Nullable
-	protected abstract TriggerItem walk(Event event);
+	protected abstract TriggerItem walk(Object event);
 
 	@Nullable
-	protected final TriggerItem walk(Event event, boolean run) {
+	protected final TriggerItem walk(Object event, boolean run) {
 		debug(event, run);
 		if (run && first != null) {
 			return first;

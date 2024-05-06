@@ -3,9 +3,7 @@ package ultreon.baseskript;
 import ch.njol.skript.Skript;
 import ultreon.baseskript.classes.data.AWTClasses;
 import ultreon.baseskript.plugins.PluginDescriptionFile;
-
-import java.io.File;
-import java.io.InputStream;
+import ultreon.baseskript.plugins.PluginDescriptionFileImpl;
 
 public class ExtLoader implements Plugin {
 	public ExtLoader() {
@@ -20,16 +18,6 @@ public class ExtLoader implements Plugin {
 	@Override
 	public String getVersion0() {
 		return "1.0.0";
-	}
-
-	@Override
-	public InputStream getResource(String name) {
-		return getClass().getResourceAsStream("/" + name);
-	}
-
-	@Override
-	public File getDataFolder() {
-		return new File(".skript/ext");
 	}
 
 	@Override
@@ -52,6 +40,6 @@ public class ExtLoader implements Plugin {
 
 	@Override
 	public PluginDescriptionFile getDescription() {
-		return null;
+		return new PluginDescriptionFileImpl(getName(), getVersion0());
 	}
 }

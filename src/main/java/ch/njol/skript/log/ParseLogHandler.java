@@ -19,9 +19,9 @@
 package ch.njol.skript.log;
 
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

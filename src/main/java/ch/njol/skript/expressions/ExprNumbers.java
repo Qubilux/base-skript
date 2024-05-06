@@ -29,9 +29,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -68,7 +67,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number @NotNull [] get(final @NotNull Event event) {
+	protected Number @NotNull [] get(final @NotNull Object event) {
 		Number s = start.getSingle(event), f = end.getSingle(event);
 		if (s == null || f == null)
 			return null;
@@ -110,7 +109,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	public Iterator<Number> iterator(final @NotNull Event event) {
+	public Iterator<Number> iterator(final @NotNull Object event) {
 		Number s = start.getSingle(event), f = end.getSingle(event);
 		if (s == null || f == null)
 			return null;
@@ -188,7 +187,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals");
 		return modeString + " from " + start.toString(e, debug) + " to " + end.toString(e, debug);
 	}

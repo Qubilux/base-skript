@@ -23,19 +23,14 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.LoopSection;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.sections.SecConditional;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -114,7 +109,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 	
 	@Override
 	@Nullable
-	protected TriggerItem walk(@NotNull Event event) {
+	protected TriggerItem walk(@NotNull Object event) {
 		debug(event, false);
 		TriggerItem node = this;
 		for (int i = breakLevels; i > 0;) {
@@ -133,12 +128,12 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 	}
 	
 	@Override
-	protected void execute(@NotNull Event event) {
+	protected void execute(@NotNull Object event) {
 		assert false;
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "stop " + breakLevels + " " + names[type];
 	}
 	

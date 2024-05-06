@@ -18,12 +18,10 @@
  */
 package ch.njol.skript.events.util;
 
-import ultreon.baseskript.event.Event;
-
 /**
  * Called when Skript starts (after everything was loaded)
  * 
  * @author Peter Güttinger
  */
-public class SkriptStartEvent extends Event {
+public class SkriptStartEvent {
 }

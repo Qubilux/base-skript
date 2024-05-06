@@ -18,13 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -36,6 +29,12 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 @Name("Hash")
@@ -63,7 +62,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	}
 	
 	@SuppressWarnings("null")
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
+	private final static Charset UTF_8 = StandardCharsets.UTF_8;
 	
 	@Nullable
 	static MessageDigest md5;
@@ -91,7 +90,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected String @NotNull [] get(final @NotNull Event e, final String @NotNull [] source) {
+	protected String @NotNull [] get(final @NotNull Object e, final String @NotNull [] source) {
 		// These can't be null
 		assert md5 != null;
 		assert sha256 != null;
@@ -124,7 +123,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "hash of " + getExpr();
 	}
 	

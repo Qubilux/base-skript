@@ -19,7 +19,7 @@
 package ch.njol.skript.util;
 
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -54,7 +54,7 @@ public class Timeperiod implements YggdrasilSerializable {
 	 */
 	@Override
 	public String toString() {
-		return "" + Time.toString(start) + (start == end ? "" : "-" + Time.toString(end));
+		return Time.toString(start) + (start == end ? "" : "-" + Time.toString(end));
 	}
 	
 	@Override
@@ -66,9 +66,8 @@ public class Timeperiod implements YggdrasilSerializable {
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof Timeperiod))
+		if (!(obj instanceof Timeperiod other))
 			return false;
-		final Timeperiod other = (Timeperiod) obj;
 		return (end == other.end && start == other.start);
 	}
 	

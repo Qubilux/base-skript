@@ -19,7 +19,7 @@
 package ch.njol.skript.localization;
 
 import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -76,7 +76,7 @@ public class Adjective extends Message {
 		validate();
 		if (Skript.testing())
 			Skript.warning("Invalid use of Adjective.toString()");
-		return "" + def;
+		return def;
 	}
 	
 	public String toString(int gender, int flags) {
@@ -88,7 +88,7 @@ public class Adjective extends Message {
 		String a = genders.get(gender);
 		if (a != null)
 			return a;
-		return "" + def;
+		return def;
 	}
 	
 	public static String toString(Adjective[] adjectives, int gender, int flags, boolean and) {
@@ -102,7 +102,7 @@ public class Adjective extends Message {
 			}
 			b.append(adjectives[i].toString(gender, flags));
 		}
-		return "" + b.toString();
+		return String.valueOf(b);
 	}
 	
 	public String toString(Noun n, int flags) {

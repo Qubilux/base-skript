@@ -20,8 +20,7 @@ package ch.njol.skript.classes;
 
 import ch.njol.skript.lang.Debuggable;
 import ch.njol.skript.registrations.Classes;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.Arrays;
@@ -41,19 +40,19 @@ public interface Converter<F, T> {
 	/**
 	 * Disallow other converters from being chained to this.
 	 */
-	public final static int NO_LEFT_CHAINING = 1;
+	int NO_LEFT_CHAINING = 1;
 	
 	/**
 	 * Disallow chaining this with other converters.
 	 */
-	public final static int NO_RIGHT_CHAINING = 2;
+	int NO_RIGHT_CHAINING = 2;
 	
 	/**
 	 * Disallow all chaining.
 	 */
-	public final static int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
+	int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
 	
-	public final static int NO_COMMAND_ARGUMENTS = 4;
+	int NO_COMMAND_ARGUMENTS = 4;
 	
 	/**
 	 * holds information about a converter
@@ -62,7 +61,7 @@ public interface Converter<F, T> {
 	 * @param <F> same as in {@link Converter}
 	 * @param <T> dito
 	 */
-	public final static class ConverterInfo<F, T> implements Debuggable {
+	final class ConverterInfo<F, T> implements Debuggable {
 		
 		public final Class<F> from;
 		public final Class<T> to;
@@ -97,7 +96,7 @@ public interface Converter<F, T> {
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable Object event, boolean debug) {
 			if (debug) {
 				String str = Arrays.stream(chain).map(c -> Classes.getExactClassName(c)).collect(Collectors.joining(" -> "));
 				assert str != null;
@@ -115,9 +114,9 @@ public interface Converter<F, T> {
 	 * @return the converted object
 	 */
 	@Nullable
-	public T convert(F f);
+	T convert(F f);
 	
-	public final static class ConverterUtils {
+	final class ConverterUtils {
 		
 		public static <F, T> Converter<?, T> createInstanceofConverter(final ConverterInfo<F, T> conv) {
 			return createInstanceofConverter(conv.from, conv.converter);

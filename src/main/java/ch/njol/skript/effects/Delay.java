@@ -29,10 +29,9 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.BaseSkript;
 
 import java.util.Collections;
 import java.util.Set;
@@ -72,7 +71,7 @@ public class Delay extends Effect {
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(@NotNull Event event) {
+	protected TriggerItem walk(@NotNull Object event) {
 		debug(event, true);
 		long start = Skript.debug() ? System.nanoTime() : 0;
 		TriggerItem next = getNext();
@@ -110,24 +109,24 @@ public class Delay extends Effect {
 	}
 
 	@Override
-	protected void execute(@NotNull Event event) {
+	protected void execute(@NotNull Object event) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "wait for " + duration.toString(event, debug) + (event == null ? "" : "...");
 	}
 
-	private static final Set<Event> DELAYED =
-		Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<Event, Boolean>()));
+	private static final Set<Object> DELAYED =
+		Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<Object, Boolean>()));
 
 	/**
 	 * The main method for checking if the execution of {@link TriggerItem}s has been delayed.
 	 * @param event The event to check for a delay.
 	 * @return Whether {@link TriggerItem} execution has been delayed.
 	 */
-	public static boolean isDelayed(Event event) {
+	public static boolean isDelayed(Object event) {
 		return DELAYED.contains(event);
 	}
 
@@ -135,7 +134,7 @@ public class Delay extends Effect {
 	 * The main method for marking the execution of {@link TriggerItem}s as delayed.
 	 * @param event The event to mark as delayed.
 	 */
-	public static void addDelayedEvent(Event event) {
+	public static void addDelayedEvent(Object event) {
 		DELAYED.add(event);
 	}
 

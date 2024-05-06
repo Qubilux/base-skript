@@ -22,8 +22,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.ChatColor;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
@@ -130,7 +130,7 @@ public class MessageComponent {
 			this.value = value;
 		}
 		
-		public static enum Action {
+		public enum Action {
 			
 			show_text,
 			
@@ -185,13 +185,13 @@ public class MessageComponent {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		if (reset) sb.append(ChatColor.RESET.toString());
-		if (color != null && color.isColor()) sb.append(color.toString());
-		if (bold) sb.append(ChatColor.BOLD.toString());
-		if (italic) sb.append(ChatColor.ITALIC.toString());
-		if (underlined) sb.append(ChatColor.UNDERLINE.toString());
-		if (strikethrough) sb.append(ChatColor.STRIKETHROUGH.toString());
-		if (obfuscated) sb.append(ChatColor.MAGIC.toString());
+		if (reset) sb.append(ChatColor.RESET);
+		if (color != null && color.isColor()) sb.append(color);
+		if (bold) sb.append(ChatColor.BOLD);
+		if (italic) sb.append(ChatColor.ITALIC);
+		if (underlined) sb.append(ChatColor.UNDERLINE);
+		if (strikethrough) sb.append(ChatColor.STRIKETHROUGH);
+		if (obfuscated) sb.append(ChatColor.MAGIC);
 		if (insertion != null) sb.append(insertion);
 		return sb.append(text).toString();
 	}

@@ -35,9 +35,8 @@ import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.ComparatorInfo;
 import org.skriptlang.skript.lang.comparator.Comparators;
@@ -331,7 +330,7 @@ public class CondCompare extends Condition {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean check(final @NotNull Event e) {
+	public boolean check(final @NotNull Object e) {
 		final Expression<?> third = this.third;
 		return first.check(e, (Checker<Object>) o1 ->
 			second.check(e, (Checker<Object>) o2 -> {
@@ -371,7 +370,7 @@ public class CondCompare extends Condition {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		String s;
 		final Expression<?> third = this.third;
 		if (third == null)

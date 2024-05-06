@@ -27,9 +27,8 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -93,20 +92,20 @@ public class EffContinue extends Effect {
 	}
 
 	@Override
-	protected void execute(@NotNull Event event) {
+	protected void execute(@NotNull Object event) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(@NotNull Event event) {
+	protected TriggerItem walk(@NotNull Object event) {
 		for (LoopSection loop : innerLoops)
 			loop.exit(event);
 		return loop;
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "continue";
 	}
 

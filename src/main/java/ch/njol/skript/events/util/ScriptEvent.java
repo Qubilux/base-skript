@@ -18,11 +18,9 @@
  */
 package ch.njol.skript.events.util;
 
-import ultreon.baseskript.event.Event;
-
 /**
  * @author Peter Güttinger
  */
-public class ScriptEvent extends Event {
+public class ScriptEvent {
 	public ScriptEvent() {}
 }

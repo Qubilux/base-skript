@@ -26,8 +26,7 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Check JUnit")
 @Description({
@@ -47,12 +46,12 @@ public class CondRunningJUnit extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(Object event) {
 		return TestMode.JUNIT;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "running JUnit";
 	}
 

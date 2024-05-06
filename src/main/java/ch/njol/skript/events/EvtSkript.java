@@ -26,9 +26,8 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +48,7 @@ public class EvtSkript extends SkriptEvent {
 	private static final List<Trigger> STOP = Collections.synchronizedList(new ArrayList<Trigger>());
 
 	public static void onSkriptStart() {
-		Event event = new SkriptStartEvent();
+		SkriptStartEvent event = new SkriptStartEvent();
 		synchronized (START) {
 			for (Trigger trigger : START)
 				trigger.execute(event);
@@ -58,7 +57,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 
 	public static void onSkriptStop() {
-		Event event = new SkriptStopEvent();
+		SkriptStopEvent event = new SkriptStopEvent();
 		synchronized (STOP) {
 			for (Trigger trigger : STOP)
 				trigger.execute(event);
@@ -86,7 +85,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(@NotNull Event event) {
+	public boolean check(@NotNull Object event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -96,7 +95,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "on skript " + (isStart ? "start" : "stop");
 	}
 	

@@ -19,8 +19,7 @@
 package ch.njol.util.coll;
 
 import ch.njol.util.Pair;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -45,7 +44,7 @@ public abstract class CollectionUtils {
 		if (array == null)
 			return -1;
 		for (int i = 0; i < array.length; i++) {
-			if (array[i] == null ? t == null : array[i].equals(t))
+			if (Objects.equals(array[i], t))
 				return i;
 		}
 		return -1;
@@ -55,7 +54,7 @@ public abstract class CollectionUtils {
 		if (array == null)
 			return -1;
 		for (int i = array.length - 1; i >= 0; i--) {
-			if (array[i] == null ? t == null : array[i].equals(t))
+			if (Objects.equals(array[i], t))
 				return i;
 		}
 		return -1;
@@ -156,7 +155,7 @@ public abstract class CollectionUtils {
 			return -1;
 		int i = 0;
 		for (final T a : iter) {
-			if (a == null ? o == null : a.equals(o))
+			if (Objects.equals(a, o))
 				return i;
 			i++;
 		}

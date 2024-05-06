@@ -18,7 +18,7 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,7 +33,7 @@ import java.util.NoSuchElementException;
 public class CombinedIterator<T> implements Iterator<T> {
 	
 	private final Iterator<? extends Iterable<T>> iterators;
-	private boolean removable;
+	private final boolean removable;
 	
 	public CombinedIterator(final Iterator<? extends Iterable<T>> iterators) {
 		this(iterators, true);

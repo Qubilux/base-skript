@@ -34,16 +34,17 @@ import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.SerializedVariable;
 import ch.njol.util.StringUtils;
 import com.google.gson.Gson;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.ChatColor;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.ChatColor;
 
 import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -343,7 +344,7 @@ public abstract class Classes {
 	@Nullable
 	public static ClassInfo<?> getClassInfoFromUserInput(String name) {
 		checkAllowClassInfoInteraction();
-		name = "" + name.toLowerCase(Locale.ENGLISH);
+		name = name.toLowerCase(Locale.ENGLISH);
 		for (final ClassInfo<?> ci : getClassInfos()) {
 			final Pattern[] uip = ci.getUserInputPatterns();
 			if (uip == null)
@@ -619,7 +620,7 @@ public abstract class Classes {
 				b.append(toString(i, mode, flags));
 				first = false;
 			}
-			return "[" + b.toString() + "]";
+			return "[" + b + "]";
 		}
 		for (final ClassInfo<?> ci : getClassInfos()) {
 			final Parser<?> parser = ci.getParser();
@@ -659,7 +660,7 @@ public abstract class Classes {
 		for (int i = 0; i < os.length; i++) {
 			if (i != 0) {
 				if (c != null)
-					b.append(c.toString());
+					b.append(c);
 				if (i == os.length - 1)
 					b.append(and ? " and " : " or ");
 				else
@@ -667,11 +668,11 @@ public abstract class Classes {
 			}
 			b.append(toString(os[i], mode, flags));
 		}
-		return "" + b.toString();
+		return String.valueOf(b);
 	}
 
 	@SuppressWarnings("null")
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
+	private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 	/**
 	 * Must be called on the appropriate thread for the given value (i.e. the main thread currently)
@@ -701,7 +702,7 @@ public abstract class Classes {
 		if (s == null) // value cannot be saved
 			return null;
 		
-		assert s.mustSyncDeserialization() ? BaseSkript.isPrimaryThread() : true;
+		assert !s.mustSyncDeserialization() || BaseSkript.isPrimaryThread();
 
         final ByteArrayOutputStream bout = new ByteArrayOutputStream();
         final OutputStreamWriter osw = new OutputStreamWriter(bout, UTF_8);
@@ -714,7 +715,7 @@ public abstract class Classes {
 	
 	private static boolean equals(final @Nullable Object o, final @Nullable Object d) {
 		// Todo: UT - Equality API
-		return o == null ? d == null : o.equals(d);
+		return Objects.equals(o, d);
 	}
 	
 	@Nullable
@@ -733,7 +734,7 @@ public abstract class Classes {
 	@Nullable
 	public static Object deserialize(final ClassInfo<?> type, InputStream value) {
 		Serializer<?> s;
-		assert (s = type.getSerializer()) != null && (s.mustSyncDeserialization() ? BaseSkript.isPrimaryThread() : true) : type + "; " + s + "; " + BaseSkript.isPrimaryThread();
+		assert (s = type.getSerializer()) != null && (!s.mustSyncDeserialization() || BaseSkript.isPrimaryThread()) : type + "; " + s + "; " + BaseSkript.isPrimaryThread();
 		InputStreamReader in = null;
 		try {
             in = new InputStreamReader(value);

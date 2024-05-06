@@ -28,10 +28,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Characters Between")
 @Description({
@@ -72,7 +71,7 @@ public class ExprCharacters extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String @NotNull [] get(@NotNull Event event) {
+	protected String @NotNull [] get(@NotNull Object event) {
 		String start = this.start.getSingle(event);
 		String end = this.end.getSingle(event);
 		if (start == null || end == null)
@@ -115,7 +114,7 @@ public class ExprCharacters extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "all the " + (isAlphanumeric ? "alphanumeric " : "") + "characters between " + start.toString(event, debug) + " and " + end.toString(event, debug);
 	}
 }

@@ -25,9 +25,8 @@ import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.structures.StructEvent;
-import ultreon.baseskript.event.Event;
-import ultreon.baseskript.event.EventPriority;
-import org.eclipse.jdt.annotation.Nullable;
+import com.ultreon.libs.events.v0.EventPriority;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -106,7 +105,7 @@ public abstract class SkriptEvent extends Structure {
 		if (Skript.debug() || source.debug())
 			Skript.debug(expr + " (" + this + "):");
 
-		Class<? extends Event>[] eventClasses = getEventClasses();
+		Class<? extends Object>[] eventClasses = getEventClasses();
 
 		try {
 			getParser().setCurrentEvent(skriptEventInfo.getName().toLowerCase(Locale.ENGLISH), eventClasses);
@@ -165,7 +164,7 @@ public abstract class SkriptEvent extends Structure {
 	 * will only be called for events this SkriptEvent is registered for.
 	 * @return true if this is SkriptEvent is represented by the Bukkit Event or false if not
 	 */
-	public abstract boolean check(Event event);
+	public abstract boolean check(Object event);
 
 	/**
 	 * Script loader checks this before loading items in event. If false is
@@ -179,7 +178,7 @@ public abstract class SkriptEvent extends Structure {
 	/**
 	 * @return the Event classes to use in {@link ch.njol.skript.lang.parser.ParserInstance}.
 	 */
-	public Class<? extends Event>[] getEventClasses() {
+	public Class<? extends Object>[] getEventClasses() {
 		return skriptEventInfo.events;
 	}
 

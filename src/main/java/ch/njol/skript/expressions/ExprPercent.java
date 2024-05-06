@@ -28,9 +28,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Percent of")
 @Description("Returns a percentage of one or more numbers.")
@@ -59,7 +58,7 @@ public class ExprPercent extends SimpleExpression<Number> {
 	}
 
 	@Override
-	protected @Nullable Number @NotNull [] get(@NotNull Event event) {
+	protected @Nullable Number @NotNull [] get(@NotNull Object event) {
 		Number percent = this.percent.getSingle(event);
 		Number[] numbers = this.numbers.getArray(event);
 		if (percent == null || numbers.length == 0)
@@ -84,7 +83,7 @@ public class ExprPercent extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return percent.toString(event, debug) + " percent of " + numbers.toString(event, debug);
 	}
 

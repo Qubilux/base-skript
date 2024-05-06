@@ -20,7 +20,7 @@ package ch.njol.skript.util.chat;
 
 import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
 import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Chat codes that come with Skript by default.
@@ -166,13 +166,13 @@ public enum SkriptChatCode implements ChatCode {
 		}
     };
 
-	private boolean hasParam;
+	private final boolean hasParam;
 	
 	@Nullable
 	private String colorCode;
 	
 	@Nullable
-	private String langName;
+	private final String langName;
 	
 	private char colorChar;
 	

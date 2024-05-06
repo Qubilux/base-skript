@@ -19,13 +19,10 @@
 package ch.njol.util.coll;
 
 import ch.njol.util.coll.iterator.ReversedListIterator;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * @author Peter Güttinger
@@ -197,16 +194,15 @@ public class ReversedListView<T> implements List<T> {
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof List<?>))
+		if (!(obj instanceof List<?> other))
 			return false;
-		final List<?> other = (List<?>) obj;
 		if (other.size() != this.size())
 			return false;
 		final Iterator<?> os = other.iterator();
 		final Iterator<T> ts = this.iterator();
 		while (ts.hasNext()) {
 			final Object t = ts.next(), o = os.next();
-			if (t == null ? o != null : !t.equals(o))
+			if (!Objects.equals(t, o))
 				return false;
 		}
 		return true;

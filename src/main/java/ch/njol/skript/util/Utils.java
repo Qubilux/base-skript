@@ -21,19 +21,22 @@ package ch.njol.skript.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.util.*;
+import ch.njol.util.Checker;
+import ch.njol.util.NonNullPair;
+import ch.njol.util.Pair;
+import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.EnumerationIterable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.ChatColor;
 import ultreon.baseskript.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import ultreon.baseskript.PluginClassesProvider;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,29 +149,19 @@ public abstract class Utils {
 	 * @return This SkriptAddon
 	 */
 	public static Class<?>[] getClasses(Plugin plugin, String basePackage, String... subPackages) throws IOException {
+		PluginClassesProvider provider = PluginClassesProvider.get(plugin);
+		if (provider != null) {
+			return provider.getClasses(basePackage, subPackages);
+		}
+
 		assert subPackages != null;
-		JarFile jar = new JarFile(getFile(plugin));
+		JarInputStream jar = new JarInputStream(getLocation(plugin).openStream());
 		for (int i = 0; i < subPackages.length; i++)
 			subPackages[i] = subPackages[i].replace('.', '/') + "/";
 		basePackage = basePackage.replace('.', '/') + "/";
 		List<Class<?>> classes = new ArrayList<>();
 		try {
-			List<String> classNames = new ArrayList<>();
-
-			for (JarEntry e : new EnumerationIterable<>(jar.entries())) {
-				if (e.getName().startsWith(basePackage) && e.getName().endsWith(".class") && !e.getName().endsWith("package-info.class")) {
-					boolean load = subPackages.length == 0;
-					for (String sub : subPackages) {
-						if (e.getName().startsWith(sub, basePackage.length())) {
-							load = true;
-							break;
-						}
-					}
-
-					if (load)
-						classNames.add(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()));
-				}
-			}
+			List<String> classNames = checkClasses(basePackage, subPackages, jar);
 
 			classNames.sort(String::compareToIgnoreCase);
 
@@ -189,15 +182,36 @@ public abstract class Utils {
 		return classes.toArray(new Class<?>[classes.size()]);
 	}
 
+	private static @NotNull List<String> checkClasses(String basePackage, String[] subPackages, JarInputStream jar) throws IOException {
+		List<String> classNames = new ArrayList<>();
+
+		JarEntry e;
+		while ((e = jar.getNextJarEntry()) != null) {
+			if (e.getName().startsWith(basePackage) && e.getName().endsWith(".class") && !e.getName().endsWith("package-info.class")) {
+				boolean load = subPackages.length == 0;
+				for (String sub : subPackages) {
+					if (e.getName().startsWith(sub, basePackage.length())) {
+						load = true;
+						break;
+					}
+				}
+
+				if (load)
+					classNames.add(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()));
+			}
+		}
+		return classNames;
+	}
+
 	/**
 	 * The first invocation of this method uses reflection to invoke the protected method {@link JavaPlugin#getFile()} to get the plugin's jar file.
 	 *
 	 * @return The jar file of the plugin.
 	 */
 	@Nullable
-	public static File getFile(Plugin plugin) {
+	public static URL getLocation(Plugin plugin) {
 		try {
-			return plugin.getFile();
+			return plugin.getPluginLocation();
 		} catch (IllegalArgumentException e) {
 			Skript.outdatedError(e);
 		} catch (SecurityException e) {
@@ -370,8 +384,8 @@ public abstract class Utils {
 	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll(Matcher.quoteReplacement("" + message.replace("<<none>>", "")), stylePattern, m1 -> {
-			SkriptColor color = SkriptColor.fromName("" + m1.group(1));
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement(message.replace("<<none>>", "")), stylePattern, m1 -> {
+			SkriptColor color = SkriptColor.fromName(m1.group(1));
 			if (color != null)
 				return color.getFormattedChat();
 			final String tag = m1.group(1).toLowerCase(Locale.ENGLISH);
@@ -383,7 +397,7 @@ public abstract class Utils {
 				if (chatColor != null)
 					return chatColor.toString();
 			}
-			return "" + m1.group();
+			return m1.group();
 		});
 		assert m != null;
 		// Restore user input post-sanitization
@@ -391,8 +405,8 @@ public abstract class Utils {
 		if (!message.equals(m)) {
 			m = m.replace("\\$", "$").replace("\\\\", "\\");
 		}
-		m = ChatColor.translateAlternateColorCodes('&', "" + m);
-		return "" + m;
+		m = ChatColor.translateAlternateColorCodes('&', m);
+		return m;
 	}
 
     /**

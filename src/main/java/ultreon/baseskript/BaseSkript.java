@@ -2,23 +2,25 @@ package ultreon.baseskript;
 
 import ch.njol.skript.Skript;
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ultreon.baseskript.event.EventBus;
 import ultreon.baseskript.plugins.PluginManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.jar.JarFile;
 
 public class BaseSkript {
-    private static final EventBus EVENT_BUS = new EventBus("Skript");
-	private static final Logger LOGGER = LogManager.getLogger("BaseSkript");
+    private static final EventBus EVENT_BUS = new EventBus();
+	public static final Logger LOGGER = LogManager.getLogger("BaseSkript");
 	private static Thread primaryThread;
     private static BaseSkript instance;
     private static final SchedulerImpl scheduler = new SchedulerImpl();
-    private static PluginManager pluginManager = new PluginManager();
+    private static final PluginManager pluginManager = new PluginManager();
     private static boolean running = true;
     private static boolean starting = true;
 	private static Skript skript;
@@ -105,11 +107,7 @@ public class BaseSkript {
         return "unknown";
     }
 
-    public static Void getServer() {
-        return null;
-    }
-
-    public static boolean isRunning() {
+	public static boolean isRunning() {
         return running;
     }
 
@@ -126,18 +124,31 @@ public class BaseSkript {
 	}
 
 	public static <T> Plugin getProvidingPlugin(Class<? extends T> elementClass) {
+		LOGGER.warn("Deprecated usage of BaseSkript.getProvidingPlugin");
+
 		for (Plugin plugin : pluginManager.getPlugins()) {
-			File file = plugin.getFile();
-			try {
-				JarFile jarFile = new JarFile(file);
-				if (jarFile.getEntry(elementClass.getName().replace('.', '/') + ".class") != null) {
-					return plugin;
+			URL pluginLocation = plugin.getPluginLocation();
+			if (pluginLocation.getProtocol().equals("file")) {
+				File file = null;
+				try {
+					file = new File(pluginLocation.toURI());
+				} catch (URISyntaxException ignored) {
+
 				}
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+				if (!file.exists() || !file.isFile() || !file.getName().endsWith(".jar"))
+					continue;
+				try {
+					JarFile jarFile = new JarFile(file);
+					if (jarFile.getEntry(elementClass.getName().replace('.', '/') + ".class") != null) {
+						return plugin;
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
-		return null;
+
+		throw new IllegalStateException("No plugin providing " + elementClass.getName());
 	}
 
 	public static void dispatchCommand(CommandSender consoleSender, String s) {

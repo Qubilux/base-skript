@@ -32,7 +32,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +140,7 @@ public final class Parameter<T> {
 					Skript.error("The " + StringUtils.fancyOrderNumber(params.size() + 1) + " argument's definition is invalid. It should look like 'name: type' or 'name: type = default value'.");
 					return null;
 				}
-				String paramName = "" + n.group(1);
+				String paramName = n.group(1);
 				// for comparing without affecting the original name, in case the config option for case insensitivity changes.
 				String lowerParamName = paramName.toLowerCase(Locale.ENGLISH);
 				for (Parameter<?> p : params) {
@@ -152,8 +152,8 @@ public final class Parameter<T> {
 					}
 				}
 				ClassInfo<?> c;
-				c = Classes.getClassInfoFromUserInput("" + n.group(2));
-				NonNullPair<String, Boolean> pl = Utils.getEnglishPlural("" + n.group(2));
+				c = Classes.getClassInfoFromUserInput(n.group(2));
+				NonNullPair<String, Boolean> pl = Utils.getEnglishPlural(n.group(2));
 				if (c == null)
 					c = Classes.getClassInfoFromUserInput(pl.getFirst());
 				if (c == null) {

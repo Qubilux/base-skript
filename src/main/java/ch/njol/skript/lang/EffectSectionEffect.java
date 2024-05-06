@@ -20,8 +20,7 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents the Effect aspect of an EffectSection. This allows for the use of EffectSections as effects, rather than just sections.
@@ -40,10 +39,10 @@ public class EffectSectionEffect extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) { }
+	protected void execute(Object event) { }
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	protected @Nullable TriggerItem walk(Object event) {
 		return effectSection.walk(event);
 	}
 
@@ -68,7 +67,7 @@ public class EffectSectionEffect extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return effectSection.toString(event, debug);
 	}
 

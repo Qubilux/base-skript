@@ -18,21 +18,15 @@
  */
 package ch.njol.skript.effects;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.*;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Do If")
 @Description("Execute an effect if a condition is true.")
@@ -66,11 +60,11 @@ public class EffDoIf extends Effect  {
 	}
 
 	@Override
-	protected void execute(@NotNull Event e) {}
+	protected void execute(@NotNull Object e) {}
 	
 	@Nullable
 	@Override
-	public TriggerItem walk(@NotNull Event e) {
+	public TriggerItem walk(@NotNull Object e) {
 		if (condition.check(e)) {
 			effect.setParent(getParent());
 			effect.setNext(getNext());
@@ -80,7 +74,7 @@ public class EffDoIf extends Effect  {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return effect.toString(e, debug) + " if " + condition.toString(e, debug);
 	}
 

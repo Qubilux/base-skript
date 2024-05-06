@@ -30,9 +30,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Date Ago/Later")
 @Description("A date the specified timespan before/after another date.")
@@ -66,7 +65,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     @Override
     @Nullable
     @SuppressWarnings("null")
-    protected Date @NotNull [] get(@NotNull Event e) {
+    protected Date @NotNull [] get(@NotNull Object e) {
         Timespan timespan = this.timespan.getSingle(e);
 		Date date = this.date != null ? this.date.getSingle(e) : new Date();
 		if (timespan == null || date == null)
@@ -86,7 +85,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean debug) {
+    public @NotNull String toString(@Nullable Object e, boolean debug) {
         return timespan.toString(e, debug) + " " + (ago ? (date != null ? "before " + date.toString(e, debug) : "ago")
 			: (date != null ? "after " + date.toString(e, debug) : "later"));
     }

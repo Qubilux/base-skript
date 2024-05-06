@@ -22,13 +22,13 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.LogHandler.LogResult;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.CommandSender;
-import ultreon.baseskript.ConsoleCommandSender;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.BaseSkript;
+import ultreon.baseskript.CommandSender;
+import ultreon.baseskript.ConsoleCommandSender;
 
 import java.util.Collection;
 /**

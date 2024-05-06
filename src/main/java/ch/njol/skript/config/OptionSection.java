@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.config;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -39,7 +39,7 @@ public class OptionSection {
 	public final <T> T get(String key) {
 		if (this.getClass() == OptionSection.class)
 			return null;
-		key = "" + key.toLowerCase(Locale.ENGLISH);
+		key = key.toLowerCase(Locale.ENGLISH);
 		for (final Field f : this.getClass().getDeclaredFields()) {
 			f.setAccessible(true);
 			if (Option.class.isAssignableFrom(f.getType())) {

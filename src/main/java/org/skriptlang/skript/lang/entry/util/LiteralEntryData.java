@@ -20,7 +20,7 @@ package org.skriptlang.skript.lang.entry.util;
 
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 
 /**

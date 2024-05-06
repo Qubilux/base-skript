@@ -32,9 +32,8 @@ import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Return")
 @Description("Makes a function return a value")
@@ -91,7 +90,7 @@ public class EffReturn extends Effect {
 		}
 		
 		if (f.isSingle() && !convertedExpr.isSingle()) {
-			Skript.error("This function is defined to only return a single " + returnType.toString() + ", but this return statement can return multiple values.");
+			Skript.error("This function is defined to only return a single " + returnType + ", but this return statement can return multiple values.");
 			return false;
 		}
 		value = convertedExpr;
@@ -102,7 +101,7 @@ public class EffReturn extends Effect {
 	@Override
 	@Nullable
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	protected TriggerItem walk(@NotNull Event event) {
+	protected TriggerItem walk(@NotNull Object event) {
 		debug(event, false);
 		if (event instanceof FunctionEvent) {
 			((ScriptFunction) function).setReturnValue(value.getArray(event));
@@ -122,12 +121,12 @@ public class EffReturn extends Effect {
 	}
 	
 	@Override
-	protected void execute(@NotNull Event event) {
+	protected void execute(@NotNull Object event) {
 		assert false;
 	}
 	
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "return " + value.toString(event, debug);
 	}
 	

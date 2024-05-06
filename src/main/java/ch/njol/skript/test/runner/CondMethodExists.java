@@ -25,8 +25,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.apache.commons.lang.StringUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class CondMethodExists extends PropertyCondition<String> {
 	}
 
 	@Override
-	public boolean check(String signature) {
+	public boolean check0(String signature) {
 		Matcher sigMatcher = SIGNATURE_PATTERN.matcher(signature);
 		if (!sigMatcher.matches())
 			return false;
@@ -85,7 +84,7 @@ public class CondMethodExists extends PropertyCondition<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "method " + signatures.toString(event, debug) + " exists";
 	}
 

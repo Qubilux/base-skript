@@ -26,7 +26,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class can be used for an easier writing of conditions that contain only one type in the pattern,
@@ -140,13 +140,12 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	}
 
 	@Override
-	public final boolean check(Event event) {
+	public final boolean check(Object event) {
 		return expr.check(event, this, isNegated());
 	}
 
-	@Override
-	public abstract boolean check(T value);
-	
+	public abstract boolean check0(T value);
+
 	protected abstract String getPropertyName();
 
 	protected PropertyType getPropertyType() {
@@ -163,11 +162,11 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return toString(this, getPropertyType(), event, debug, expr, getPropertyName());
 	}
 
-	public static String toString(Condition condition, PropertyType propertyType, @Nullable Event event,
+	public static String toString(Condition condition, PropertyType propertyType, @Nullable Object event,
 								  boolean debug, Expression<?> expr, String property) {
 		switch (propertyType) {
 			case BE:

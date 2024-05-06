@@ -18,18 +18,8 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Keywords;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -37,6 +27,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -78,7 +72,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected String @NotNull [] get(final @NotNull Event e) {
+	protected String @NotNull [] get(final @NotNull Object e) {
 		final List<String> parts = new ArrayList<String>();
 		final String[] strings = string.getArray(e);
 		if (strings == null)
@@ -118,7 +112,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 	
 	@Override
 	@SuppressWarnings("null")
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		if (start == null) {
 			assert end != null;
 			return "the first " + end.toString(e, debug) + " characters of " + string.toString(e, debug);

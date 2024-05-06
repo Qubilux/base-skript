@@ -18,14 +18,12 @@
  */
 package ch.njol.skript.effects;
 
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.BaseSkript;
 
 /**
  * @author Peter Güttinger
@@ -34,7 +32,7 @@ public class IndeterminateDelay extends Delay {
 	
 	@Override
 	@Nullable
-	protected TriggerItem walk(Event event) {
+	protected TriggerItem walk(Object event) {
 		debug(event, true);
 
 		long start = Skript.debug() ? System.nanoTime() : 0;
@@ -64,7 +62,7 @@ public class IndeterminateDelay extends Delay {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "wait for operation to finish";
 	}
 	

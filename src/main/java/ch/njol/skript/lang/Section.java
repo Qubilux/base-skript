@@ -24,9 +24,9 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
+import ultreon.baseskript.event.Event;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -106,7 +106,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	 * to run the section one or more times.
 	 */
 	@SafeVarargs
-	protected final Trigger loadCode(SectionNode sectionNode, String name, Class<? extends Event>... events) {
+	protected final Trigger loadCode(SectionNode sectionNode, String name, Class<? extends Object>... events) {
 		return loadCode(sectionNode, name, null, events);
 	}
 
@@ -126,11 +126,11 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	 * to run the section one or more times.
 	 */
 	@SafeVarargs
-	protected final Trigger loadCode(SectionNode sectionNode, String name, @Nullable Runnable afterLoading, Class<? extends Event>... events) {
+	protected final Trigger loadCode(SectionNode sectionNode, String name, @Nullable Runnable afterLoading, Class<? extends Object>... events) {
 		ParserInstance parser = getParser();
 
 		String previousName = parser.getCurrentEventName();
-		Class<? extends Event>[] previousEvents = parser.getCurrentEvents();
+		Class<? extends Object>[] previousEvents = parser.getCurrentEvents();
 		Structure previousStructure = parser.getCurrentStructure();
 		List<TriggerSection> previousSections = parser.getCurrentSections();
 		Kleenean previousDelay = parser.getHasDelayBefore();

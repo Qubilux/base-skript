@@ -37,9 +37,8 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -79,7 +78,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		Skript.registerExpression(expression, type, ExpressionType.EVENT, "[the] " + pattern);
 	}
 
-	private final Map<Class<? extends Event>, Getter<? extends T, ?>> getters = new HashMap<Class<? extends Event>, Getter<? extends T, ?>>();
+	private final Map<Class<? extends Object>, Getter<? extends T, ?>> getters = new HashMap<Class<? extends Object>, Getter<? extends T, ?>>();
 
 	private final Class<?> componentType;
 	private final Class<? extends T> type;
@@ -128,12 +127,12 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
 			boolean hasValue = false;
-			Class<? extends Event>[] events = getParser().getCurrentEvents();
+			Class<? extends Object>[] events = getParser().getCurrentEvents();
 			if (events == null) {
 				assert false;
 				return false;
 			}
-			for (Class<? extends Event> event : events) {
+			for (Class<? extends Object> event : events) {
 				if (getters.containsKey(event)) {
 					hasValue = getters.get(event) != null;
 					continue;
@@ -169,7 +168,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	protected T[] get(Event event) {
+	protected T[] get(Object event) {
 		T value = getValue(event);
 		if (value == null)
 			return (T[]) Array.newInstance(componentType, 0);
@@ -186,13 +185,13 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	private <E extends Event> T getValue(E event) {
+	private <E extends Object> T getValue(E event) {
 		if (getters.containsKey(event.getClass())) {
 			final Getter<? extends T, ? super E> g = (Getter<? extends T, ? super E>) getters.get(event.getClass());
 			return g == null ? null : g.get(event);
 		}
 
-		for (final Entry<Class<? extends Event>, Getter<? extends T, ?>> p : getters.entrySet()) {
+		for (final Entry<Class<? extends Object>, Getter<? extends T, ?>> p : getters.entrySet()) {
 			if (p.getKey().isAssignableFrom(event.getClass())) {
 				getters.put(event.getClass(), p.getValue());
 				return p.getValue() == null ? null : ((Getter<? extends T, ? super E>) p.getValue()).get(event);
@@ -214,7 +213,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) {
 		if (changer == null)
 			throw new SkriptAPIException("The changer cannot be null");
 		ChangerUtils.change(changer, getArray(event), delta, mode);
@@ -222,12 +221,12 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 
 	@Override
 	public boolean setTime(int time) {
-		Class<? extends Event>[] events = getParser().getCurrentEvents();
+		Class<? extends Object>[] events = getParser().getCurrentEvents();
 		if (events == null) {
 			assert false;
 			return false;
 		}
-		for (Class<? extends Event> event : events) {
+		for (Class<? extends Object> event : events) {
 			assert event != null;
 			boolean has;
 			if (exact) {
@@ -267,7 +266,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (!debug || event == null)
 			return "event-" + Classes.getSuperClassInfo(componentType).getName().toString(!single);
 		return Classes.getDebugMessage(getValue(event));

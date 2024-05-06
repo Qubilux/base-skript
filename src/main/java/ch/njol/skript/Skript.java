@@ -43,19 +43,12 @@ import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
-import ch.njol.util.coll.iterator.EnumerationIterable;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
-import ultreon.baseskript.*;
-import ultreon.baseskript.classes.data.AWTClasses;
-import ultreon.baseskript.event.Event;
-import ultreon.baseskript.event.Listener;
-import ultreon.baseskript.events.PluginDisableEvent;
-import ultreon.baseskript.plugins.PluginDescriptionFile;
-import ultreon.baseskript.plugins.PluginDescriptionFileImpl;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.converter.Converter;
@@ -64,13 +57,18 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
 import org.skriptlang.skript.lang.structure.StructureInfo;
+import ultreon.baseskript.*;
+import ultreon.baseskript.event.Listener;
+import ultreon.baseskript.events.LoadLanguageFilesEvent;
+import ultreon.baseskript.events.PluginDisableEvent;
+import ultreon.baseskript.plugins.PluginDescriptionFile;
+import ultreon.baseskript.plugins.PluginDescriptionFileImpl;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -78,16 +76,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Filter;
-import org.apache.logging.log4j.Level;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 // TODO meaningful error if someone uses an %expression with percent signs% outside of text or a variable
 
@@ -116,7 +110,7 @@ import java.util.zip.ZipFile;
  * @see Comparators#registerComparator(Class, Class, Comparator)
  * @see Converters#registerConverter(Class, Class, Converter)
  */
-public final class Skript extends Listener implements Plugin {
+public class Skript extends Listener implements Plugin {
 	
 	// ================ PLUGIN ================
 	
@@ -137,7 +131,7 @@ public final class Skript extends Listener implements Plugin {
 	 * Current updater instance used by Skript.
 	 */
 	@Nullable
-	private Void updater = null;
+	private final Void updater = null;
 	
 	public Skript() throws IllegalStateException {
 		if (instance != null)
@@ -145,7 +139,8 @@ public final class Skript extends Listener implements Plugin {
 		instance = this;
 	}
 	
-	private static Version minecraftVersion = new Version(666), UNKNOWN_VERSION = new Version(666);
+	private static Version minecraftVersion = new Version(666);
+	private static final Version UNKNOWN_VERSION = new Version(666);
 	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
 
 	/**
@@ -159,7 +154,7 @@ public final class Skript extends Listener implements Plugin {
 		if (!m.find()) {
 			minecraftVersion = new Version(666, 0, 0);
 		} else {
-			minecraftVersion = new Version("" + m.group());
+			minecraftVersion = new Version(m.group());
 		}
 	}
 	
@@ -181,16 +176,6 @@ public final class Skript extends Listener implements Plugin {
 		if (v == null)
 			throw new IllegalStateException();
 		return v;
-	}
-
-	@Override
-	public InputStream getResource(String name) {
-		return getClass().getResourceAsStream("/" + name);
-	}
-
-	@Override
-	public File getDataFolder() {
-		return new File(".skript");
 	}
 
 	@Override
@@ -244,7 +229,7 @@ public final class Skript extends Listener implements Plugin {
 					"Skript will still work, but you might get random errors if you use features that are not available in your version of BaseSkript.");
 			minecraftVersion = new Version(666, 0, 0);
 		} else {
-			minecraftVersion = new Version("" + m.group());
+			minecraftVersion = new Version(m.group());
 		}
 		Skript.debug("Loading for Minecraft " + minecraftVersion);
 		
@@ -342,7 +327,7 @@ public final class Skript extends Listener implements Plugin {
 		
 		handleJvmArguments(); // JVM arguments
 		
-		version = new Version("" + getVersion0()); // Skript version
+		version = new Version(getVersion0()); // Skript version
 		
 		// Start the updater
 		// Note: if config prohibits update checks, it will NOT do network connections
@@ -354,7 +339,8 @@ public final class Skript extends Listener implements Plugin {
 		File features = new File(getDataFolder(), "features.sk");
 		File lang = new File(getDataFolder(), "lang");
 		if (!scriptsFolder.isDirectory() || !config.exists() || !features.exists() || !lang.exists()) {
-			ZipFile f = null;
+
+			ZipInputStream f = null;
 			try {
 				boolean populateExamples = false;
 				if (!scriptsFolder.isDirectory()) {
@@ -370,44 +356,47 @@ public final class Skript extends Listener implements Plugin {
 					populateLanguageFiles = true;
 				}
 
-				f = new ZipFile(getFile());
-				for (ZipEntry e : new EnumerationIterable<ZipEntry>(f.entries())) {
-					if (e.isDirectory())
-						continue;
-					File saveTo = null;
-					if (populateExamples && e.getName().startsWith(SCRIPTSFOLDER + "/")) {
-						String fileName = e.getName().substring(e.getName().indexOf("/") + 1);
-						// All example scripts must be disabled for jar security.
-						if (!fileName.startsWith(ScriptLoader.DISABLED_SCRIPT_PREFIX))
-							fileName = ScriptLoader.DISABLED_SCRIPT_PREFIX + fileName;
-						saveTo = new File(scriptsFolder, fileName);
-					} else if (populateLanguageFiles
+				f = new ZipInputStream(getPluginLocation().openStream());
+				if (!config.exists())
+					FileUtils.save(getResource("config.sk"), config);
+
+				if (!features.exists())
+					FileUtils.save(getResource("features.sk"), features);
+
+				LoadLanguageFilesEvent event = new LoadLanguageFilesEvent(this, lang);
+				BaseSkript.getEventBus().publish(event);
+				if (!event.isCancelled()) {
+					ZipEntry e;
+					while ((e = f.getNextEntry()) != null) {
+						if (e.isDirectory())
+							continue;
+						File saveTo = null;
+						if (populateExamples && e.getName().startsWith(SCRIPTSFOLDER + "/")) {
+							String fileName = e.getName().substring(e.getName().indexOf("/") + 1);
+							// All example scripts must be disabled for jar security.
+							if (!fileName.startsWith(ScriptLoader.DISABLED_SCRIPT_PREFIX))
+								fileName = ScriptLoader.DISABLED_SCRIPT_PREFIX + fileName;
+							saveTo = new File(scriptsFolder, fileName);
+						} else if (populateLanguageFiles
 							&& e.getName().startsWith("lang/")
 							&& !e.getName().endsWith("default.lang")) {
-						String fileName = e.getName().substring(e.getName().lastIndexOf("/") + 1);
-						saveTo = new File(lang, fileName);
-					} else if (e.getName().equals("config.sk")) {
-						if (!config.exists())
-							saveTo = config;
-//					} else if (e.getName().startsWith("aliases-") && e.getName().endsWith(".sk") && !e.getName().contains("/")) {
-//						File af = new File(getDataFolder(), e.getName());
-//						if (!af.exists())
-//							saveTo = af;
-					} else if (e.getName().startsWith("features.sk")) {
-						if (!features.exists())
-							saveTo = features;
-					}
-					if (saveTo != null) {
-						InputStream in = f.getInputStream(e);
-						try {
-							assert in != null;
-							FileUtils.save(in, saveTo);
-						} finally {
-							in.close();
+							String fileName = e.getName().substring(e.getName().lastIndexOf("/") + 1);
+							saveTo = new File(lang, fileName);
+						}
+						if (saveTo != null) {
+							try {
+								assert f != null;
+								FileUtils.save(f, saveTo);
+							} finally {
+								((InputStream) f).close();
+							}
 						}
 					}
+					info("Successfully generated the config and the example scripts.");
+				} else {
+					info("Successfully generated the config.");
 				}
-				info("Successfully generated the config and the example scripts.");
+
 			} catch (ZipException ignored) {} catch (IOException e) {
 				error("Error generating the default files: " + ExceptionUtils.toString(e));
 			} finally {
@@ -494,32 +483,6 @@ public final class Skript extends Listener implements Plugin {
 			@SuppressWarnings("synthetic-access")
 			@Override
 			public void run() {
-				// Load hooks from Skript jar
-				try {
-					try (JarFile jar = new JarFile(getFile())) {
-						for (JarEntry e : new EnumerationIterable<JarEntry>(jar.entries())) {
-							if (e.getName().startsWith("ch/njol/skript/hooks/") && e.getName().endsWith("Hook.class") && StringUtils.count("" + e.getName(), '/') <= 5) {
-								final String c = e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length());
-								try {
-									Class<?> hook = Class.forName(c, true, getClassLoader());
-									if (Hook.class.isAssignableFrom(hook) && !Modifier.isAbstract(hook.getModifiers()) && isHookEnabled((Class<? extends Hook<?>>) hook)) {
-										hook.getDeclaredConstructor().setAccessible(true);
-										hook.getDeclaredConstructor().newInstance();
-									}
-								} catch (ClassNotFoundException ex) {
-									Skript.exception(ex, "Cannot load class " + c);
-								} catch (ExceptionInInitializerError err) {
-									Skript.exception(err.getCause(), "Class " + c + " generated an exception while loading");
-								} catch (Exception ex) {
-									Skript.exception(ex, "Exception initializing hook: " + c);
-								}
-							}
-						}
-					}
-				} catch (IOException e) {
-					error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
-					Skript.exception(e);
-				}
 				finishedLoadingHooks = true;
 				
 				stopAcceptingRegistrations();
@@ -594,7 +557,9 @@ public final class Skript extends Listener implements Plugin {
 							outputDir.mkdirs();
 							HTMLGenerator generator = new HTMLGenerator(templateDir, outputDir);
 							Skript.info(sender, "Generating docs...");
-							generator.generate(); // Try to generate docs... hopefully
+							Thread thread = new Thread(generator::generate);
+							thread.setDaemon(false);
+							thread.start(); // Try to generate docs... hopefully
 							Skript.info(sender, "Documentation generated!");
 						} else if (TestMode.DEV_MODE) { // Developer controlled environment.
 							info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
@@ -1224,7 +1189,7 @@ public final class Skript extends Listener implements Plugin {
 	 * @return A SkriptEventInfo representing the registered event. Used to generate Skript's documentation.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(String name, Class<E> c, Class<? extends Event> event, String... patterns) {
+	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(String name, Class<E> c, Class<? extends Object> event, String... patterns) {
 		return registerEvent(name, c, new Class[] {event}, patterns);
 	}
 	
@@ -1237,7 +1202,7 @@ public final class Skript extends Listener implements Plugin {
 	 * @param patterns Skript patterns to match this event
 	 * @return A SkriptEventInfo representing the registered event. Used to generate Skript's documentation.
 	 */
-	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(String name, Class<E> c, Class<? extends Event>[] events, String... patterns) {
+	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(String name, Class<E> c, Class<? extends Object>[] events, String... patterns) {
 		checkAcceptRegistrations();
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
 
@@ -1368,7 +1333,7 @@ public final class Skript extends Listener implements Plugin {
 	 * Maps Java packages of plugins to descriptions of said plugins.
 	 * This is only done for plugins that depend or soft-depend on Skript.
 	 */
-	private static Map<String, PluginDescriptionFile> pluginPackages = new HashMap<String, PluginDescriptionFile>();
+	private static final Map<String, PluginDescriptionFile> pluginPackages = new HashMap<String, PluginDescriptionFile>();
 	private static boolean checkedPlugins = false;
 	
 	/**
@@ -1422,7 +1387,7 @@ public final class Skript extends Listener implements Plugin {
 					// Put this to map
 					pluginPackages.put(name.toString(), desc);
 					if (Skript.debug())
-						Skript.info("Identified potential addon: " + desc.getFullName() + " (" + name.toString() + ")");
+						Skript.info("Identified potential addon: " + desc.getFullName() + " (" + name + ")");
 				}
 			}
 			
@@ -1518,7 +1483,7 @@ public final class Skript extends Listener implements Plugin {
 		}
 		boolean first = true;
 		while (cause != null) {
-			logEx((first ? "" : "Caused by: ") + cause.toString());
+			logEx((first ? "" : "Caused by: ") + cause);
 			for (final StackTraceElement e : cause.getStackTrace())
 				logEx("    at " + e.toString());
 			cause = cause.getCause();
@@ -1580,11 +1545,11 @@ public final class Skript extends Listener implements Plugin {
 	 * @see #adminBroadcast(String)
 	 */
 	public static void broadcast(final String message, final String permission) {
-		BaseSkript.getEventBus().post(new BroadcastEvent(Utils.replaceEnglishChatStyles(getSkriptPrefix() + message), permission));
+		BaseSkript.getEventBus().publish(new BroadcastEvent(Utils.replaceEnglishChatStyles(getSkriptPrefix() + message), permission));
 	}
 	
 	public static void adminBroadcast(final String message) {
-		BaseSkript.getEventBus().post(new AdminBroadcastEvent(message));
+		BaseSkript.getEventBus().publish(new AdminBroadcastEvent(message));
 	}
 	
 	/**
@@ -1594,7 +1559,7 @@ public final class Skript extends Listener implements Plugin {
 	 * @param info
 	 */
 	public static void message(final CommandSender sender, final String info) {
-		BaseSkript.getEventBus().post(new MessageEvent(sender, info));
+		BaseSkript.getEventBus().publish(new MessageEvent(sender, info));
 	}
 	
 	public static void error(final CommandSender sender, final String error) {

@@ -29,9 +29,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Repeat String")
 @Description("Repeats inputted strings a given amount of times.")
@@ -58,7 +57,7 @@ public class ExprRepeat extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected @Nullable String @NotNull [] get(@NotNull Event event) {
+	protected @Nullable String @NotNull [] get(@NotNull Object event) {
 		int repeatCount = this.repeatCount.getOptionalSingle(event).orElse(0);
 		if (repeatCount < 1)
 			return new String[0];
@@ -76,7 +75,7 @@ public class ExprRepeat extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return strings.toString(event, debug) + " repeated " + repeatCount.toString(event, debug) + " times";
 	}
 

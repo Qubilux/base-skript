@@ -19,7 +19,7 @@
 package ch.njol.skript.localization;
 
 import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,12 +76,12 @@ public class RegexMessage extends Message {
 	
 	public boolean matches(String s) {
 		Pattern p = getPattern();
-		return p == null ? false : p.matcher(s).matches();
+		return p != null && p.matcher(s).matches();
 	}
 	
 	public boolean find(String s) {
 		Pattern p = getPattern();
-		return p == null ? false : p.matcher(s).find();
+		return p != null && p.matcher(s).find();
 	}
 	
 	@Override

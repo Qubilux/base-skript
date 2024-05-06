@@ -25,11 +25,11 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
+import ultreon.baseskript.event.Event;
 
 import java.util.Iterator;
 
@@ -75,7 +75,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 				continue;
 			return new ConvertedExpression<T, R>(expr, type, conv) {
 				@Override
-				public String toString(@Nullable Event event, boolean debug) {
+				public String toString(@Nullable Object event, boolean debug) {
 					if (debug && event == null)
 						return "(" + WrapperExpression.this.toString(event, debug) + ")->" + to.getName();
 					return WrapperExpression.this.toString(event, debug);
@@ -86,13 +86,13 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	}
 	
 	@Override
-	protected T[] get(Event event) {
+	protected T[] get(Object event) {
 		return expr.getArray(event);
 	}
 	
 	@Override
 	@Nullable
-	public Iterator<? extends T> iterator(Event event) {
+	public Iterator<? extends T> iterator(Object event) {
 		return expr.iterator(event);
 	}
 	
@@ -118,7 +118,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) {
 		expr.change(event, delta, mode);
 	}
 	

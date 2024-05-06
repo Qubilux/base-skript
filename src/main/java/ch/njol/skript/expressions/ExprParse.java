@@ -38,10 +38,9 @@ import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
-import ultreon.baseskript.ChatColor;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.ChatColor;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -155,7 +154,7 @@ public class ExprParse extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected Object @NotNull [] get(@NotNull Event event) {
+	protected Object @NotNull [] get(@NotNull Object event) {
 		String text = this.text.getSingle(event);
 		if (text == null)
 			return null;
@@ -250,7 +249,7 @@ public class ExprParse extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return text.toString(event, debug) + " parsed as " + (classInfo != null ? classInfo.toString(Language.F_INDEFINITE_ARTICLE) : pattern);
 	}
 

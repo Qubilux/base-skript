@@ -19,7 +19,7 @@
 package ch.njol.skript.test.runner;
 
 import ch.njol.skript.test.utils.TestResults;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.io.File;

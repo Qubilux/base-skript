@@ -24,9 +24,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
 public class ExprFunctionCall<T> extends SimpleExpression<T> {
@@ -57,7 +56,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> {
 
 	@Override
 	@Nullable
-	protected T[] get(Event e) {
+	protected T[] get(Object e) {
 		Object[] returnValue = function.execute(e);
 		function.resetReturnValue();
 		return Converters.convert(returnValue, returnTypes, returnType);
@@ -87,7 +86,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable Object e, boolean debug) {
 		return function.toString(e, debug);
 	}
 

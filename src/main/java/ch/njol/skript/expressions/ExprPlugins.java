@@ -28,11 +28,10 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.BaseSkript;
 import ultreon.baseskript.Plugin;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -58,7 +57,7 @@ public class ExprPlugins extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String @NotNull [] get(@NotNull Event e) {
+	protected String @NotNull [] get(@NotNull Object e) {
 		return Arrays.stream(BaseSkript.getPluginManager().getPlugins())
 			.map(Plugin::getName)
 			.toArray(String[]::new);
@@ -75,7 +74,7 @@ public class ExprPlugins extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return "the loaded plugins";
 	}
 

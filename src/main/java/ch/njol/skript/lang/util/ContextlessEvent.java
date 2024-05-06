@@ -19,9 +19,6 @@
 package ch.njol.skript.lang.util;
 
 import ch.njol.skript.lang.parser.ParserInstance;
-import ultreon.baseskript.event.Event;
-import ultreon.baseskript.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is intended for usage in places of Skript that require an Event.
@@ -32,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * So, this classes exists to avoid dangerously passing null in these places.
  * @see #get()
  */
-public final class ContextlessEvent extends Event {
+public final class ContextlessEvent {
 
 	private ContextlessEvent() { }
 
@@ -41,15 +38,6 @@ public final class ContextlessEvent extends Event {
 	 */
 	public static ContextlessEvent get() {
 		return new ContextlessEvent();
-	}
-
-	/**
-	 * This method should never be called.
-	 */
-	@Override
-	@NotNull
-	public HandlerList getHandlers() {
-		throw new IllegalStateException();
 	}
 
 }

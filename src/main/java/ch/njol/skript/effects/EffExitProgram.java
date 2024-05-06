@@ -27,19 +27,19 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.BaseSkript;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Exit Program")
 @Description({"Exit the program with or without a custom exit code."})
-@Examples({"on main:",
-	"	log \"Hello World\" to the console",
-	"   exit program"})
+@Examples({
+	"log \"Hello World\" to the console",
+	"exit program"
+})
 @Since("3.0")
 public class EffExitProgram extends Effect {
 	static {
@@ -64,7 +64,7 @@ public class EffExitProgram extends Effect {
 	}
 
 	@Override
-	protected void execute(final @NotNull Event e) {
+	protected void execute(final @NotNull Object e) {
 		if (numbers != null) {
 			int code = numbers.getSingle(e).intValue();
 			BaseSkript.exit(code);
@@ -74,7 +74,7 @@ public class EffExitProgram extends Effect {
 	}
 
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		Expression<Number> numbers1 = numbers;
 		if (numbers1 == null) {
 			return "exit program";

@@ -20,7 +20,7 @@ package ch.njol.skript.classes;
 
 import ch.njol.yggdrasil.ClassResolver;
 import ch.njol.yggdrasil.Fields;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 

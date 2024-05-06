@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,6 +30,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -62,7 +60,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 	}
 	
 	@Override
-	protected Long @NotNull [] get(final @NotNull Event e, final Number @NotNull [] source) {
+	protected Long @NotNull [] get(final @NotNull Object e, final Number @NotNull [] source) {
 		return get(source, n -> {
 			if (n instanceof Integer)
 				return n.longValue();
@@ -78,7 +76,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return (action == -1 ? "floor" : action == 0 ? "round" : "ceil") + "(" + getExpr().toString(e, debug) + ")";
 	}
 	

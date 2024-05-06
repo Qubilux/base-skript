@@ -22,7 +22,7 @@ import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SimpleNode;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 
 /**

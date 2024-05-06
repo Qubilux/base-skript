@@ -30,9 +30,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Colored / Uncolored")
 @Description({"Parses &lt;color&gt;s and, optionally, chat styles in a message or removes",
@@ -76,7 +75,7 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	protected String @NotNull [] get(final @NotNull Event e, final String @NotNull [] source) {
+	protected String @NotNull [] get(final @NotNull Object e, final String @NotNull [] source) {
 		return get(source, s -> color ? Utils.replaceEnglishChatStyles(s) : ChatMessages.stripStyles(s));
 	}
 	
@@ -86,7 +85,7 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return (color ? "" : "un") + "colored " + getExpr().toString(e, debug);
 	}
 	

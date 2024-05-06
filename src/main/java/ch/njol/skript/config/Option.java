@@ -24,7 +24,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Setter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.Locale;
@@ -47,7 +47,7 @@ public class Option<T> {
 	private Setter<? super T> setter;
 	
 	public Option(final String key, final T defaultValue) {
-		this.key = "" + key.toLowerCase(Locale.ENGLISH);
+		this.key = key.toLowerCase(Locale.ENGLISH);
 		this.defaultValue = defaultValue;
 		parsedValue = defaultValue;
 		@SuppressWarnings("unchecked")
@@ -74,7 +74,7 @@ public class Option<T> {
 	}
 	
 	public Option(final String key, final T defaultValue, final Converter<String, ? extends T> parser) {
-		this.key = "" + key.toLowerCase(Locale.ENGLISH);
+		this.key = key.toLowerCase(Locale.ENGLISH);
 		this.defaultValue = defaultValue;
 		parsedValue = defaultValue;
 		this.parser = parser;

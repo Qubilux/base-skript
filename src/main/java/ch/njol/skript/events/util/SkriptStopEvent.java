@@ -18,12 +18,10 @@
  */
 package ch.njol.skript.events.util;
 
-import ultreon.baseskript.event.Event;
-
 /**
  * Called when Skript stops (before anything is unloaded)
  * 
  * @author Peter Güttinger
  */
-public class SkriptStopEvent extends Event {
+public class SkriptStopEvent {
 }

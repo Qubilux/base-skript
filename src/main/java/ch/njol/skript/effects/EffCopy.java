@@ -29,9 +29,8 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -84,7 +83,7 @@ public class EffCopy extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void execute(@NotNull Event event) {
+	protected void execute(@NotNull Object event) {
 		if (!(source instanceof Variable) || source.isSingle()) {
 			ChangeMode mode = ChangeMode.SET;
 			Object[] clone = (Object[]) Classes.clone(source.getArray(event));
@@ -113,7 +112,7 @@ public class EffCopy extends Effect {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable Object event, boolean debug) {
 		return "copy " + source.toString(event, debug) + " into " + rawDestination.toString(event, debug);
 	}
 
@@ -134,7 +133,7 @@ public class EffCopy extends Effect {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void set(Event event, String targetName, Map<String, Object> source, boolean local) {
+	private static void set(Object event, String targetName, Map<String, Object> source, boolean local) {
 		source.forEach((key, value) -> {
 			String node = targetName + (key == null ? "" : Variable.SEPARATOR + key);
 			if (value instanceof Map) {

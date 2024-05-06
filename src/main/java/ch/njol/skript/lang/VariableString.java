@@ -41,11 +41,11 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.script.Script;
 import ultreon.baseskript.ChatColor;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
-import org.skriptlang.skript.lang.script.Script;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -383,7 +383,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toUnformattedString(Event event) {
+	public String toUnformattedString(Object event) {
 		if (isSimple) {
 			assert simpleUnformatted != null;
 			return simpleUnformatted;
@@ -407,7 +407,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Currently running event.
 	 * @return Message components.
 	 */
-	public List<MessageComponent> getMessageComponents(Event event) {
+	public List<MessageComponent> getMessageComponents(Object event) {
 		if (isSimple) { // Trusted, constant string in a script
 			assert simpleUnformatted != null;
 			return ChatMessages.parse(simpleUnformatted);
@@ -472,7 +472,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Currently running event.
 	 * @return Message components.
 	 */
-	public List<MessageComponent> getMessageComponentsUnsafe(Event event) {
+	public List<MessageComponent> getMessageComponentsUnsafe(Object event) {
 		if (isSimple) { // Trusted, constant string in a script
 			assert simpleUnformatted != null;
 			return ChatMessages.parse(simpleUnformatted);
@@ -487,7 +487,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toChatString(Event event) {
+	public String toChatString(Object event) {
 		return ChatMessages.toJson(getMessageComponents(event));
 	}
 
@@ -515,7 +515,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toString(@Nullable Event event) {
+	public String toString(@Nullable Object event) {
 		if (isSimple) {
 			assert simple != null;
 			return simple;
@@ -550,7 +550,7 @@ public class VariableString implements Expression<String> {
 	 * Use {@link #toString(Event)} to get the actual string. This method is for debugging.
 	 */
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (isSimple) {
 			assert simple != null;
 			return '"' + simple + '"';
@@ -575,7 +575,7 @@ public class VariableString implements Expression<String> {
 	 * @return List<String> of all possible super class code names.
 	 */
 	@NotNull
-	public List<String> getDefaultVariableNames(String variableName, Event event) {
+	public List<String> getDefaultVariableNames(String variableName, Object event) {
 		if (script == null || mode != StringMode.VARIABLE_NAME)
 			return Lists.newArrayList();
 
@@ -642,17 +642,17 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public String getSingle(Event event) {
+	public String getSingle(Object event) {
 		return toString(event);
 	}
 
 	@Override
-	public String[] getArray(Event event) {
+	public String[] getArray(Object event) {
 		return new String[] {toString(event)};
 	}
 
 	@Override
-	public String[] getAll(Event event) {
+	public String[] getAll(Object event) {
 		return new String[] {toString(event)};
 	}
 
@@ -662,12 +662,12 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super String> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super String> checker, boolean negated) {
 		return SimpleExpression.check(getAll(event), checker, negated, false);
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super String> checker) {
+	public boolean check(Object event, Checker<? super String> checker) {
 		return SimpleExpression.check(getAll(event), checker, false, false);
 	}
 
@@ -692,7 +692,7 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -717,7 +717,7 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public Iterator<? extends String> iterator(Event event) {
+	public Iterator<? extends String> iterator(Object event) {
 		return new SingleItemIterator<String>(toString(event));
 	}
 

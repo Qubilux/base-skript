@@ -28,9 +28,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Number of Characters")
 @Description("The number of uppercase, lowercase, or digit characters in a string.")
@@ -65,7 +64,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	@Override
 	@SuppressWarnings("null")
 	@Nullable
-	protected Long @NotNull [] get(@NotNull Event e) {
+	protected Long @NotNull [] get(@NotNull Object e) {
 		String str = expr.getSingle(e);
 		if (str == null)
 			return null;
@@ -97,7 +96,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		if (pattern == 0) {
 			return "number of uppercase characters";
 		} else if (pattern == 1) {

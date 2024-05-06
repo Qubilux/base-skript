@@ -27,7 +27,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -47,7 +46,7 @@ public class ExprParseLogs extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event event) {
+	protected String[] get(Object event) {
 		return SecParse.lastLogs;
 	}
 
@@ -62,7 +61,7 @@ public class ExprParseLogs extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "last parse logs";
 	}
 

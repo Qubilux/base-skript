@@ -39,7 +39,6 @@ import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.collect.ImmutableList;
-import ultreon.baseskript.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -182,7 +181,7 @@ public class StructVariables extends Structure {
 					Skript.error("'" + var + "' is not a valid name for a default variable");
 					return null;
 				}
-				ClassInfo<?> ci = Classes.getClassInfoFromUserInput("" + m.group(1));
+				ClassInfo<?> ci = Classes.getClassInfoFromUserInput(m.group(1));
 				if (ci == null) {
 					Skript.error("Can't understand the type '" + m.group(1) + "'");
 					return null;
@@ -271,7 +270,7 @@ public class StructVariables extends Structure {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "variables";
 	}
 

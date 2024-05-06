@@ -18,11 +18,7 @@
  */
 package ch.njol.skript;
 
-import ch.njol.skript.config.Config;
-import ch.njol.skript.config.EnumParser;
-import ch.njol.skript.config.Option;
-import ch.njol.skript.config.OptionSection;
-import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.config.*;
 import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.SkriptLogger;
@@ -32,8 +28,8 @@ import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Version;
 import ch.njol.skript.variables.Variables;
-import ultreon.baseskript.event.EventPriority;
-import org.eclipse.jdt.annotation.Nullable;
+import com.ultreon.libs.events.v0.EventPriority;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +100,7 @@ public class SkriptConfig {
     public static String formatDate(final long timestamp) {
         final DateFormat f = dateFormat.value();
         synchronized (f) {
-            return "" + f.format(timestamp);
+            return f.format(timestamp);
         }
     }
 
@@ -297,7 +293,7 @@ public class SkriptConfig {
 
                             final SectionNode def = (SectionNode) newDBs.get("default");
                             assert def != null;
-                            def.set("backup interval", "" + mc.get("variables backup interval"));
+                            def.set("backup interval", mc.get("variables backup interval"));
                         } catch (final Exception e) {
                             Skript.error("An error occurred while trying to update the config's database section.");
                             Skript.error("You'll have to update the config yourself:");

@@ -30,9 +30,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 
@@ -64,7 +63,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object @NotNull [] get(@NotNull Event e) {
+	protected Object @NotNull [] get(@NotNull Object e) {
 		Object[] inputArray = list.getArray(e).clone();
 		Object[] array = (Object[]) Array.newInstance(getReturnType(), inputArray.length);
 		System.arraycopy(inputArray, 0, array, 0, inputArray.length);
@@ -106,7 +105,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		return "reversed " + list.toString(e, debug);
 	}
 

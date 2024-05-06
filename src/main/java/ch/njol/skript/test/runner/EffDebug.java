@@ -32,9 +32,8 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -109,14 +108,14 @@ public class EffDebug extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void execute(Object event) {
 		if (expressions == null)
 			return;
 		print(event, debug);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "debug " + expressions.toString(event, debug);
 	}
 
@@ -124,7 +123,7 @@ public class EffDebug extends Effect  {
 		print(null, debug);
 	}
 
-	private void print(@Nullable Event event, boolean debug) {
+	private void print(@Nullable Object event, boolean debug) {
 		Skript.info("--------------------");
 		Skript.info(event == null ? "PARSE TIME" : "RUNTIME");
 		Skript.info("\tExpression " + expressions.getClass().getName());

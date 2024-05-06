@@ -34,10 +34,10 @@ import ch.njol.util.SynchronizedReference;
 import ch.njol.yggdrasil.Yggdrasil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.converter.Converters;
 import ultreon.baseskript.BaseSkript;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-import org.skriptlang.skript.lang.converter.Converters;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +90,7 @@ public class Variables {
 //
 //			@Override
 //			@Nullable
-//			public String getID(@NonNull Class<?> c) {
+//			public String getID(@NotNull Class<?> c) {
 //				if (ConfigurationSerializable.class.isAssignableFrom(c)
 //						&& Classes.getSuperClassInfo(c) == Classes.getExactClassInfo(Object.class))
 //					return CONFIGURATION_SERIALIZABLE_PREFIX +
@@ -101,7 +101,7 @@ public class Variables {
 //
 //			@Override
 //			@Nullable
-//			public Class<? extends ConfigurationSerializable> getClass(@NonNull String id) {
+//			public Class<? extends ConfigurationSerializable> getClass(@NotNull String id) {
 //				if (id.startsWith(CONFIGURATION_SERIALIZABLE_PREFIX))
 //					return ConfigurationSerialization.getClassByAlias(
 //							id.substring(CONFIGURATION_SERIALIZABLE_PREFIX.length()));
@@ -182,8 +182,7 @@ public class Variables {
 			boolean successful = true;
 
 			for (Node node : (SectionNode) databases) {
-				if (node instanceof SectionNode) {
-					SectionNode sectionNode = (SectionNode) node;
+				if (node instanceof SectionNode sectionNode) {
 
 					String type = sectionNode.getValue("type");
 					if (type == null) {
@@ -318,7 +317,7 @@ public class Variables {
 	 * A map storing all local variables,
 	 * indexed by their {@link Event}.
 	 */
-	private static final Map<Event, VariablesMap> localVariables = new ConcurrentHashMap<Event, VariablesMap>();
+	private static final Map<Object, VariablesMap> localVariables = new ConcurrentHashMap<Object, VariablesMap>();
 
 	/**
 	 * Gets the {@link TreeMap} of all global variables.
@@ -359,7 +358,7 @@ public class Variables {
 	 * or {@code null} if the event had no local variables.
 	 */
 	@Nullable
-	public static VariablesMap removeLocals(Event event) {
+	public static VariablesMap removeLocals(Object event) {
 		return localVariables.remove(event);
 	}
 
@@ -374,7 +373,7 @@ public class Variables {
 	 * @param event the event.
 	 * @param map the new local variables.
 	 */
-	public static void setLocalVariables(Event event, @Nullable Object map) {
+	public static void setLocalVariables(Object event, @Nullable Object map) {
 		if (map != null) {
 			localVariables.put(event, (VariablesMap) map);
 		} else {
@@ -390,7 +389,7 @@ public class Variables {
 	 * @return the copy.
 	 */
 	@Nullable
-	public static Object copyLocalVariables(Event event) {
+	public static Object copyLocalVariables(Object event) {
 		VariablesMap from = localVariables.get(event);
 		if (from == null)
 			return null;
@@ -415,7 +414,7 @@ public class Variables {
 	 */
 	// TODO don't expose the internal value, bad API
 	@Nullable
-	public static Object getVariable(String name, @Nullable Event event, boolean local) {
+	public static Object getVariable(String name, @Nullable Object event, boolean local) {
 		String n;
 		if (caseInsensitiveVariables) {
 			n = name.toLowerCase(Locale.ENGLISH);
@@ -462,7 +461,7 @@ public class Variables {
 	 *                 the local variable resides in.
 	 * @param local if this variable is a local or global variable.
 	 */
-	public static void deleteVariable(String name, @Nullable Event event, boolean local) {
+	public static void deleteVariable(String name, @Nullable Object event, boolean local) {
 		setVariable(name, null, event, local);
 	}
 
@@ -478,7 +477,7 @@ public class Variables {
 	 *                 the local variable resides in.
 	 * @param local if this variable is a local or global variable.
 	 */
-	public static void setVariable(String name, @Nullable Object value, @Nullable Event event, boolean local) {
+	public static void setVariable(String name, @Nullable Object value, @Nullable Object event, boolean local) {
 		if (caseInsensitiveVariables) {
 			name = name.toLowerCase(Locale.ENGLISH);
 		}

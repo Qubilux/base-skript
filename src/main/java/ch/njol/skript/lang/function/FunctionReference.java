@@ -17,6 +17,7 @@
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.function;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.ClassInfo;
@@ -28,8 +29,7 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.StringUtils;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
@@ -272,7 +272,7 @@ public class FunctionReference<T> {
 
 	@SuppressWarnings("unchecked")
 	@Nullable
-	protected T[] execute(Event e) {
+	protected T[] execute(Object e) {
 		// If needed, acquire the function reference
 		if (function == null)
 			function = (Function<? extends T>) Functions.getFunction(functionName, script);
@@ -323,7 +323,7 @@ public class FunctionReference<T> {
 		return ret == null ? null : ret.getC();
 	}
 	
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable Object e, boolean debug) {
 		StringBuilder b = new StringBuilder(functionName + "(");
 		for (int i = 0; i < parameters.length; i++) {
 			if (i != 0)

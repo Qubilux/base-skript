@@ -19,7 +19,7 @@
 package ch.njol.yggdrasil;
 
 import com.google.common.collect.ImmutableList;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -52,11 +52,9 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 		if (!SUPPORTED_CLASSES.contains(object.getClass()))
 			throw new IllegalArgumentException();
 		Fields fields = new Fields();
-		if (object instanceof Collection) {
-			Collection<?> collection = ((Collection<?>) object);
+		if (object instanceof Collection<?> collection) {
 			fields.putObject("values", collection.toArray());
-		} else if (object instanceof Map) {
-			Map<?, ?> map = ((Map<?, ?>) object);
+		} else if (object instanceof Map<?, ?> map) {
 			fields.putObject("keys", map.keySet().toArray());
 			fields.putObject("values", map.values().toArray());
 		} else if (object instanceof UUID) {
@@ -93,15 +91,13 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 	@Override
 	public void deserialize(Object object, Fields fields) throws StreamCorruptedException {
 		try {
-			if (object instanceof Collection) {
-				Collection<?> collection = ((Collection<?>) object);
+			if (object instanceof Collection<?> collection) {
 				Object[] values = fields.getObject("values", Object[].class);
 				if (values == null)
 					throw new StreamCorruptedException();
 				collection.addAll((Collection) Arrays.asList(values));
 				return;
-			} else if (object instanceof Map) {
-				Map<?, ?> map = ((Map<?, ?>) object);
+			} else if (object instanceof Map<?, ?> map) {
 				Object[] keys = fields.getObject("keys", Object[].class), values = fields.getObject("values", Object[].class);
 				if (keys == null || values == null || keys.length != values.length)
 					throw new StreamCorruptedException();

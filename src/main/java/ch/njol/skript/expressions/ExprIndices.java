@@ -30,9 +30,8 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,7 +91,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	@Nullable
 	@Override
 	@SuppressWarnings({"unchecked", "ConstantConditions"})
-	protected String @NotNull [] get(@NotNull Event e) {
+	protected String @NotNull [] get(@NotNull Object e) {
 		Map<String, Object> variable = (Map<String, Object>) list.getRaw(e);
 
 		if (variable == null) {
@@ -121,7 +120,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		String text = "indices of " + list.toString(e, debug);
 
 		if (sort)

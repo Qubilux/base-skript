@@ -25,9 +25,9 @@ import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
-import ultreon.baseskript.ChatColor;
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.ChatColor;
 
 public class LogEntry {
 
@@ -85,7 +85,7 @@ public class LogEntry {
 		from = tracked || Skript.debug() ? findCaller() : "";
 	}
 
-	private static final String skriptLogPackageName = "" + SkriptLogger.class.getPackage().getName();
+	private static final String skriptLogPackageName = SkriptLogger.class.getPackage().getName();
 
 	static String findCaller() {
 		StackTraceElement[] es = new Exception().getStackTrace();
@@ -171,7 +171,7 @@ public class LogEntry {
 			from = ChatColor.GRAY + "   " + from + "\n";
 
 		return
-			String.format(lineInfoMsg, String.valueOf(node.getLine()), c.getFileName()) + // String.valueOf is to convert the line number (int) to a String
+			String.format(lineInfoMsg, node.getLine(), c.getFileName()) + // String.valueOf is to convert the line number (int) to a String
 			String.format(detailsMsg, message.replaceAll("§", "&")) + from +
 			String.format(lineDetailsMsg, node.save().trim().replaceAll("§", "&"));
 	}

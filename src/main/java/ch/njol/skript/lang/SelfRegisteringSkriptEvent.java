@@ -19,7 +19,6 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.config.Config;
-import ultreon.baseskript.event.Event;
 
 import java.util.Objects;
 
@@ -79,7 +78,7 @@ public abstract class SelfRegisteringSkriptEvent extends SkriptEvent {
 	}
 
 	@Override
-	public final boolean check(Event e) {
+	public final boolean check(Object e) {
 		throw new UnsupportedOperationException();
 	}
 

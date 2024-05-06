@@ -19,7 +19,7 @@
 package ch.njol.skript.timings;
 
 import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Static utils for Skript timings.
@@ -43,7 +43,8 @@ public class SkriptTimings {
 	
 	public static void stop(@Nullable Object timing) {
 		if (timing == null) // Timings disabled...
-			return;
+		{
+		}
 //		((Timing) timing).stopTimingIfSync();
 	}
 	

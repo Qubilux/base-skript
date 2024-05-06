@@ -33,9 +33,8 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.lang.reflect.Array;
@@ -102,7 +101,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] getArray(Object event) {
 		return data;
 	}
 
@@ -112,7 +111,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T[] getAll(Event event) {
+	public T[] getAll(Object event) {
 		return data;
 	}
 
@@ -122,7 +121,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T getSingle(Event event) {
+	public T getSingle(Object event) {
 		return getSingle();
 	}
 
@@ -144,7 +143,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		if (debug)
 			return "[" + Classes.toString(data, getAnd(), StringMode.DEBUG) + "]";
 		return Classes.toString(data, getAnd());
@@ -166,12 +165,12 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super T> checker, boolean negated) {
 		return SimpleExpression.check(data, checker, negated, getAnd());
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super T> checker) {
+	public boolean check(Object event, Checker<? super T> checker) {
 		return SimpleExpression.check(data, checker, false, getAnd());
 	}
 
@@ -189,7 +188,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final Object event, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		final ClassInfo<? super T> returnTypeInfo = this.returnTypeInfo;
 		if (returnTypeInfo == null)
 			throw new UnsupportedOperationException();
@@ -215,7 +214,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public NonNullIterator<T> iterator(final Event event) {
+	public NonNullIterator<T> iterator(final Object event) {
 		return new NonNullIterator<T>() {
 			private int i = 0;
 

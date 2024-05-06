@@ -32,7 +32,7 @@
 //import lib.PatPeter.SQLibrary.SQLibrary;
 //import io.github.ultreon.skript.Bukkit;
 //import org.bukkit.plugin.Plugin;
-//import org.eclipse.jdt.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.io.File;
 //import java.sql.PreparedStatement;

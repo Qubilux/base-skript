@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,6 +29,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -56,7 +54,7 @@ public class ExprParseError extends SimpleExpression<String> {
 	}
 	
 	@Override
-	protected String @NotNull [] get(final @NotNull Event e) {
+	protected String @NotNull [] get(final @NotNull Object e) {
 		return ExprParse.lastError == null ? new String[0] : new String[] {ExprParse.lastError};
 	}
 	
@@ -71,7 +69,7 @@ public class ExprParseError extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public @NotNull String toString(final @Nullable Event e, final boolean debug) {
+	public @NotNull String toString(final @Nullable Object e, final boolean debug) {
 		return "the last parse error";
 	}
 	

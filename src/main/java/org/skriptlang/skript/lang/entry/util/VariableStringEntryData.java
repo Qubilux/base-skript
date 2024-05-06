@@ -20,7 +20,7 @@ package org.skriptlang.skript.lang.entry.util;
 
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.StringMode;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.KeyValueEntryData;
 
 /**

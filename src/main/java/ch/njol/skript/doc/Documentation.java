@@ -35,9 +35,10 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.IteratorIterable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,16 +88,12 @@ public class Documentation {
 		if (!generate)
 			return;
 		try {
-			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(Skript.getInstance().getDataFolder(), "doc.sql")), "UTF-8"));
+			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(Skript.getInstance().getDataFolder(), "doc.sql")), StandardCharsets.UTF_8));
 			asSql(pw);
 			pw.flush();
 			pw.close();
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
-			return;
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return;
 		}
 	}
 
@@ -289,7 +286,7 @@ public class Documentation {
 							Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
 					}
 				}
-				return "" + b.append("%").toString();
+				return String.valueOf(b.append("%"));
 			});
 		assert s != null : patterns;
 		return s;
@@ -300,20 +297,20 @@ public class Documentation {
 		if (elementClass.getAnnotation(NoDoc.class) != null)
 			return;
 		if (elementClass.getAnnotation(Name.class) == null || elementClass.getAnnotation(Description.class) == null || elementClass.getAnnotation(Examples.class) == null || elementClass.getAnnotation(Since.class) == null) {
-			Skript.warning("" + elementClass.getSimpleName() + " is missing information");
+			Skript.warning(elementClass.getSimpleName() + " is missing information");
 			return;
 		}
 		final String desc = validateHTML(StringUtils.join(elementClass.getAnnotation(Description.class).value(), "<br/>"), type + "s");
 		final String since = validateHTML(elementClass.getAnnotation(Since.class).value(), type + "s");
 		if (desc == null || since == null) {
-			Skript.warning("" + elementClass.getSimpleName() + "'s description or 'since' is invalid");
+			Skript.warning(elementClass.getSimpleName() + "'s description or 'since' is invalid");
 			return;
 		}
 		final String patterns = cleanPatterns(StringUtils.join(info.patterns, "\n", 0, elementClass == CondCompare.class ? 8 : info.patterns.length));
 		insertOnDuplicateKeyUpdate(pw, "syntax_elements",
 				"id, name, type, patterns, description, examples, since",
 				"patterns = TRIM(LEADING '\n' FROM CONCAT(patterns, '\n', '" + escapeSQL(patterns) + "'))",
-				escapeHTML("" + elementClass.getSimpleName()),
+				escapeHTML(elementClass.getSimpleName()),
 				escapeHTML(elementClass.getAnnotation(Name.class).value()),
 				type,
 				patterns,
@@ -326,7 +323,7 @@ public class Documentation {
 		if (info.getDescription() == SkriptEventInfo.NO_DOC)
 			return;
 		if (info.getDescription() == null || info.getExamples() == null || info.getSince() == null) {
-			Skript.warning("" + info.getName() + " (" + info.getElementClass().getSimpleName() + ") is missing information");
+			Skript.warning(info.getName() + " (" + info.getElementClass().getSimpleName() + ") is missing information");
 			return;
 		}
 		for (final SkriptEventInfo<?> i : Skript.getEvents()) {
@@ -404,17 +401,17 @@ public class Documentation {
 
 	private static void insertOnDuplicateKeyUpdate(final PrintWriter pw, final String table, final String fields, final String update, final String... values) {
 		for (int i = 0; i < values.length; i++)
-			values[i] = escapeSQL("" + values[i]);
+			values[i] = escapeSQL(values[i]);
 		pw.println("INSERT INTO " + table + " (" + fields + ") VALUES ('" + StringUtils.join(values, "','") + "') ON DUPLICATE KEY UPDATE " + update + ";");
 	}
 
 	private static void replaceInto(final PrintWriter pw, final String table, final String fields, final String... values) {
 		for (int i = 0; i < values.length; i++)
-			values[i] = escapeSQL("" + values[i]);
+			values[i] = escapeSQL(values[i]);
 		pw.println("REPLACE INTO " + table + " (" + fields + ") VALUES ('" + StringUtils.join(values, "','") + "');");
 	}
 
-	private static ArrayList<Pattern> validation = new ArrayList<Pattern>();
+	private static final ArrayList<Pattern> validation = new ArrayList<Pattern>();
 	static {
 		validation.add(Pattern.compile("<" + "(?!a href='|/a>|br ?/|/?(i|b|u|code|pre|ul|li|em)>)"));
 		validation.add(Pattern.compile("(?<!</a|'|br ?/|/?(i|b|u|code|pre|ul|li|em))" + ">"));
@@ -432,7 +429,7 @@ public class Documentation {
 			if (p.matcher(html).find())
 				return null;
 		}
-		html = "" + html.replaceAll("&(?!(amp|lt|gt|quot);)", "&amp;");
+		html = html.replaceAll("&(?!(amp|lt|gt|quot);)", "&amp;");
 		final Matcher m = Pattern.compile("<a href='(.*?)'>").matcher(html);
 		linkLoop: while (m.find()) {
 			final String url = m.group(1);
@@ -451,7 +448,7 @@ public class Documentation {
 							continue linkLoop;
 					}
 				} else if (s[0].equals("../functions/")) {
-					if (Functions.getGlobalFunction("" + s[1]) != null)
+					if (Functions.getGlobalFunction(s[1]) != null)
 						continue;
 				} else {
 					final int i = CollectionUtils.indexOf(urls, s[0].substring("../".length(), s[0].length() - 1));
@@ -469,7 +466,7 @@ public class Documentation {
 	}
 
 	private static String escapeSQL(String value) {
-		return "" + value.replace("'", "\\'").replace("\"", "\\\"");
+		return value.replace("'", "\\'").replace("\"", "\\\"");
 	}
 
 	public static String escapeHTML(@Nullable String value) {
@@ -477,7 +474,7 @@ public class Documentation {
 			assert false;
 			return "";
 		}
-		return "" + value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 
 	public static String[] escapeHTML(@Nullable String[] values) {

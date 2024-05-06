@@ -23,8 +23,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A base class for property expressions that requires only few overridden methods
@@ -51,7 +50,7 @@ public abstract class SimplePropertyExpression<F, T> extends PropertyExpression<
 	public abstract T convert(F from);
 
 	@Override
-	protected T[] get(Event event, F[] source) {
+	protected T[] get(Object event, F[] source) {
 		return super.get(source, this);
 	}
 
@@ -64,7 +63,7 @@ public abstract class SimplePropertyExpression<F, T> extends PropertyExpression<
 	protected abstract String getPropertyName();
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return getPropertyName() + " of " + getExpr().toString(event, debug);
 	}
 

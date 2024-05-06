@@ -22,7 +22,7 @@ import ch.njol.yggdrasil.Fields.FieldContext;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustEnum;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.io.*;
@@ -206,7 +206,7 @@ public final class Yggdrasil {
 		if (yid != null) {
 			return yid.value();
 		}
-		return "" + field.getName();
+		return field.getName();
 	}
 	
 	public static String getID(Enum<?> e) {
@@ -214,7 +214,7 @@ public final class Yggdrasil {
 			return getID(e.getDeclaringClass().getDeclaredField(e.name()));
 		} catch (NoSuchFieldException ex) {
 			assert false : e;
-			return "" + e.name();
+			return e.name();
 		}
 	}
 	

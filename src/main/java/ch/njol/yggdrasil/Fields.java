@@ -20,7 +20,7 @@ package ch.njol.yggdrasil;
 
 import ch.njol.yggdrasil.Fields.FieldContext;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.io.NotSerializableException;
@@ -151,9 +151,8 @@ public final class Fields implements Iterable<FieldContext> {
 				return true;
 			if (object == null)
 				return false;
-			if (!(object instanceof FieldContext))
+			if (!(object instanceof FieldContext other))
 				return false;
-			FieldContext other = (FieldContext) object;
 			return id.equals(other.id);
 		}
 		

@@ -24,8 +24,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -47,13 +46,13 @@ public class EffFunctionCall extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
+	protected void execute(final Object e) {
 		function.execute(e);
 		function.resetReturnValue(); // Function might have return value that we're ignoring
 	}
 	
 	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
+	public String toString(@Nullable final Object e, final boolean debug) {
 		return function.toString(e, debug);
 	}
 	

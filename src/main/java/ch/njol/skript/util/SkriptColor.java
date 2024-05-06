@@ -22,10 +22,9 @@ import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.variables.Variables;
 import ch.njol.yggdrasil.Fields;
-import ultreon.baseskript.ChatColor;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ultreon.baseskript.ChatColor;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -155,7 +154,7 @@ public enum SkriptColor implements Color {
 
 	@Override
 	public String toString() {
-		return adjective == null ? "" + name() : adjective.toString(-1, 0);
+		return adjective == null ? name() : adjective.toString(-1, 0);
 	}
 
 	@Override
@@ -164,7 +163,7 @@ public enum SkriptColor implements Color {
 	}
 
 	@Override
-	public void deserialize(@NonNull Fields fields) throws StreamCorruptedException {
+	public void deserialize(@NotNull Fields fields) throws StreamCorruptedException {
 		chat = fields.getObject("chat", ChatColor.class);
 		try {
 			adjective = fields.getObject("adjective", Adjective.class);

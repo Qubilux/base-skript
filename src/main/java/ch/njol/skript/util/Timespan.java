@@ -21,13 +21,12 @@ package ch.njol.skript.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.localization.Noun;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -67,7 +66,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 			
 			final int offset = ss.length == 3 && !s.contains(".") || ss.length == 4 ? 0 : 1;
 			for (int i = 0; i < ss.length; i++) {
-				t += times[offset + i] * Utils.parseLong("" + ss[i]);	
+				t += times[offset + i] * Utils.parseLong(ss[i]);
 			}
 		} else { // <number> minutes/seconds/.. etc
 			final String[] subs = s.toLowerCase(Locale.ENGLISH).split("\\s+");
@@ -237,12 +236,9 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Timespan))
+		if (!(obj instanceof Timespan other))
 			return false;
-		final Timespan other = (Timespan) obj;
-		if (millis != other.millis)
-			return false;
-		return true;
+		return millis == other.millis;
 	}
 	
 }

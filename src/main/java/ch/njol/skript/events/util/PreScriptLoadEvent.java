@@ -18,18 +18,17 @@
  */
 package ch.njol.skript.events.util;
 
-import java.util.List;
-
 import ch.njol.skript.config.Config;
 import ch.njol.util.Validate;
-import ultreon.baseskript.event.Event;
+
+import java.util.List;
 
 /**
  * This event has no guarantee of being on the main thread.
  * Please do not use bukkit api before checking {@link Bukkit#isPrimaryThread()}
  */
 
-public class PreScriptLoadEvent extends Event {
+public class PreScriptLoadEvent {
 
     private final List<Config> scripts;
 

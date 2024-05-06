@@ -20,14 +20,15 @@ package ch.njol.skript.config;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.validate.SectionValidator;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -151,7 +152,7 @@ public class Config implements Comparable<Config> {
 	 */
 	public void save(final File f) throws IOException {
 		separator = defaultSeparator;
-		final PrintWriter w = new PrintWriter(f, "UTF-8");
+		final PrintWriter w = new PrintWriter(f, StandardCharsets.UTF_8);
 		try {
 			main.save(w);
 		} finally {
@@ -280,7 +281,7 @@ public class Config implements Comparable<Config> {
 				try {
 					if (OptionSection.class.isAssignableFrom(field.getType())) {
 						final OptionSection section = (OptionSection) field.get(object);
-						@NonNull final Class<?> pc = section.getClass();
+						@NotNull final Class<?> pc = section.getClass();
 						load(pc, section, path + section.key + ".");
 					} else if (Option.class.isAssignableFrom(field.getType())) {
 						((Option<?>) field.get(object)).set(this, path);

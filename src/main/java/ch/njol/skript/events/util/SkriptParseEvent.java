@@ -18,11 +18,9 @@
  */
 package ch.njol.skript.events.util;
 
-import ultreon.baseskript.event.Event;
-
 /**
  * Internally used for parsing `parse if` sections
  */
-public class SkriptParseEvent extends Event {
+public class SkriptParseEvent {
 
 }

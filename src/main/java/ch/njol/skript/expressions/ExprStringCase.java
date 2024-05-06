@@ -18,10 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.event.Event;
-import org.apache.commons.lang.WordUtils;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,7 +28,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.apache.commons.lang.WordUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Case Text")
 @Description("Copy of given text in Lowercase, Uppercase, Proper Case, camelCase, PascalCase, Snake_Case, and Kebab-Case")
@@ -114,7 +112,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
-	protected String @NotNull [] get(@NotNull Event e) {
+	protected String @NotNull [] get(@NotNull Object e) {
 		String[] strs = expr.getArray(e);
 		for (int i = 0; i < strs.length; i++) {
 			if (strs[i] != null) {
@@ -154,7 +152,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event e, boolean debug) {
+	public @NotNull String toString(@Nullable Object e, boolean debug) {
 		switch (type) {
 			case 0: // Basic Case Change 
 				return (casemode == 1) ? "uppercase" : "lowercase";

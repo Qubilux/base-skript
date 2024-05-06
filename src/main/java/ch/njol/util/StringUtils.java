@@ -18,7 +18,7 @@
  */
 package ch.njol.util;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -135,7 +135,7 @@ public abstract class StringUtils {
 			c--;
 		if (s.charAt(c) == '.')
 			c--;
-		return "" + s.substring(0, c + 1);
+		return s.substring(0, c + 1);
 	}
 	
 	public static String firstToUpper(final String s) {
@@ -161,7 +161,7 @@ public abstract class StringUtils {
 			end = end + s.length();
 		if (end < start)
 			throw new IllegalArgumentException("invalid indices");
-		return "" + s.substring(start, end);
+		return s.substring(start, end);
 	}
 	
 	/**
@@ -402,14 +402,14 @@ public abstract class StringUtils {
 	
 	public static String replace(final String haystack, final String needle, final String replacement, final boolean caseSensitive) {
 		if (caseSensitive)
-			return "" + haystack.replace(needle, replacement);
-		return "" + haystack.replaceAll("(?ui)" + Pattern.quote(needle), Matcher.quoteReplacement(replacement));
+			return haystack.replace(needle, replacement);
+		return haystack.replaceAll("(?ui)" + Pattern.quote(needle), Matcher.quoteReplacement(replacement));
 	}
 	
 	public static String replaceFirst(final String haystack, final String needle, final String replacement, final boolean caseSensitive) {
 		if (caseSensitive)
-			return "" + haystack.replaceFirst(needle, replacement);
-		return "" + haystack.replaceFirst("(?ui)" + Pattern.quote(needle), replacement);
+			return haystack.replaceFirst(needle, replacement);
+		return haystack.replaceFirst("(?ui)" + Pattern.quote(needle), replacement);
 	}
 
 	public static byte[] hexStringToByteArray(String s) {

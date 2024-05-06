@@ -30,10 +30,9 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import ultreon.baseskript.event.Event;
 import org.apache.logging.log4j.Level;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression matches.
@@ -109,7 +108,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable Object event, boolean debug) {
 		return "'" + data + "'";
 	}
 
@@ -148,7 +147,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object[] getAll(Event event) {
+	public Object[] getAll(Object event) {
 		throw invalidAccessException();
 	}
 
@@ -158,7 +157,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object[] getArray(Event event) {
+	public Object[] getArray(Object event) {
 		throw invalidAccessException();
 	}
 
@@ -168,17 +167,17 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object getSingle(Event event) {
+	public Object getSingle(Object event) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public NonNullIterator<Object> iterator(Event event) {
+	public NonNullIterator<Object> iterator(Object event) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Object event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		throw invalidAccessException();
 	}
 
@@ -188,12 +187,12 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super Object> checker) {
+	public boolean check(Object event, Checker<? super Object> checker) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public boolean check(Event event, Checker<? super Object> checker, boolean negated) {
+	public boolean check(Object event, Checker<? super Object> checker, boolean negated) {
 		throw invalidAccessException();
 	}
 

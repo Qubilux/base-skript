@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.config;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -43,11 +43,11 @@ public class NodeMap {
 			assert false : n;
 			return "";
 		}
-		return "" + key.toLowerCase(Locale.ENGLISH);
+		return key.toLowerCase(Locale.ENGLISH);
 	}
 	
 	private static String getKey(final String key) {
-		return "" + key.toLowerCase(Locale.ENGLISH);
+		return key.toLowerCase(Locale.ENGLISH);
 	}
 	
 	public void put(final Node n) {

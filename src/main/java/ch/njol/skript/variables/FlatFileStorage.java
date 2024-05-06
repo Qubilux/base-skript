@@ -25,7 +25,7 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.*;
 import ch.njol.util.NotifyingReference;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -229,7 +229,7 @@ public class FlatFileStorage extends VariablesStorage {
 			if (unsuccessfulVariableCount > 0) {
 				Skript.error(unsuccessfulVariableCount + " variable" + (unsuccessfulVariableCount == 1 ? "" : "s") +
 						" could not be loaded!");
-				Skript.error("Affected variables: " + invalid.toString());
+				Skript.error("Affected variables: " + invalid);
 			}
 
 			if (ioException != null) {
@@ -417,7 +417,7 @@ public class FlatFileStorage extends VariablesStorage {
 					//  the data in the actual file may be partially lost)
 					File tempFile = new File(file.getParentFile(), file.getName() + ".temp");
 
-					try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
+					try (PrintWriter pw = new PrintWriter(tempFile, StandardCharsets.UTF_8)) {
 						pw.println("# === Skript's variable storage ===");
 						pw.println("# Please do not modify this file manually!");
 						pw.println("#");

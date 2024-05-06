@@ -18,8 +18,8 @@
  */
 package ch.njol.skript.lang;
 
+import org.jetbrains.annotations.Nullable;
 import ultreon.baseskript.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Represents an element that can print details involving an event.
@@ -31,7 +31,7 @@ public interface Debuggable {
 	 * @param debug If true this should print more information, if false this should print what is shown to the end user
 	 * @return String representation of this object
 	 */
-	String toString(@Nullable Event event, boolean debug);
+	String toString(@Nullable Object event, boolean debug);
 
 	/**
 	 * Should return <tt>{@link #toString(Event, boolean) toString}(null, false)</tt>
