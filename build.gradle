@@ -14,6 +14,8 @@ configurations {
 	testImplementation.extendsFrom testShadow
 }
 
+def project_version = "3.0-base"
+
 allprojects {
 	repositories {
 		mavenCentral()
@@ -328,7 +330,7 @@ tasks.register('JUnit') {
 task githubResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
-		version = project.property('version')
+		project_version = project.property('version')
 		def channel = 'stable'
 		if (version.contains('pre'))
 			channel = 'prerelease'
@@ -362,7 +364,7 @@ task githubRelease(type: ShadowJar) {
 task spigotResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
-		version = project.property('version')
+		project_version = project.property('version')
 		def channel = 'stable'
 		if (version.contains('pre'))
 			channel = 'prerelease'
@@ -397,9 +399,9 @@ task nightlyResources(type: ProcessResources) {
 	from 'src/main/resources', {
 		include '**'
 		def hash = 'git rev-parse --short HEAD'.execute().text.trim()
-		version = project.property('version') + '-nightly-' + hash
+		project_version = project.property('version') + '-nightly-' + hash
 		filter ReplaceTokens, tokens: [
-			'version'         : version,
+			'version'         : project_version,
 			'today'           : '' + LocalTime.now(),
 			'release-flavor'  : 'skriptlang-nightly', // SkriptLang build, automatically done by CI
 			'release-channel' : 'prerelease', // No update checking, but these are VERY unstable
