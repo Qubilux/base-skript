@@ -3,4 +3,4 @@
 })
 package ch.njol.skript.entity;
 
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;

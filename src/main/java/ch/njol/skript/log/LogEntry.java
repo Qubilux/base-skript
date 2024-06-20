@@ -27,7 +27,7 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.ChatColor;
 
 public class LogEntry {
 

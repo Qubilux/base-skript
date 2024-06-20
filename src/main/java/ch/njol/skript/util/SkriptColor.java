@@ -24,7 +24,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.yggdrasil.Fields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.ChatColor;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;

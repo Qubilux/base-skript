@@ -44,8 +44,8 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
-import ultreon.baseskript.ChatColor;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.event.Event;
 
 import java.util.ArrayList;
 import java.util.Arrays;

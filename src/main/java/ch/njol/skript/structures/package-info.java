@@ -30,5 +30,5 @@ package ch.njol.skript.structures;
 
 import org.eclipse.jdt.annotation.DefaultLocation;
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;
 

@@ -31,7 +31,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.event.Cancellable;
+import dev.ultreon.baseskript.event.Cancellable;
 
 /**
  * @author Peter Güttinger

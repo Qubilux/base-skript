@@ -21,7 +21,7 @@ package ch.njol.skript.classes;
 import ch.njol.skript.classes.data.DefaultChangers;
 import ch.njol.skript.lang.Expression;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 /**
  * An interface to declare changeable values. All Expressions implement something similar like this by default, but refuse any change if {@link Expression#acceptChange(ChangeMode)}

@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import ch.njol.skript.doc.Documentation;
 import ch.njol.skript.localization.ArgsMessage;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.Plugin;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.Plugin;
 
 /**
  * @author Peter Güttinger

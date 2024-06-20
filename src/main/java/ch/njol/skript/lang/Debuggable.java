@@ -19,7 +19,7 @@
 package ch.njol.skript.lang;
 
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 /**
  * Represents an element that can print details involving an event.

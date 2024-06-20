@@ -24,8 +24,8 @@ import ch.njol.skript.events.util.SkriptStopEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.CommandSender;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.CommandSender;
 
 /**
  * @author Peter Güttinger

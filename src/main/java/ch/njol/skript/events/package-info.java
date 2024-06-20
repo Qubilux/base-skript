@@ -3,4 +3,4 @@
 })
 package ch.njol.skript.events;
 
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;

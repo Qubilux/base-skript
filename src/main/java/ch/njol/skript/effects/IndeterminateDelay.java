@@ -23,7 +23,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.BaseSkript;
 
 /**
  * @author Peter Güttinger

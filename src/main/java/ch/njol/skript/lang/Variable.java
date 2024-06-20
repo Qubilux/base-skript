@@ -51,8 +51,8 @@ import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptWarning;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.ConverterEvent;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.ConverterEvent;
 
 import java.lang.reflect.Array;
 import java.util.*;

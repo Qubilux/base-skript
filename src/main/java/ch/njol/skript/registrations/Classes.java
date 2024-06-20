@@ -38,8 +38,8 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.ChatColor;
 
 import java.io.*;
 import java.lang.reflect.Array;

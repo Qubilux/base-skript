@@ -4,4 +4,4 @@
 })
 package ch.njol.skript.conditions;
 
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;

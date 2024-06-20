@@ -28,9 +28,9 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
-import ultreon.baseskript.Plugin;
-import ultreon.baseskript.PluginClassesProvider;
+import dev.ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.Plugin;
+import dev.ultreon.baseskript.PluginClassesProvider;
 
 import java.io.IOException;
 import java.net.URL;
@@ -151,7 +151,7 @@ public abstract class Utils {
 	public static Class<?>[] getClasses(Plugin plugin, String basePackage, String... subPackages) throws IOException {
 		PluginClassesProvider provider = PluginClassesProvider.get(plugin);
 		if (provider != null) {
-			return provider.getClasses(basePackage, subPackages);
+			return provider.getClasses(plugin, basePackage, subPackages);
 		}
 
 		assert subPackages != null;

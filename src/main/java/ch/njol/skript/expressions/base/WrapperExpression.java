@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.util.Iterator;
 

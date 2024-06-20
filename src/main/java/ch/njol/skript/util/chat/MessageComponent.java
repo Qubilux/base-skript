@@ -23,7 +23,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.ChatColor;
 
 import java.lang.reflect.Type;
 import java.util.Locale;

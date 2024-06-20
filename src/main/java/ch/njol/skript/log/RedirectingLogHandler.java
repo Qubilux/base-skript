@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.log;
 
-import ultreon.baseskript.CommandSender;
+import dev.ultreon.baseskript.CommandSender;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 

@@ -30,8 +30,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.Plugin;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.Plugin;
 
 import java.util.Arrays;
 

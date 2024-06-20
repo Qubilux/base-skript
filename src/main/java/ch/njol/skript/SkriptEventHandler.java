@@ -27,10 +27,10 @@ import com.google.common.collect.Multimap;
 import com.google.common.eventbus.EventBus;
 import com.ultreon.libs.events.v0.EventPriority;
 import com.ultreon.libs.events.v0.SubscribeEvent;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Cancellable;
-import ultreon.baseskript.event.EventExecutor;
-import ultreon.baseskript.event.Listener;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.event.Cancellable;
+import dev.ultreon.baseskript.event.EventExecutor;
+import dev.ultreon.baseskript.event.Listener;
 
 import java.util.Iterator;
 import java.util.List;

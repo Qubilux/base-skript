@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.ChatColor;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

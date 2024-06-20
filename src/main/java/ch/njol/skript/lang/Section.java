@@ -26,7 +26,7 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.util.ArrayList;
 import java.util.Iterator;

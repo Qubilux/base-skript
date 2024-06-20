@@ -29,7 +29,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.BaseSkript;
 
 /**
  * @author Peter Güttinger

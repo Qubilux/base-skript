@@ -22,7 +22,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Checker;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.util.Iterator;
 

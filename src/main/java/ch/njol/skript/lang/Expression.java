@@ -31,7 +31,7 @@ import ch.njol.util.Checker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.util.*;
 import java.util.stream.Stream;

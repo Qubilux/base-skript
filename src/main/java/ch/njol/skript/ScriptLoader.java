@@ -43,7 +43,7 @@ import ch.njol.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
-import ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.BaseSkript;
 
 import java.io.File;
 import java.io.FileFilter;

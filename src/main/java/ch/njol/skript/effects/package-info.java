@@ -14,4 +14,4 @@
 })
 package ch.njol.skript.effects;
 
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;

@@ -37,4 +37,4 @@
 })
 package ch.njol.skript.expressions;
 
-import ultreon.baseskript.SkriptInitializer;
+import dev.ultreon.baseskript.SkriptInitializer;

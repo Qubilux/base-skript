@@ -23,7 +23,7 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.io.File;
 

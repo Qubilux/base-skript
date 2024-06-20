@@ -22,7 +22,7 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.Version;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.Plugin;
+import dev.ultreon.baseskript.Plugin;
 
 import java.io.File;
 import java.io.IOException;

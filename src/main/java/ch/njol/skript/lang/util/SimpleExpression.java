@@ -34,7 +34,7 @@ import ch.njol.util.coll.iterator.ArrayIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

@@ -25,7 +25,7 @@ import ch.njol.skript.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.Nullable;
-import ultreon.baseskript.ChatColor;
+import dev.ultreon.baseskript.ChatColor;
 
 import java.util.*;
 import java.util.regex.Pattern;

@@ -36,8 +36,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
-import ultreon.baseskript.BaseSkript;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.BaseSkript;
+import dev.ultreon.baseskript.event.Event;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

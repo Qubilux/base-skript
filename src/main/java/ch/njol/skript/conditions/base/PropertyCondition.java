@@ -25,7 +25,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
-import ultreon.baseskript.event.Event;
+import dev.ultreon.baseskript.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**

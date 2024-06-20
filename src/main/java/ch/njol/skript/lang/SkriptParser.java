@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptWarning;
-import ultreon.baseskript.Plugin;
+import dev.ultreon.baseskript.Plugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
