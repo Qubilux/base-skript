@@ -58,7 +58,7 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
 import org.skriptlang.skript.lang.structure.StructureInfo;
-import ultreon.baseskript.*;
+import dev.ultreon.baseskript.*;
 import dev.ultreon.baseskript.event.Listener;
 import dev.ultreon.baseskript.events.LoadLanguageFilesEvent;
 import dev.ultreon.baseskript.events.PluginDisableEvent;
