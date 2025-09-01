@@ -156,7 +156,9 @@ public abstract class Utils {
 	public static Class<?>[] getClasses(Plugin plugin, String basePackage, String... subPackages) throws IOException {
 		PluginClassesProvider provider = PluginClassesProvider.get(plugin);
 		if (provider != null) {
-			return provider.getClasses(plugin, basePackage, subPackages);
+			Class<?>[] classes = provider.getClasses(plugin, basePackage, subPackages);
+			if (classes != null)
+				return classes;
 		}
 
 		assert subPackages != null;
