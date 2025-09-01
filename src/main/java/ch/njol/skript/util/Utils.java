@@ -33,7 +33,11 @@ import dev.ultreon.baseskript.Plugin;
 import dev.ultreon.baseskript.PluginClassesProvider;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -49,8 +53,9 @@ public abstract class Utils {
 
 	public static final boolean COPY_SUPPORTED = true;
 
-	private Utils() {}
-	
+	private Utils() {
+	}
+
 	public final static Random random = new Random();
 
 	public static String join(final Object[] objects) {
@@ -77,7 +82,7 @@ public abstract class Utils {
 		}
 		return b.toString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isEither(@Nullable T compared, @Nullable T... types) {
 		return CollectionUtils.contains(types, compared);
@@ -93,7 +98,7 @@ public abstract class Utils {
 		}
 		return new Pair<String, Integer>(s, Integer.valueOf(-1));
 	}
-	
+
 //	public final static class AmountResponse {
 //		public final String s;
 //		public final int amount;
@@ -144,9 +149,9 @@ public abstract class Utils {
 	 *
 	 * @param basePackage The base package to add to all sub packages, e.g. <tt>"ch.njol.skript"</tt>.
 	 * @param subPackages Which subpackages of the base package should be loaded, e.g. <tt>"expressions", "conditions", "effects"</tt>. Subpackages of these packages will be loaded
-	 *            as well. Use an empty array to load all subpackages of the base package.
-	 * @throws IOException If some error occurred attempting to read the plugin's jar file.
+	 *                    as well. Use an empty array to load all subpackages of the base package.
 	 * @return This SkriptAddon
+	 * @throws IOException If some error occurred attempting to read the plugin's jar file.
 	 */
 	public static Class<?>[] getClasses(Plugin plugin, String basePackage, String... subPackages) throws IOException {
 		PluginClassesProvider provider = PluginClassesProvider.get(plugin);
@@ -155,7 +160,11 @@ public abstract class Utils {
 		}
 
 		assert subPackages != null;
-		JarInputStream jar = new JarInputStream(getLocation(plugin).openStream());
+		URL location = getLocation(plugin);
+		if (location.getProtocol().equals("file")) {
+			return getClassesFromFile(plugin, basePackage, subPackages, location);
+		}
+		JarInputStream jar = new JarInputStream(location.openStream());
 		for (int i = 0; i < subPackages.length; i++)
 			subPackages[i] = subPackages[i].replace('.', '/') + "/";
 		basePackage = basePackage.replace('.', '/') + "/";
@@ -177,7 +186,8 @@ public abstract class Utils {
 		} finally {
 			try {
 				jar.close();
-			} catch (IOException e) {}
+			} catch (IOException e) {
+			}
 		}
 		return classes.toArray(new Class<?>[classes.size()]);
 	}
@@ -221,42 +231,42 @@ public abstract class Utils {
 	}
 
 	private final static String[][] plurals = {
-			
-			{"fe", "ves"},// most -f words' plurals can end in -fs as well as -ves
-			
-			{"axe", "axes"},
-			{"x", "xes"},
-			
-			{"ay", "ays"},
-			{"ey", "eys"},
-			{"iy", "iys"},
-			{"oy", "oys"},
-			{"uy", "uys"},
-			{"kie", "kies"},
-			{"zombie", "zombies"},
-			{"y", "ies"},
-			
-			{"h", "hes"},
-			
-			{"man", "men"},
-			
-			{"us", "i"},
-			
-			{"hoe", "hoes"},
-			{"toe", "toes"},
-			{"o", "oes"},
-			
-			{"alias", "aliases"},
-			{"gas", "gases"},
-			
-			{"child", "children"},
-			
-			{"sheep", "sheep"},
-			
-			// general ending
-			{"", "s"},
+
+		{"fe", "ves"},// most -f words' plurals can end in -fs as well as -ves
+
+		{"axe", "axes"},
+		{"x", "xes"},
+
+		{"ay", "ays"},
+		{"ey", "eys"},
+		{"iy", "iys"},
+		{"oy", "oys"},
+		{"uy", "uys"},
+		{"kie", "kies"},
+		{"zombie", "zombies"},
+		{"y", "ies"},
+
+		{"h", "hes"},
+
+		{"man", "men"},
+
+		{"us", "i"},
+
+		{"hoe", "hoes"},
+		{"toe", "toes"},
+		{"o", "oes"},
+
+		{"alias", "aliases"},
+		{"gas", "gases"},
+
+		{"child", "children"},
+
+		{"sheep", "sheep"},
+
+		// general ending
+		{"", "s"},
 	};
-	
+
 	/**
 	 * @param s trimmed string
 	 * @return Pair of singular string + boolean whether it was plural
@@ -274,10 +284,10 @@ public abstract class Utils {
 		}
 		return new NonNullPair<String, Boolean>(s, Boolean.FALSE);
 	}
-	
+
 	/**
 	 * Gets the english plural of a word.
-	 * 
+	 *
 	 * @param s
 	 * @return The english plural of the given word
 	 */
@@ -290,10 +300,10 @@ public abstract class Utils {
 		assert false;
 		return s + "s";
 	}
-	
+
 	/**
 	 * Gets the plural of a word (or not if p is false)
-	 * 
+	 *
 	 * @param s
 	 * @param p
 	 * @return The english plural of the given word, or the word itself if p is false.
@@ -303,10 +313,10 @@ public abstract class Utils {
 			return toEnglishPlural(s);
 		return s;
 	}
-	
+
 	/**
 	 * Adds 'a' or 'an' to the given string, depending on the first character of the string.
-	 * 
+	 *
 	 * @param s The string to add the article to
 	 * @return The given string with an appended a/an and a space at the beginning
 	 * @see #A(String)
@@ -315,10 +325,10 @@ public abstract class Utils {
 	public static String a(final String s) {
 		return a(s, false);
 	}
-	
+
 	/**
 	 * Adds 'A' or 'An' to the given string, depending on the first character of the string.
-	 * 
+	 *
 	 * @param s The string to add the article to
 	 * @return The given string with an appended A/An and a space at the beginning
 	 * @see #a(String)
@@ -327,11 +337,11 @@ public abstract class Utils {
 	public static String A(final String s) {
 		return a(s, true);
 	}
-	
+
 	/**
 	 * Adds 'a' or 'an' to the given string, depending on the first character of the string.
-	 * 
-	 * @param s The string to add the article to
+	 *
+	 * @param s    The string to add the article to
 	 * @param capA Whether to use a capital a or not
 	 * @return The given string with an appended a/an (or A/An if capA is true) and a space at the beginning
 	 * @see #a(String)
@@ -352,26 +362,26 @@ public abstract class Utils {
 	final static ChatColor[] styles = new ChatColor[]{ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<String, String>();
 	final static Map<String, String> englishChat = new HashMap<String, String>();
-	
+
 	public final static boolean HEX_SUPPORTED = true;
 
 	static {
 		Language.addListener(() -> {
-            final boolean english = englishChat.isEmpty();
-            chat.clear();
-            for (final ChatColor style : styles) {
-                for (final String s : Language.getList("chat styles." + style.name())) {
-                    chat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
-                    if (english)
-                        englishChat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
-                }
-            }
-        });
+			final boolean english = englishChat.isEmpty();
+			chat.clear();
+			for (final ChatColor style : styles) {
+				for (final String s : Language.getList("chat styles." + style.name())) {
+					chat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
+					if (english)
+						englishChat.put(s.toLowerCase(Locale.ENGLISH), style.toString());
+				}
+			}
+		});
 	}
 
-    static {
-        Pattern.compile("<([^<>]+)>");
-    }
+	static {
+		Pattern.compile("<([^<>]+)>");
+	}
 
 	private final static Pattern stylePattern = Pattern.compile("<([^<>]+)>");
 
@@ -409,10 +419,10 @@ public abstract class Utils {
 		return m;
 	}
 
-    /**
+	/**
 	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the language of colour codes is not well defined while the language is
 	 * changing, and for some hardcoded messages.
-	 * 
+	 *
 	 * @param message
 	 * @return message with english chat styles converted to Minecraft's format
 	 */
@@ -451,7 +461,7 @@ public abstract class Utils {
 
 	/**
 	 * Gets a random value between <tt>start</tt> (inclusive) and <tt>end</tt> (exclusive)
-	 * 
+	 *
 	 * @param start
 	 * @param end
 	 * @return <tt>start + random.nextInt(end - start)</tt>
@@ -483,10 +493,10 @@ public abstract class Utils {
 	 * Note that if the "best guess" is <i>not</i> a real supertype, it can never be selected.
 	 *
 	 * @param bestGuess The fallback class to guess
-	 * @param classes The types to check
+	 * @param classes   The types to check
+	 * @param <Found>   The highest common denominator found
+	 * @param <Type>    The input type spread
 	 * @return The most appropriate common class of all provided
-	 * @param <Found> The highest common denominator found
-	 * @param <Type> The input type spread
 	 */
 	@SafeVarargs
 	@SuppressWarnings("unchecked")
@@ -520,12 +530,12 @@ public abstract class Utils {
 		// See #1747 to learn how it broke returning items from functions
 		return (Class<Found>) (chosen == Cloneable.class ? bestGuess : chosen == Object.class ? bestGuess : chosen);
 	}
-	
+
 	/**
 	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Integer#parseInt(String)} due to
 	 * overflow.
 	 * This method will return {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively if that happens.
-	 * 
+	 *
 	 * @param s
 	 * @return The parsed integer, {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively
 	 */
@@ -537,12 +547,12 @@ public abstract class Utils {
 			return s.startsWith("-") ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 		}
 	}
-	
+
 	/**
 	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Long#parseLong(String)} due to
 	 * overflow.
 	 * This method will return {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively if that happens.
-	 * 
+	 *
 	 * @param s
 	 * @return The parsed long, {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively
 	 */
@@ -554,10 +564,11 @@ public abstract class Utils {
 			return s.startsWith("-") ? Long.MIN_VALUE : Long.MAX_VALUE;
 		}
 	}
-	
+
 	/**
 	 * Gets class for name. Throws RuntimeException instead of checked one.
 	 * Use this only when absolutely necessary.
+	 *
 	 * @param name Class name.
 	 * @return The class.
 	 */
@@ -570,11 +581,11 @@ public abstract class Utils {
 			throw new RuntimeException("Class not found!");
 		}
 	}
-	
+
 	/**
 	 * Finds the index of the last in a {@link List} that matches the given {@link Checker}.
 	 *
-	 * @param list the {@link List} to search.
+	 * @param list    the {@link List} to search.
 	 * @param checker the {@link Checker} to match elements against.
 	 * @return the index of the element found, or -1 if no matching element was found.
 	 */
@@ -600,6 +611,55 @@ public abstract class Utils {
 			return ChatColor.ofHex(name);
 		} catch (IllegalArgumentException e) {
 			return null;
+		}
+	}
+
+	private static Class<?>[] getClassesFromFile(Plugin plugin, String basePackage, String[] subPackages, URL location) {
+		try {
+			Path path = Paths.get(location.toURI()).resolve(basePackage.replace(".", "/"));
+			if (Files.isDirectory(path)) {
+				List<Class<?>> classes = new ArrayList<>();
+				for (String subPackage : subPackages) {
+					if (loadSubPackageDirectory(plugin, basePackage, subPackage, path, classes)) continue;
+				}
+				return classes.toArray(new Class<?>[0]);
+			} else if (Files.exists(path)) {
+				throw new RuntimeException("Not a directory: " + path);
+			} else {
+				Skript.error("Could not find " + path + "!");
+				return new Class<?>[0];
+			}
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static boolean loadSubPackageDirectory(Plugin plugin, String basePackage, String subPackage, Path path, List<Class<?>> classes) throws IOException {
+		Path resolve = path.resolve(subPackage);
+		if (!Files.exists(resolve)) {
+			return true;
+		}
+		Files.walk(resolve).filter(Files::isRegularFile).forEach(p -> {
+			walkFile(plugin, basePackage, subPackage, p, classes);
+		});
+		return false;
+	}
+
+	private static void walkFile(Plugin plugin, String basePackage, String subPackage, Path p, List<Class<?>> classes) {
+		String fileName = p.getFileName().toString();
+		if (fileName.endsWith(".class")) {
+			String className = fileName.substring(0, fileName.length() - 6);
+			try {
+				Class<?> clazz = Class.forName(basePackage + "." + subPackage + "." + className);
+				if (clazz.getClassLoader() != plugin.getClass().getClassLoader()) {
+					return;
+				}
+				classes.add(clazz);
+			} catch (ClassNotFoundException e) {
+				// ignore
+			}
 		}
 	}
 }
